@@ -17,6 +17,10 @@ object Cliens {
     }
 
     def main(args: Array[String]) {
+        if (args.length == 0) {
+            Console.err.println("\nError: missing argument: <action>\n\nUsage: cliens <action>\n")
+            return
+        }
         val action = args.head
         action match {
             case "list" => list(args.tail)

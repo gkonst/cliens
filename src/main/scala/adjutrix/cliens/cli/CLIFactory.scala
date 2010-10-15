@@ -10,6 +10,7 @@ import adjutrix.cliens.conf.Configuration
 object CLIFactory {
     def apply(configuration: Configuration, cli: String) = cli match {
         case "category" => new CategoryCLI(configuration)
+        case "storage" => new StorageCLI(configuration)
         case _ => throw new UnsupportedOperationException("Unknown cli : " + cli)
     }
 }
