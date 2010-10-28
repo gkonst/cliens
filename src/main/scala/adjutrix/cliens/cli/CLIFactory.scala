@@ -11,6 +11,7 @@ object CLIFactory {
     def apply(configuration: Configuration, cli: String) = cli match {
         case "category" => new CategoryCLI(configuration)
         case "storage" => new StorageCLI(configuration)
+        case "expense" => new ExpenseCLI(configuration)
         case _ => throw new UnsupportedOperationException("Unknown cli : " + cli)
     }
 }
