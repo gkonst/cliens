@@ -38,5 +38,6 @@ abstract class CLI(configuration: Configuration) {
     def list(data: Option[Any]) =
         data match {
             case Some(items) => printList(items.asInstanceOf[List[Any]])
+            case None => println("No data found")
         }
 }

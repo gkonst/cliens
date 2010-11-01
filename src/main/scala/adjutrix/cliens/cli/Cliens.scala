@@ -10,7 +10,7 @@ import adjutrix.cliens.adapter.AdapterFactory
  * @author konstantin_grigoriev
  */
 object Cliens {
-    val config = new Configuration("http://127.0.0.1:8000/api", "kostya", "s")
+    val config = Configuration.load
 
     val parser = new OptionParser("cliens") {
         arg("<entity>", "<entity> is name of entity to manipulate", {v: String => config.entity = v})
