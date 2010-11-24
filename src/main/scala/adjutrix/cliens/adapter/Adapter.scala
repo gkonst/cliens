@@ -20,9 +20,10 @@ abstract class Adapter(configuration: Configuration) extends Logging {
     def findAll() =
         processGet()
 
-    def findById(id: Int) = processGet(String.valueOf(id)) match {
+    def findById(id: Int) = processGet(Array(String.valueOf(id))) match {
         case Some(x) => x.asInstanceOf[List[Map[Any, Any]]].size match {
             case 1 => x.asInstanceOf[List[Map[Any, Any]]].head
+            case 0 => null
             case _ => throw new IllegalArgumentException("Multi result returned")
         }
         case None => null
@@ -47,8 +48,8 @@ abstract class Adapter(configuration: Configuration) extends Logging {
 
     def createData(data: Map[Any, Any]) = data.map((item) => item._1 + "=" + item._2).reduceLeft(_ + "&" + _)
 
-    def getConnection(method: String, parameters: String*) = {
-        val fullUrl = (Array(configuration.url, url) ++ parameters).reduceLeft(_ + "/" + _) + "/"
+    def getConnection(method: String, parameters: Array[String] = Array[String](), queryString: String = "") = {
+        val fullUrl = (Array(configuration.url, url) ++ parameters).reduceLeft(_ + "/" + _) + "/" + queryString
         debug("request url : " + fullUrl)
         val connection = new URL(fullUrl).openConnection.asInstanceOf[HttpURLConnection]
         connection.setRequestProperty("Authorization", auth);
@@ -56,7 +57,8 @@ abstract class Adapter(configuration: Configuration) extends Logging {
         connection
     }
 
-    def processGet(parameters: String*) = processResponse(getConnection("GET", parameters: _*))
+    def processGet(parameters: Array[String] = Array[String](), queryString: String = "") =
+        processResponse(getConnection("GET", parameters, queryString))
 
     def processPost(data: Map[Any, Any]) = processResponse(writeData(getConnection("POST"), data))
 
