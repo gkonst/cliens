@@ -21,15 +21,18 @@ abstract class CLI(configuration: Configuration) {
         }
 
     def rowSummary(item: Map[Any, Any]) {
-        def getAttr(attr: Array[String], subitem: Map[Any, Any]): Any = attr.size match {
-            case 0 => throw new IllegalArgumentException("Wrong attribute definition")
-            case 1 => subitem.get(attr.head) match {
-                case Some(x) => x
-                case None => null
-            }
-            case _ => subitem.get(attr.head) match {
-                case Some(x) => getAttr(attr.tail, x.asInstanceOf[Map[Any, Any]])
-                case None => null
+        def getAttr(attr: Array[String], subitem: Map[Any, Any]): Any = subitem match {
+            case null => null
+            case _ => attr.size match {
+                case 0 => throw new IllegalArgumentException("Wrong attribute definition")
+                case 1 => subitem.get(attr.head) match {
+                    case Some(x) => x
+                    case None => null
+                }
+                case _ => subitem.get(attr.head) match {
+                    case Some(x) => getAttr(attr.tail, x.asInstanceOf[Map[Any, Any]])
+                    case None => null
+                }
             }
         }
         println(summary.map(attr => attr + " -> " + getAttr(attr.split("\\."), item)).reduceLeft(_ + ", " + _))
