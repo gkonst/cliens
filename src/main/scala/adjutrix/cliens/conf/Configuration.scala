@@ -31,15 +31,19 @@ object Configuration {
             createDefault
         }
         val properties = new Properties
-        StreamUtil.withCloseable[FileInputStream](Unit => new FileInputStream(file), fis => properties.load(fis))
-        Configuration(properties.getProperty("url"), properties.getProperty("username"), properties.getProperty("password"))
+        StreamUtil.withCloseable[FileInputStream](() => new FileInputStream(file),
+            fis => properties.load(fis))
+        Configuration(properties.getProperty("url"), properties.getProperty("username"),
+            properties.getProperty("password"))
     }
 
     def createDefault {
         val properties = new Properties
-        StreamUtil.withCloseable[InputStream](Unit => classOf[Configuration]
-                .getResourceAsStream("/default.configuration.properties"), fis => properties.load(fis))
+        StreamUtil.withCloseable[InputStream](() => classOf[Configuration]
+                .getResourceAsStream("/default.configuration.properties"),
+            fis => properties.load(fis))
         file.getParentFile.mkdirs
-        StreamUtil.withCloseable[FileOutputStream](Unit => new FileOutputStream(file), fos => properties.store(fos, "Default properties"))
+        StreamUtil.withCloseable[FileOutputStream](() => new FileOutputStream(file),
+            fos => properties.store(fos, "Default properties"))
     }
 }

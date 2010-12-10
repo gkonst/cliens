@@ -8,7 +8,7 @@ import java.io.Closeable
  * @author konstantin_grigoriev
  */
 object StreamUtil {
-    def withCloseable[T <: Closeable](create: Unit => T, operate: T => Unit) {
+    def withCloseable[T <: Closeable](create: () => T, operate: T => Unit) {
         var closeable: T = null.asInstanceOf[T];
         try {
             closeable = create()
