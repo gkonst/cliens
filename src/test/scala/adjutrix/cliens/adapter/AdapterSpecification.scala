@@ -1,8 +1,7 @@
-package adjutrix.cliens.scala
+package adjutrix.cliens.adapter
 
 import org.specs.Specification
 import adjutrix.cliens.conf.Configuration
-import adjutrix.cliens.adapter.{CategoryAdapter, ValidationException, AdapterFactory}
 
 trait TestConfiguration {
     val conf = new Configuration("http://127.0.0.1:8000/api", "kostya", "s")
@@ -31,27 +30,51 @@ object AdapterSpecification extends Specification with TestConfiguration {
 }
 
 object CategoryAdapterSpecification extends Specification with TestConfiguration {
-    "CategoryAdapter.create should return Map of Any" in {
-        AdapterFactory(conf, "category").create(Map("name" -> "TestCategory", "type" -> 0)) must notBeNull
+    val adapter = AdapterFactory(conf, "category").asInstanceOf[CategoryAdapter]
+
+    "CategoryAdapter.create" should {
+        val item = adapter.create(Map("name" -> "TestCategory", "type" -> 0))
+        "return not null" in {
+            item must notBeNull
+        }
+        "return Map[Any, Any]" in {
+            item must haveSuperClass[Map[Any, Any]]
+        }
+        "return must have id" in {
+            item must haveKey("id")
+        }
+        adapter.delete(item.get("id").get.asInstanceOf[Double].toInt)
     }
 
     "CategoryAdapter.findExpenseCategories should return Some of Entities" in {
-        AdapterFactory(conf, "category").asInstanceOf[CategoryAdapter].findExpenseCategories must beSome[Any]
+        adapter.findExpenseCategories must beSomething
     }
 
     "CategoryAdapter.findExpenseCategories should return entities with type=0" in {
-        AdapterFactory(conf, "category").asInstanceOf[CategoryAdapter].findExpenseCategories.get.asInstanceOf[List[Map[Any, Any]]].
+        adapter.findExpenseCategories.get.asInstanceOf[List[Map[Any, Any]]].
                 foreach(entity => entity.get("type").get must beEqualTo(0))
     }
 
 }
 
 object StorageAdapterSpecification extends Specification with TestConfiguration {
-    "StorageAdapter.create should return Map of Any" in {
-        AdapterFactory(conf, "storage").create(Map("name" -> "TestStorage", "amount" -> 0, "currency_type" -> 1, "type" -> 3)) must notBeNull
+    val adapter = AdapterFactory(conf, "storage")
+
+    "StorageAdapter.create" should {
+        val item = adapter.create(Map("name" -> "TestStorage", "amount" -> 0, "currency_type" -> 1, "type" -> 3))
+        "return not null" in {
+            item must notBeNull
+        }
+        "return Map[Any, Any]" in {
+            item must haveSuperClass[Map[Any, Any]]
+        }
+        "return must have id" in {
+            item must haveKey("id")
+        }
+        adapter.delete(item.get("id").get.asInstanceOf[Double].toInt)
     }
 
     "StorageAdapter.create should throw ValidationException" in {
-        AdapterFactory(conf, "storage").create(Map("name" -> "TestStorage", "amount" -> 0)) must throwA[ValidationException]
+        adapter.create(Map("name" -> "TestStorage", "amount" -> 0)) must throwA[ValidationException]
     }
 }

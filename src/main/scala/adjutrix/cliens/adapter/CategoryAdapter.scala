@@ -8,7 +8,7 @@ import adjutrix.cliens.conf.Configuration
  * @author konstantin_grigoriev
  */
 case class CategoryAdapter(configuration: Configuration) extends Adapter(configuration: Configuration) {
-    val url = "category"
+    val baseUrl = "category"
 
-    def findExpenseCategories = processGet(Array[String](), "?type=0")
+    def findExpenseCategories = executeGet(absoluteBaseUrl, Option(Map[Any, Any]("type" -> 0)))
 }

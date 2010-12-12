@@ -8,5 +8,5 @@ import adjutrix.cliens.conf.Configuration
  * @author konstantin_grigoriev
  */
 class ExpenseAdapter(configuration: Configuration) extends Adapter(configuration: Configuration) {
-    val url = "expense"
+    val baseUrl = "expense"
 }

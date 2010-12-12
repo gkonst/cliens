@@ -8,5 +8,5 @@ import adjutrix.cliens.conf.Configuration
  * @author konstantin_grigoriev
  */
 case class StorageAdapter(configuration: Configuration) extends Adapter(configuration: Configuration) {
-    val url = "storage"
+    val baseUrl = "storage"
 }
