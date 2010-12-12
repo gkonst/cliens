@@ -1,8 +1,8 @@
 package adjutrix.cliens.conf
 
 import java.util.Properties
-import adjutrix.cliens.util.StreamUtil
 import java.io.{InputStream, FileOutputStream, FileInputStream, File}
+import adjutrix.cliens.util.{Logging, StreamUtil}
 
 /**
  * Configuration model class, used to store and transfer configuration related values.
@@ -20,13 +20,14 @@ case class Configuration(url: String,
  *
  * @author konstantin_grigoriev
  */
-object Configuration {
+object Configuration extends Logging {
     val DIRECTORY = ".cliens"
     val PROPERTIES = "configuration.properties"
-    val file = new File(Array(System.getProperty("user.home"), DIRECTORY, PROPERTIES)
-            .reduceLeft(_ + File.separator + _))
+    var baseDir = System.getProperty("user.home")
+    lazy val file = new File(Array(baseDir, DIRECTORY, PROPERTIES).reduceLeft(_ + File.separator + _))
 
     def load = {
+        debug("loading configuration..." + file)
         if (!file.exists) {
             createDefault
         }
