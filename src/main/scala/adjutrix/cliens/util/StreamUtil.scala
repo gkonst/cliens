@@ -3,11 +3,12 @@ package adjutrix.cliens.util
 import java.io.Closeable
 
 /**
- * TODO add comment
+ * Various stream utility methods.
  *
  * @author konstantin_grigoriev
  */
 object StreamUtil {
+
     def withCloseable[T <: Closeable](create: () => T, operate: T => Unit) {
         var closeable: T = null.asInstanceOf[T];
         try {

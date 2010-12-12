@@ -8,7 +8,7 @@ trait TestConfiguration {
 }
 
 /**
- * Specification for    { @link Adapter } class and its subclasses.
+ * Specification for {@link Adapter} class and its subclasses.
  *
  * @author konstantin_grigoriev
  */
