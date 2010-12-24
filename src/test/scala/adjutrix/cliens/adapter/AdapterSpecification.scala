@@ -2,79 +2,70 @@ package adjutrix.cliens.adapter
 
 import org.specs.Specification
 import adjutrix.cliens.conf.Configuration
+import adjutrix.cliens.model.Model
 
 trait TestConfiguration {
-    val conf = new Configuration("http://127.0.0.1:8000/api", "kostya", "s")
+    val conf = new Configuration("http://127.0.0.1:8000/api", "test_user", "s")
 }
 
-/**
- * Specification for {@link Adapter} class and its subclasses.
- *
- * @author konstantin_grigoriev
- */
 object AdapterSpecification extends Specification with TestConfiguration {
-    val adapters = Array("storage", "category", "expense")
 
-    "createData should return valid string" in {
-        AdapterFactory(conf, adapters(0)).createData(Map("key" -> "value")) must beEqualTo("key=value")
-        AdapterFactory(conf, adapters(0)).createData(Map("key" -> "value", "key1" -> "value1")) must beEqualTo("key=value&key1=value1")
-    }
+    //    "createData should return valid string" in {
+    //        AdapterFactory(conf, adapters(0)).createData(Map("key" -> "value")) must beEqualTo("key=value")
+    //        AdapterFactory(conf, adapters(0)).createData(Map("key" -> "value", "key1" -> "value1")) must beEqualTo("key=value&key1=value1")
+    //    }
 
-    "findAll should return Some of Entities" in {
-        adapters.foreach(adapter => AdapterFactory(conf, adapter).findAll must beSome[Any])
-    }
+    /**
+     * Specification for {@link Adapter} class and its subclasses.
+     *
+     * @author konstantin_grigoriev
+     */
+    abstract class AdapterSpecification[M <: Model, T <: Adapter[M]](adapterName: String) extends Specification with TestConfiguration {
 
-    "findById should return Map of Any" in {
-        adapters.foreach(adapter => AdapterFactory(conf, adapter).findById(10))
-    }
-}
+        val fixtureId = 10
 
-object CategoryAdapterSpecification extends Specification with TestConfiguration {
-    val adapter = AdapterFactory(conf, "category").asInstanceOf[CategoryAdapter]
+        val adapter = AdapterFactory(conf, adapterName).asInstanceOf[T]
 
-    "CategoryAdapter.create" should {
-        val item = adapter.create(Map("name" -> "TestCategory", "type" -> 0))
-        "return not null" in {
-            item must notBeNull
+        "Adapter.findAll" should {
+            val result = adapter.findAll
+            "return Some with List" in {
+                result must beSome[List[_]]
+            }
+            "return List with not Null values" in {
+                result.get.foreach(model => model must notBeNull)
+            }
         }
-        "return Map[Any, Any]" in {
-            item must haveSuperClass[Map[Any, Any]]
+
+        def createModel: M
+
+        def checkFields(result: M)
+
+        "Adapter.findById" should {
+            val result = adapter.findById(fixtureId)
+            "result not Null" in {
+                result must notBeNull
+            }
+            "result is Model with id equal to " + fixtureId in {
+                result.asInstanceOf[Model].id must (notBeNull and beEqualTo(fixtureId))
+            }
+            checkFields(result)
         }
-        "return must have id" in {
-            item must haveKey("id")
+
+        "Adapter.create" should {
+            var result = createModel
+            result = adapter.create(result)
+            try {
+                "result not null" in {
+                    result must notBeNull
+                }
+                "result must have id" in {
+                    result.asInstanceOf[Model].id must notBeNull
+                }
+                checkFields(result)
+            } finally {
+                adapter.delete(result.id)
+            }
         }
-        adapter.delete(item.get("id").get.asInstanceOf[Double].toInt)
     }
 
-    "CategoryAdapter.findExpenseCategories should return Some of Entities" in {
-        adapter.findExpenseCategories must beSomething
-    }
-
-    "CategoryAdapter.findExpenseCategories should return entities with type=0" in {
-        adapter.findExpenseCategories.get.asInstanceOf[List[Map[Any, Any]]].
-                foreach(entity => entity.get("type").get must beEqualTo(0))
-    }
-
-}
-
-object StorageAdapterSpecification extends Specification with TestConfiguration {
-    val adapter = AdapterFactory(conf, "storage")
-
-    "StorageAdapter.create" should {
-        val item = adapter.create(Map("name" -> "TestStorage", "amount" -> 0, "currency_type" -> 1, "type" -> 3))
-        "return not null" in {
-            item must notBeNull
-        }
-        "return Map[Any, Any]" in {
-            item must haveSuperClass[Map[Any, Any]]
-        }
-        "return must have id" in {
-            item must haveKey("id")
-        }
-        adapter.delete(item.get("id").get.asInstanceOf[Double].toInt)
-    }
-
-    "StorageAdapter.create should throw ValidationException" in {
-        adapter.create(Map("name" -> "TestStorage", "amount" -> 0)) must throwA[ValidationException]
-    }
 }

@@ -7,13 +7,14 @@ import scala.util.parsing.json.JSON.parseFull
 import adjutrix.cliens.util.Logging
 import java.io.{OutputStreamWriter, InputStream}
 import adjutrix.cliens.conf.Configuration
+import adjutrix.cliens.model.Model
 
 /**
  * Base adapter implementation. Encapsulates core CRUD methods for working with Adjutrix API.
  *
  * @author konstantin_grigoriev
  */
-abstract class Adapter(configuration: Configuration) extends Logging {
+abstract class Adapter[T <: Model](configuration: Configuration) extends Logging {
     val baseUrl: String
     val auth = "Basic " + new String(Base64.encodeBase64((configuration.username + ":" + configuration.password).getBytes))
 
@@ -24,15 +25,15 @@ abstract class Adapter(configuration: Configuration) extends Logging {
 
     import Method._
 
-    def findAll() = executeGet(absoluteBaseUrl, None)
+    def findAll(): Option[List[T]] = executeGet(absoluteBaseUrl, None)
 
-    def findById(id: Int) = executeGet(absoluteBaseUrl + String.valueOf(id), None) match {
-        case Some(x) => x.asInstanceOf[List[Map[Any, Any]]].size match {
-            case 1 => x.asInstanceOf[List[Map[Any, Any]]].head
-            case 0 => null
+    def findById(id: Int): T = executeGet(absoluteBaseUrl + String.valueOf(id), None) match {
+        case Some(x) => x.size match {
+            case 1 => x.head
+            case 0 => null.asInstanceOf[T]
             case _ => throw new IllegalArgumentException("Multi result returned")
         }
-        case None => null
+        case None => null.asInstanceOf[T]
     }
 
     def delete(id: Int) {
@@ -41,19 +42,23 @@ abstract class Adapter(configuration: Configuration) extends Logging {
         debug(" < delete...Ok")
     }
 
-    def create(entity: Map[Any, Any]) = {
+    def create(entity: T): T = {
         debug(" > create..." + entity)
-        val data = executePost(absoluteBaseUrl, Some(entity)) match {
-            case Some(x) => x.asInstanceOf[Map[Any, Any]]
-            case None => null
+        val data = executePost(absoluteBaseUrl, convertRequestData(entity)) match {
+            case Some(x) => convertResponseData(x.asInstanceOf[Map[String, Any]])
+            case None => null.asInstanceOf[T]
         }
         debug(" < create...Ok " + data)
         data
     }
 
+    def convertRequestData(entity: T): Option[Map[String, Any]]
+
+    def convertResponseData(data: Map[String, Any]): T
+
     def absoluteBaseUrl = configuration.url + "/" + baseUrl + "/"
 
-    def writeData(connection: HttpURLConnection, data: Option[Map[Any, Any]]) {
+    def writeData(connection: HttpURLConnection, data: Option[Map[String, Any]]) {
         data match {
             case Some(data) => {
                 connection.setDoOutput(true)
@@ -67,9 +72,9 @@ abstract class Adapter(configuration: Configuration) extends Logging {
         }
     }
 
-    def createData(data: Map[Any, Any]) = data.map((item) => item._1 + "=" + item._2).reduceLeft(_ + "&" + _)
+    def createData(data: Map[String, Any]) = data.map((item) => item._1 + "=" + item._2).reduceLeft(_ + "&" + _)
 
-    def createQueryParameters(data: Option[Map[Any, Any]]) = data match {
+    def createQueryParameters(data: Option[Map[String, Any]]) = data match {
         case Some(data) => "?" + createData(data)
         case None => ""
     }
@@ -77,22 +82,28 @@ abstract class Adapter(configuration: Configuration) extends Logging {
     def getConnection(method: Method, requestUrl: String) = {
         debug("request url : " + requestUrl)
         val connection = new URL(requestUrl).openConnection.asInstanceOf[HttpURLConnection]
+        debug(" auth : " + auth)
         connection.setRequestProperty("Authorization", auth);
         connection.setRequestMethod(method.toString)
         connection
     }
 
-    def executeGet(url: String, data: Option[Map[Any, Any]]) = {
+    def executeGet(url: String, data: Option[Map[String, Any]]): Option[List[T]] = {
         val connection = getConnection(GET, url + createQueryParameters(data))
         connection.getResponseCode match {
-            case HttpURLConnection.HTTP_OK => processJSONStream(connection.getInputStream)
+            case HttpURLConnection.HTTP_OK => baseConvertResponse(processJSONStream(connection.getInputStream))
             case code => {
                 throw new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString)
             }
         }
     }
 
-    def executeDelete(url: String, data: Option[Map[Any, Any]]) {
+    def baseConvertResponse(data: Option[List[Map[String, Any]]]): Option[List[T]] = data match {
+        case Some(data) => Some(data.map(convertResponseData))
+        case None => None
+    }
+
+    def executeDelete(url: String, data: Option[Map[String, Any]]) {
         val connection = getConnection(DELETE, url + createQueryParameters(data))
         connection.getResponseCode match {
             case HttpURLConnection.HTTP_NO_CONTENT => Unit
@@ -102,7 +113,7 @@ abstract class Adapter(configuration: Configuration) extends Logging {
         }
     }
 
-    def executePost(url: String, data: Option[Map[Any, Any]]) = {
+    def executePost(url: String, data: Option[Map[String, Any]]) = {
         val connection = getConnection(POST, url)
         writeData(connection, data)
         connection.getResponseCode match {
@@ -114,7 +125,7 @@ abstract class Adapter(configuration: Configuration) extends Logging {
         }
     }
 
-    def executePut(url: String, data: Option[Map[Any, Any]]) = {
+    def executePut(url: String, data: Option[Map[String, Any]]) = {
         val connection = getConnection(PUT, url)
         writeData(connection, data)
         connection.getResponseCode match {
@@ -128,7 +139,7 @@ abstract class Adapter(configuration: Configuration) extends Logging {
 
     def processJSONStream(stream: InputStream) = processJSON(fromInputStream(stream).getLines.mkString)
 
-    def processJSON(input: String) = parseFull(input)
+    def processJSON(input: String) = parseFull(input).asInstanceOf[Option[List[Map[String, Any]]]]
 
 }
 
