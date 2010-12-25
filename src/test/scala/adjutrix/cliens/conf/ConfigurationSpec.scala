@@ -1,14 +1,13 @@
 package adjutrix.cliens.conf
 
 import org.specs.Specification
-import java.io.File
 
 /**
  * Specification for {@link Configuration}.
  *
  * @author Konstantin_Grigoriev
  */
-object ConfigurationSpecification extends Specification {
+object ConfigurationSpec extends Specification {
     Configuration.baseDir = "target"
 
     def reset {

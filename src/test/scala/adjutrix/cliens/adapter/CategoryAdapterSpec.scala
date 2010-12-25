@@ -1,6 +1,6 @@
 package adjutrix.cliens.adapter
 
-import adjutrix.cliens.adapter.AdapterSpecification._
+import adjutrix.cliens.adapter.AdapterSpec._
 import adjutrix.cliens.model.{CategoryType, Category}
 
 /**

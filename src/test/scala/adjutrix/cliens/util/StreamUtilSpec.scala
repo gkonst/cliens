@@ -5,11 +5,11 @@ import java.io.{FileOutputStream, File}
 import org.specs.mock.Mockito
 
 /**
- * Specification for {@link StreamUtil} object.
+ * Specification for {@link StreamUtil}.
  *
  * @author Konstantin_Grigoriev
  */
-object StreamUtilSpecification extends Specification with Mockito {
+object StreamUtilSpec extends Specification with Mockito {
     "withCloseable" should {
         object Stub {
             var stream: FileOutputStream = null
