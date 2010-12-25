@@ -9,5 +9,5 @@ import adjutrix.cliens.model.Category
  * @author konstantin_grigoriev
  */
 class CategoryCLI(configuration: Configuration) extends CLI[Category](configuration: Configuration) {
-    override val summary = Array("id", "name", "type", "default_storage.name")
+    val summary = Array("id", "name", "type", "default_storage.name")
 }

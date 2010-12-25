@@ -9,5 +9,5 @@ import adjutrix.cliens.model.Expense
  * @author konstantin_grigoriev
  */
 class ExpenseCLI(configuration: Configuration) extends CLI[Expense](configuration: Configuration) {
-    override val summary = Array("id", "sum", "category.name", "desc", "operation_date", "storage.name", "place")
+    val summary = Array("id", "sum", "category.name", "desc", "operation_date", "storage.name", "place")
 }

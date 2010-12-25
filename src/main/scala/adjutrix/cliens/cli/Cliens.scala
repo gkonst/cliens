@@ -13,7 +13,9 @@ object Cliens {
     val config = Configuration.load
 
     val parser = new OptionParser("cliens") {
-        arg("<entity>", "<entity> is name of entity to manipulate", {v: String => config.entity = v})
+        arg("<entity>", "<entity> is name of entity to manipulate", {
+            v: String => config.entity = v
+        })
     }
 
     def main(args: Array[String]) {
@@ -29,18 +31,24 @@ object Cliens {
     }
 
     def list(args: Array[String]) {
-        parser.booleanOpt("s", "show", "show full information or not", {v: Boolean => config.showFull = v})
+        parser.booleanOpt("s", "show", "show full information or not", {
+            v: Boolean => config.showFull = v
+        })
         if (parser.parse(args)) {
             val adapter = AdapterFactory(config, config.entity)
             val printer = CLIFactory(config, config.entity)
-            printer.list(adapter.findAll)
+            printer.optionList(adapter.findAll)
         }
     }
 
     def view(args: Array[String]) {
-        parser.booleanOpt("s", "show", "show full information or not", {v: Boolean => config.showFull = v})
+        parser.booleanOpt("s", "show", "show full information or not", {
+            v: Boolean => config.showFull = v
+        })
         var id = 0
-        parser.arg("<id>", "<id> item identifier", {v: String => id = Integer.valueOf(v).intValue})
+        parser.arg("<id>", "<id> item identifier", {
+            v: String => id = Integer.valueOf(v).intValue
+        })
         if (parser.parse(args)) {
             val adapter = AdapterFactory(config, config.entity)
             val printer = CLIFactory(config, config.entity)

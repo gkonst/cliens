@@ -9,5 +9,5 @@ import adjutrix.cliens.model.Storage
  * @author konstantin_grigoriev
  */
 class StorageCLI(configuration: Configuration) extends CLI[Storage](configuration: Configuration) {
-    override val summary = Array("id", "name", "amount", "currency_type.name", "type.name")
+    val summary = Array("id", "name", "amount", "currency_type.name", "type.name")
 }
