@@ -1,9 +1,9 @@
 package adjutrix.cliens.model.serializer
 
-import adjutrix.cliens.model.{Category, Storage, Model}
+import adjutrix.cliens.model.{CurrencyType, Category, Storage, Model}
 
 /**
- * TODO add description
+ * Factory for serializers.
  *
  * @author Konstantin_Grigoriev
  */
@@ -14,6 +14,8 @@ object Serializer {
             StorageSerializer.asInstanceOf[Serializer[T]]
         } else if (cls == classOf[Category]) {
             CategorySerializer.asInstanceOf[Serializer[T]]
+        } else if (cls == classOf[CurrencyType]) {
+            CurrencyTypeSerializer.asInstanceOf[Serializer[T]]
         } else {
             throw new UnsupportedOperationException("Serializer for model " + cls + " not found")
         }
