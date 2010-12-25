@@ -10,8 +10,4 @@ import adjutrix.cliens.model.Model
  */
 class ExpenseAdapter(configuration: Configuration) extends Adapter[Model](configuration: Configuration) {
     val baseUrl = "expense"
-
-    def convertRequestData(entity: Model) = null
-
-    def convertResponseData(data: Map[String, Any]) = null
 }

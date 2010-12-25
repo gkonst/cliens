@@ -5,7 +5,6 @@ package adjutrix.cliens.model
  *
  * @author Konstantin_Grigoriev
  */
-
 class Storage(var name: String,
               val storageType: Int,
               val currencyType: Int,

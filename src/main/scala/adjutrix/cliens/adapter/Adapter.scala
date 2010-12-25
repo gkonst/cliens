@@ -8,6 +8,8 @@ import adjutrix.cliens.util.Logging
 import java.io.{OutputStreamWriter, InputStream}
 import adjutrix.cliens.conf.Configuration
 import adjutrix.cliens.model.Model
+import java.lang.reflect.ParameterizedType
+import adjutrix.cliens.model.serializer.Serializer
 
 /**
  * Base adapter implementation. Encapsulates core CRUD methods for working with Adjutrix API.
@@ -17,6 +19,8 @@ import adjutrix.cliens.model.Model
 abstract class Adapter[T <: Model](configuration: Configuration) extends Logging {
     val baseUrl: String
     val auth = "Basic " + new String(Base64.encodeBase64((configuration.username + ":" + configuration.password).getBytes))
+    val modelClass = this.getClass.getGenericSuperclass.asInstanceOf[ParameterizedType].getActualTypeArguments.head.asInstanceOf[Class[T]]
+    val serializer = Serializer(modelClass)
 
     object Method extends Enumeration {
         type Method = Value
@@ -44,17 +48,17 @@ abstract class Adapter[T <: Model](configuration: Configuration) extends Logging
 
     def create(entity: T): T = {
         debug(" > create..." + entity)
-        val data = executePost(absoluteBaseUrl, convertRequestData(entity)) match {
-            case Some(x) => convertResponseData(x.asInstanceOf[Map[String, Any]])
+        val data = executePost(absoluteBaseUrl, serializer.serialize(entity)) match {
+            case Some(x) => serializer.deserialize(x.asInstanceOf[Map[String, Any]])
             case None => null.asInstanceOf[T]
         }
         debug(" < create...Ok " + data)
         data
     }
 
-    def convertRequestData(entity: T): Option[Map[String, Any]]
-
-    def convertResponseData(data: Map[String, Any]): T
+    //    def convertRequestData(entity: T): Option[Map[String, Any]]
+    //
+    //    def convertResponseData(data: Map[String, Any]): T
 
     def absoluteBaseUrl = configuration.url + "/" + baseUrl + "/"
 
@@ -99,7 +103,7 @@ abstract class Adapter[T <: Model](configuration: Configuration) extends Logging
     }
 
     def baseConvertResponse(data: Option[List[Map[String, Any]]]): Option[List[T]] = data match {
-        case Some(data) => Some(data.map(convertResponseData))
+        case Some(data) => Some(data.map(serializer.deserialize))
         case None => None
     }
 

@@ -12,6 +12,7 @@ class Category(var name: String,
 
 object CategoryType extends Enumeration {
     val EXPENSE, INCOME = Value
+    type CategoryType = Value
 
     implicit def intToCategoryType(id: Int) = {
         values.filter(p => p.id == id).head
