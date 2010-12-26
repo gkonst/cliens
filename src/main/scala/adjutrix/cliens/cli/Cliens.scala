@@ -52,7 +52,7 @@ object Cliens {
         if (parser.parse(args)) {
             val adapter = AdapterFactory(config, config.entity)
             val printer = CLIFactory(config, config.entity)
-            printer.row(adapter.findById(id))
+            printer.optionRow(adapter.findById(id))
         }
     }
 }

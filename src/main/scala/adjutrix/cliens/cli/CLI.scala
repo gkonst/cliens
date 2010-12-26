@@ -13,6 +13,13 @@ abstract class CLI[T <: Model](configuration: Configuration) {
     def list(items: List[T]) =
         items.foreach(item => row(item))
 
+    def optionRow(item: Option[T]) {
+        item match {
+            case Some(x) => row(x)
+            case None => println("Not found")
+        }
+    }
+
     def row(item: T) {
         if (configuration.showFull) {
             println(rowFull(item))

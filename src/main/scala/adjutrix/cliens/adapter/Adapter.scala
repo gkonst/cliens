@@ -31,13 +31,13 @@ abstract class Adapter[T <: Model](configuration: Configuration) extends Logging
 
     def findAll(): Option[List[T]] = executeGet(absoluteBaseUrl, None)
 
-    def findById(id: Int): T = executeGet(absoluteBaseUrl + String.valueOf(id), None) match {
+    def findById(id: Int): Option[T] = executeGet(absoluteBaseUrl + String.valueOf(id), None) match {
         case Some(x) => x.size match {
-            case 1 => x.head
-            case 0 => null.asInstanceOf[T]
+            case 1 => Some(x.head)
+            case 0 => None
             case _ => throw new IllegalArgumentException("Multi result returned")
         }
-        case None => null.asInstanceOf[T]
+        case None => None
     }
 
     def delete(id: Int) {
@@ -46,11 +46,11 @@ abstract class Adapter[T <: Model](configuration: Configuration) extends Logging
         debug(" < delete...Ok")
     }
 
-    def create(entity: T): T = {
+    def create(entity: T): Option[T] = {
         debug(" > create..." + entity)
         val data = executePost(absoluteBaseUrl, serializer.serialize(entity)) match {
-            case Some(x) => serializer.deserialize(x.asInstanceOf[Map[String, Any]])
-            case None => null.asInstanceOf[T]
+            case Some(x) => Some(serializer.deserialize(x.asInstanceOf[Map[String, Any]]))
+            case None => None
         }
         debug(" < create...Ok " + data)
         data

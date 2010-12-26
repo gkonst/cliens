@@ -12,6 +12,9 @@ object StorageAdapterSpec extends AdapterSpecification[Storage, StorageAdapter](
 
 
     def checkFields(result: Storage) {
+        "result must have name" in {
+            result.name must notBeNull
+        }
         "result must have storageType" in {
             result.storageType must notBeNull
         }

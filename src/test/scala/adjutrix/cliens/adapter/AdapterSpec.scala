@@ -40,31 +40,31 @@ object AdapterSpec extends Specification with TestConfiguration {
 
         "Adapter.findById" should {
             val result = adapter.findById(fixtureId)
-            "result not Null" in {
-                result must notBeNull
+            "result be Some[Model]" in {
+                result must beSome[Model]
             }
             "result is Model with id equal to " + fixtureId in {
-                result.id must (beSome[Int] and beEqualTo(Some(fixtureId)))
+                result.get.id must (beSome[Int] and beEqualTo(Some(fixtureId)))
             }
-            checkFields(result)
-            "result is Null if nothing found" in {
-                adapter.findById(unknownId) must beNull
+            checkFields(result.get)
+            "result is None if nothing found" in {
+                adapter.findById(unknownId) must beNone
             }
         }
 
         "Adapter.create" should {
-            var result = createModel
-            result = adapter.create(result)
+            val given = createModel
+            val result = adapter.create(given)
             try {
-                "result not null" in {
-                    result must notBeNull
+                "result be Some[Model]" in {
+                    result must beSome[Model]
                 }
                 "result must have id" in {
-                    result.id must beSome[Int]
+                    result.get.id must beSome[Int]
                 }
-                checkFields(result)
+                checkFields(result.get)
             } finally {
-                adapter.delete(result.id.get)
+                adapter.delete(result.get.id.get)
             }
         }
     }
