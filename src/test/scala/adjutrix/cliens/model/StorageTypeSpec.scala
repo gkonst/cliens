@@ -25,8 +25,8 @@ object StorageTypeSpec extends ModelSpec {
 
     "serialize" should {
         var result = StorageTypeSerializer.serialize(new StorageType("Bill", 1))
-        "result must be Some of Map[String, Any]" in {
-            result must beSome[Map[String, Any]]
+        "result must not be empty" in {
+            result must notBeEmpty
         }
         checkPair(result, "id", 1)
         checkPair(result, "name", "Bill")

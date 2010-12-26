@@ -15,5 +15,5 @@ object StorageTypeSerializer extends Serializer[StorageType] {
         new StorageType(name, id)
     }
 
-    def serialize(entity: StorageType) = Some(Map("id" -> entity.id, "name" -> entity.name))
+    def serialize(entity: StorageType) = Map("id" -> entity.id, "name" -> entity.name)
 }

@@ -1,6 +1,6 @@
 package adjutrix.cliens.model.serializer
 
-import adjutrix.cliens.model.{CurrencyType, Category, Storage, Model}
+import adjutrix.cliens.model._
 
 /**
  * Factory for serializers.
@@ -16,6 +16,8 @@ object Serializer {
             CategorySerializer.asInstanceOf[Serializer[T]]
         } else if (cls == classOf[CurrencyType]) {
             CurrencyTypeSerializer.asInstanceOf[Serializer[T]]
+        } else if (cls == classOf[StorageType]) {
+            StorageTypeSerializer.asInstanceOf[Serializer[T]]
         } else {
             throw new UnsupportedOperationException("Serializer for model " + cls + " not found")
         }
@@ -23,9 +25,13 @@ object Serializer {
 }
 
 trait Serializer[T <: Model] {
-    def serialize(entity: T): Option[Map[String, Any]]
+    def serialize(entity: T): Map[String, Any]
 
     def deserialize(data: Map[String, Any]): T
 
-    def getId(data: Map[String, Any]) = data.get("id").get.asInstanceOf[Double].toInt
+    def getId(data: Map[String, Any]) = data.get("id").get match {
+        case x: Int => x
+        case x: Double => x.toInt
+        case x => throw new IllegalArgumentException("Unknown id type : " + x.asInstanceOf[Object].getClass)
+    }
 }

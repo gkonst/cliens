@@ -9,7 +9,7 @@ import adjutrix.cliens.model.Category
  */
 
 object CategorySerializer extends Serializer[Category] {
-    def serialize(entity: Category) = Some(Map("name" -> entity.name, "type" -> entity.categoryType.id, "default_storage_id" -> entity.defaultStorageId))
+    def serialize(entity: Category) = Map("name" -> entity.name, "type" -> entity.categoryType.id, "default_storage_id" -> entity.defaultStorageId)
 
     def deserialize(data: Map[String, Any]) = {
         val id = data.get("id").get.asInstanceOf[Double].toInt

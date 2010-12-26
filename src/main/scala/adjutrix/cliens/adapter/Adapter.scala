@@ -62,18 +62,13 @@ abstract class Adapter[T <: Model](configuration: Configuration) extends Logging
 
     def absoluteBaseUrl = configuration.url + "/" + baseUrl + "/"
 
-    def writeData(connection: HttpURLConnection, data: Option[Map[String, Any]]) {
-        data match {
-            case Some(data) => {
-                connection.setDoOutput(true)
-                val out = new OutputStreamWriter(connection.getOutputStream())
-                val dataEncoded = createData(data)
-                debug("request data : " + dataEncoded)
-                out.write(dataEncoded)
-                out.close
-            }
-            case None => Unit
-        }
+    def writeData(connection: HttpURLConnection, data: Map[String, Any]) {
+        connection.setDoOutput(true)
+        val out = new OutputStreamWriter(connection.getOutputStream())
+        val dataEncoded = createData(data)
+        debug("request data : " + dataEncoded)
+        out.write(dataEncoded)
+        out.close
     }
 
     def createData(data: Map[String, Any]) = data.map((item) => item._1 + "=" + item._2).reduceLeft(_ + "&" + _)
@@ -117,7 +112,7 @@ abstract class Adapter[T <: Model](configuration: Configuration) extends Logging
         }
     }
 
-    def executePost(url: String, data: Option[Map[String, Any]]) = {
+    def executePost(url: String, data: Map[String, Any]) = {
         val connection = getConnection(POST, url)
         writeData(connection, data)
         connection.getResponseCode match {
@@ -129,7 +124,7 @@ abstract class Adapter[T <: Model](configuration: Configuration) extends Logging
         }
     }
 
-    def executePut(url: String, data: Option[Map[String, Any]]) = {
+    def executePut(url: String, data: Map[String, Any]) = {
         val connection = getConnection(PUT, url)
         writeData(connection, data)
         connection.getResponseCode match {

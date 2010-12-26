@@ -10,9 +10,9 @@ import org.specs.Specification
 
 class ModelSpec extends Specification {
 
-    def checkPair(result: Option[Map[String, Any]], key: String, value: Any) {
+    def checkPair(result: Map[String, Any], key: String, value: Any) {
         "result must have " + key + " and equal " + value in {
-            result.get must havePair((key, value))
+            result must havePair((key, value))
         }
     }
 }
