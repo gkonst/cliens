@@ -29,6 +29,10 @@ trait Serializer[T <: Model] {
 
     def deserialize(data: Map[String, Any]): T
 
+    //    def serializeId(entity: T): Map[String, Any] = {
+    //        entity
+    //    }
+
     def getId(data: Map[String, Any]) = data.get("id").get match {
         case x: Int => x
         case x: Double => x.toInt

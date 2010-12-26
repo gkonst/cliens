@@ -7,7 +7,7 @@ package adjutrix.cliens.model
  */
 class Category(var name: String,
                var categoryType: CategoryType.Value,
-               var defaultStorageId: Int = null.asInstanceOf[Int],
+               var defaultStorage: Option[Storage] = None,
                id: Int = null.asInstanceOf[Int]) extends Model(id)
 
 object CategoryType extends Enumeration {
