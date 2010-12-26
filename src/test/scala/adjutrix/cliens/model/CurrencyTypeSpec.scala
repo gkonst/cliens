@@ -1,15 +1,14 @@
 package adjutrix.cliens.model
 
-import org.specs.Specification
 import serializer.CurrencyTypeSerializer
 
 /**
- * Specification for {@link CurrencyTypeSerializer}.
+ * Specification for {@link CurrencyType}.
  *
  * @author Konstantin_Grigoriev
  */
 
-object CurrencyTypeSpec extends Specification {
+object CurrencyTypeSpec extends ModelSpec {
     def checkFields(result: CurrencyType, id: Int, name: String, abbr: String, rate: BigDecimal) {
         "result must have id and equal " + id in {
             result.id must (notBeNull and equalTo(id))
@@ -35,14 +34,9 @@ object CurrencyTypeSpec extends Specification {
         "result must be Some of Map[String, Any]" in {
             result must beSome[Map[String, Any]]
         }
-        def checkPair(key: String, value: Any) {
-            "result must have " + key + " and equal " + value in {
-                result.get must havePair((key, value))
-            }
-        }
-        checkPair("id", 1)
-        checkPair("name", "Dollar")
-        checkPair("abbr", "$")
-        checkPair("rate", "1.0")
+        checkPair(result, "id", 1)
+        checkPair(result, "name", "Dollar")
+        checkPair(result, "abbr", "$")
+        checkPair(result, "rate", "1.0")
     }
 }

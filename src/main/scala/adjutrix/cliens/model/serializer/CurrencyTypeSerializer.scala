@@ -10,7 +10,7 @@ import adjutrix.cliens.model.CurrencyType
 
 object CurrencyTypeSerializer extends Serializer[CurrencyType] {
     def deserialize(data: Map[String, Any]) = {
-        val id = data.get("id").get.asInstanceOf[Double].toInt
+        val id = getId(data)
         val name = data.get("name").get.asInstanceOf[String]
         val abbr = data.get("abbr").get.asInstanceOf[String]
         val rate = BigDecimal(data.get("rate").get.asInstanceOf[String])
