@@ -29,13 +29,26 @@ trait Serializer[T <: Model] {
 
     def deserialize(data: Map[String, Any]): T
 
-    //    def serializeId(entity: T): Map[String, Any] = {
-    //        entity
-    //    }
+    def serializeId(entity: T): Map[String, Any] = {
+        entity.id match {
+            case Some(x) => Map("id" -> x)
+            case None => Map.empty[String, Any]
+        }
+    }
 
-    def getId(data: Map[String, Any]) = data.get("id").get match {
+    def getOldId(data: Map[String, Any]) = data.get("id").get match {
         case x: Int => x
         case x: Double => x.toInt
         case x => throw new IllegalArgumentException("Unknown id type : " + x.asInstanceOf[Object].getClass)
+    }
+
+    def getId(data: Map[String, Any]): Option[Int] = data.get("id") match {
+        case Some(x) => x
+        match {
+            case x: Int => Some(x)
+            case x: Double => Some(x.toInt)
+            case x => throw new IllegalArgumentException("Unknown id type : " + x.asInstanceOf[Object].getClass)
+        }
+        case None => None
     }
 }

@@ -14,13 +14,13 @@ object CategorySerializer extends Serializer[Category] {
 
     def serializeDefaultStorage(entity: Category) = {
         entity.defaultStorage match {
-            case Some(x) => Map("default_storage" -> x.id)
+            case Some(x) => Map("default_storage" -> x.id.get)
             case None => Map.empty[String, Any]
         }
     }
 
     def deserialize(data: Map[String, Any]) = {
-        val id = data.get("id").get.asInstanceOf[Double].toInt
+        val id = getId(data)
         val name = data.get("name").get.asInstanceOf[String]
         val categoryType = data.get("type").get.asInstanceOf[Double].toInt
         val defaultStorage = data.get("default_storage") match {

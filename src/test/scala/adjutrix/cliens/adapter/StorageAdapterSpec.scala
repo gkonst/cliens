@@ -24,7 +24,7 @@ object StorageAdapterSpec extends AdapterSpecification[Storage, StorageAdapter](
     }
 
     def createModel = new Storage(name = "TestStorage",
-        storageType = new StorageType("Bill", 46),
-        currencyType = new CurrencyType("Dollar", "$", 1.0, 1),
+        storageType = new StorageType("Bill", Some(46)),
+        currencyType = new CurrencyType("Dollar", "$", 1.0, Some(1)),
         amount = 0)
 }

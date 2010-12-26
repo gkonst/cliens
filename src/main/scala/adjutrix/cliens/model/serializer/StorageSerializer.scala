@@ -9,7 +9,7 @@ import adjutrix.cliens.model.{StorageType, CurrencyType, Storage}
  */
 object StorageSerializer extends Serializer[Storage] {
     def deserialize(data: Map[String, Any]) = {
-        val id = data.get("id").get.asInstanceOf[Double].toInt
+        val id = getId(data)
         val name = data.get("name").get.asInstanceOf[String]
         val amount = BigDecimal(data.get("amount").get.asInstanceOf[String])
         val storageType = Serializer(classOf[StorageType]).deserialize(data.get("type").get.asInstanceOf[Map[String, Any]])
@@ -17,10 +17,10 @@ object StorageSerializer extends Serializer[Storage] {
         new Storage(name, storageType, currencyType, amount, id)
     }
 
-    def serialize(entity: Storage) = Map("name" -> entity.name,
-        "amount" -> entity.amount.toString,
-        "currency_type" -> entity.currencyType.id,
-        "type" -> entity.storageType.id,
-        "id" -> entity.id)
+    def serialize(entity: Storage) = serializeId(entity) ++
+            Map("name" -> entity.name,
+                "amount" -> entity.amount.toString,
+                "currency_type" -> entity.currencyType.id.get,
+                "type" -> entity.storageType.id.get)
 }
 

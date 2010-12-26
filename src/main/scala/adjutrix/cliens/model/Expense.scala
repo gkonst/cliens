@@ -6,4 +6,4 @@ package adjutrix.cliens.model
  * @author Konstantin_Grigoriev
  */
 
-class Expense(id: Int = null.asInstanceOf[Int]) extends Model(id)
+class Expense(id: Option[Int] = None) extends Model(id)

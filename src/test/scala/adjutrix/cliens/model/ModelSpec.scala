@@ -15,4 +15,10 @@ class ModelSpec extends Specification {
             result must havePair((key, value))
         }
     }
+
+    def checkId(result: Model, id: Int) {
+        "result must have id and equal " + id in {
+            result.id must (beSome[Int] and equalTo(Some(id)))
+        }
+    }
 }

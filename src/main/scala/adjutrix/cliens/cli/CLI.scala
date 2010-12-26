@@ -22,7 +22,10 @@ abstract class CLI[T <: Model](configuration: Configuration) {
     }
 
     def rowSummary(item: T) = {
-        "id -> " + item.id
+        item.id match {
+            case Some(x) => "id -> " + x
+            case None => ""
+        }
     }
 
     def rowFull(item: T) = {

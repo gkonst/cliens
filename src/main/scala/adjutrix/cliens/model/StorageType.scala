@@ -6,4 +6,4 @@ package adjutrix.cliens.model
  * @author Konstantin_Grigoriev
  */
 
-class StorageType(val name: String, id: Int = null.asInstanceOf[Int]) extends Model(id)
+class StorageType(val name: String, id: Option[Int] = None) extends Model(id)

@@ -10,9 +10,7 @@ import serializer.StorageTypeSerializer
 
 object StorageTypeSpec extends ModelSpec {
     def checkFields(result: StorageType, id: Int, name: String) {
-        "result must have id and equal " + id in {
-            result.id must (notBeNull and equalTo(id))
-        }
+        checkId(result, id)
         "result must have name and equal " + name in {
             result.name must (notBeNull and equalTo(name))
         }
@@ -24,11 +22,21 @@ object StorageTypeSpec extends ModelSpec {
     }
 
     "serialize" should {
-        var result = StorageTypeSerializer.serialize(new StorageType("Bill", 1))
-        "result must not be empty" in {
-            result must notBeEmpty
+        "not fail if id is Some" in {
+            var result = StorageTypeSerializer.serialize(new StorageType("Bill", Some(1)))
+            "result must not be empty" in {
+                result must notBeEmpty
+            }
+            checkPair(result, "id", 1)
+            checkPair(result, "name", "Bill")
         }
-        checkPair(result, "id", 1)
-        checkPair(result, "name", "Bill")
+        "not fail if id is None" in {
+            var result = StorageTypeSerializer.serialize(new StorageType("Bill"))
+            "result must not be empty" in {
+                result must notBeEmpty
+            }
+            result must notHaveKey("id")
+            checkPair(result, "name", "Bill")
+        }
     }
 }

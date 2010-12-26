@@ -10,9 +10,7 @@ import serializer.CurrencyTypeSerializer
 
 object CurrencyTypeSpec extends ModelSpec {
     def checkFields(result: CurrencyType, id: Int, name: String, abbr: String, rate: BigDecimal) {
-        "result must have id and equal " + id in {
-            result.id must (notBeNull and equalTo(id))
-        }
+        checkId(result, id)
         "result must have name and equal " + name in {
             result.name must (notBeNull and equalTo(name))
         }
@@ -30,13 +28,25 @@ object CurrencyTypeSpec extends ModelSpec {
     }
 
     "serialize" should {
-        var result = CurrencyTypeSerializer.serialize(new CurrencyType("Dollar", "$", BigDecimal("1.0"), 1))
-        "result must not be empty" in {
-            result must notBeEmpty
+        "not fail if id is Some" in {
+            var result = CurrencyTypeSerializer.serialize(new CurrencyType("Dollar", "$", BigDecimal("1.0"), Some(1)))
+            "result must not be empty" in {
+                result must notBeEmpty
+            }
+            checkPair(result, "id", 1)
+            checkPair(result, "name", "Dollar")
+            checkPair(result, "abbr", "$")
+            checkPair(result, "rate", "1.0")
         }
-        checkPair(result, "id", 1)
-        checkPair(result, "name", "Dollar")
-        checkPair(result, "abbr", "$")
-        checkPair(result, "rate", "1.0")
+        "not fail if id is None" in {
+            var result = CurrencyTypeSerializer.serialize(new CurrencyType("Dollar", "$", BigDecimal("1.0")))
+            "result must not be empty" in {
+                result must notBeEmpty
+            }
+            result must notHaveKey("id")
+            checkPair(result, "name", "Dollar")
+            checkPair(result, "abbr", "$")
+            checkPair(result, "rate", "1.0")
+        }
     }
 }

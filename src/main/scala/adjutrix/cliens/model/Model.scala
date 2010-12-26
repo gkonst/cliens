@@ -5,4 +5,4 @@ package adjutrix.cliens.model
  *
  * @author Konstantin_Grigoriev
  */
-abstract class Model(val id: Int)
+abstract class Model(val id: Option[Int] = None)

@@ -22,8 +22,8 @@ object StorageSpec extends ModelSpec {
         }
     }
 
-    val storageType = new StorageType("Bill", 1)
-    val currencyType = new CurrencyType("Dollar", "$", 1.0, 1)
+    val storageType = new StorageType("Bill", Some(1))
+    val currencyType = new CurrencyType("Dollar", "$", 1.0, Some(1))
 
     "deserialize" should {
         val data = Map("name" -> "Parex", "id" -> 1d, "amount" -> "10.0",
@@ -34,12 +34,24 @@ object StorageSpec extends ModelSpec {
     }
 
     "serialize" should {
-        var result = StorageSerializer.serialize(new Storage("Bill", storageType, currencyType, 10.0, 1))
-        "result must not be empty" in {
-            result must notBeEmpty
+        "not fail if id is Some" in {
+            var result = StorageSerializer.serialize(new Storage("Bill", storageType, currencyType, 10.0, Some(1)))
+            "result must not be empty" in {
+                result must notBeEmpty
+            }
+            checkPair(result, "id", 1)
+            checkPair(result, "name", "Bill")
+            checkPair(result, "amount", "10.0")
         }
-        checkPair(result, "id", 1)
-        checkPair(result, "name", "Bill")
-        checkPair(result, "amount", "10.0")
+        "not fail if id is None" in {
+            var result = StorageSerializer.serialize(new Storage("Bill", storageType, currencyType, 10.0))
+            "result must not be empty" in {
+                result must notBeEmpty
+            }
+            result must notHaveKey("id")
+            checkPair(result, "name", "Bill")
+            checkPair(result, "amount", "10.0")
+        }
+
     }
 }

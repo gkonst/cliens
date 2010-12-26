@@ -9,4 +9,4 @@ class Storage(var name: String,
               val storageType: StorageType,
               val currencyType: CurrencyType,
               var amount: BigDecimal = 0,
-              id: Int = null.asInstanceOf[Int]) extends Model(id)
+              id: Option[Int] = None) extends Model(id)

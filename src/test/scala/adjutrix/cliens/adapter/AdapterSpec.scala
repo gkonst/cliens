@@ -44,7 +44,7 @@ object AdapterSpec extends Specification with TestConfiguration {
                 result must notBeNull
             }
             "result is Model with id equal to " + fixtureId in {
-                result.asInstanceOf[Model].id must (notBeNull and beEqualTo(fixtureId))
+                result.id must (beSome[Int] and beEqualTo(Some(fixtureId)))
             }
             checkFields(result)
             "result is Null if nothing found" in {
@@ -60,11 +60,11 @@ object AdapterSpec extends Specification with TestConfiguration {
                     result must notBeNull
                 }
                 "result must have id" in {
-                    result.asInstanceOf[Model].id must notBeNull
+                    result.id must beSome[Int]
                 }
                 checkFields(result)
             } finally {
-                adapter.delete(result.id)
+                adapter.delete(result.id.get)
             }
         }
     }

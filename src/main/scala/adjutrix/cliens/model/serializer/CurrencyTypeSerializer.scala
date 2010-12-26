@@ -20,5 +20,5 @@ object CurrencyTypeSerializer extends Serializer[CurrencyType] {
             id = id)
     }
 
-    def serialize(entity: CurrencyType) = Map("name" -> entity.name, "abbr" -> entity.abbr, "rate" -> entity.rate.toString, "id" -> entity.id)
+    def serialize(entity: CurrencyType) = serializeId(entity) ++ Map("name" -> entity.name, "abbr" -> entity.abbr, "rate" -> entity.rate.toString)
 }
