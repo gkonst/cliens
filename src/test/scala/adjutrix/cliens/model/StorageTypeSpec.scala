@@ -23,7 +23,7 @@ object StorageTypeSpec extends ModelSpec {
 
     "serialize" should {
         "not fail if id is Some" in {
-            var result = StorageTypeSerializer.serialize(new StorageType("Bill", Some(1)))
+            val result = StorageTypeSerializer.serialize(new StorageType("Bill", Some(1)))
             "result must not be empty" in {
                 result must notBeEmpty
             }
@@ -31,7 +31,7 @@ object StorageTypeSpec extends ModelSpec {
             checkPair(result, "name", "Bill")
         }
         "not fail if id is None" in {
-            var result = StorageTypeSerializer.serialize(new StorageType("Bill"))
+            val result = StorageTypeSerializer.serialize(new StorageType("Bill"))
             "result must not be empty" in {
                 result must notBeEmpty
             }

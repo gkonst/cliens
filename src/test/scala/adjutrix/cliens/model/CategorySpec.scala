@@ -8,7 +8,6 @@ import serializer.{CurrencyTypeSerializer, StorageTypeSerializer, CategorySerial
  *
  * @author Konstantin_Grigoriev
  */
-
 object CategorySpec extends ModelSpec {
     def checkFields(result: Category, id: Int, name: String, categoryType: CategoryType) {
         checkId(result, id)
@@ -41,7 +40,7 @@ object CategorySpec extends ModelSpec {
 
     "serialize" should {
         "not fail if id is Some" in {
-            var result = CategorySerializer.serialize(new Category("Food", CategoryType.INCOME, id = Some(1)))
+            val result = CategorySerializer.serialize(new Category("Food", CategoryType.INCOME, id = Some(1)))
             "result must not be empty" in {
                 result must notBeEmpty
             }
@@ -50,7 +49,7 @@ object CategorySpec extends ModelSpec {
             checkPair(result, "type", CategoryType.INCOME.id)
         }
         "not fail if id is None" in {
-            var result = CategorySerializer.serialize(new Category("Food", CategoryType.INCOME))
+            val result = CategorySerializer.serialize(new Category("Food", CategoryType.INCOME))
             "result must not be empty" in {
                 result must notBeEmpty
             }
@@ -59,8 +58,7 @@ object CategorySpec extends ModelSpec {
             checkPair(result, "type", CategoryType.INCOME.id)
         }
         "not fail if id is None and defaultStorage is Some" in {
-            val storage = new Storage("Parex", StorageSpec.storageType, StorageSpec.currencyType, 10.0, Some(2))
-            val result = CategorySerializer.serialize(new Category("Food", CategoryType.INCOME, Some(storage)))
+            val result = CategorySerializer.serialize(new Category("Food", CategoryType.INCOME, Some(StorageSpec.storage(Some(2)))))
             "result must not be empty" in {
                 result must notBeEmpty
             }

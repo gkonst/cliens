@@ -17,39 +17,44 @@ object StorageSpec extends ModelSpec {
         "result must have currencyType" in {
             result.currencyType must notBeNull
         }
-        "result must have amount" in {
-            result.amount must notBeNull
+        "result must have amount equal " + amount in {
+            result.amount must beEqualTo(amount)
+        }
+        "result must have name equal " + name in {
+            result.name must beEqualTo(name)
         }
     }
 
     val storageType = new StorageType("Bill", Some(1))
     val currencyType = new CurrencyType("Dollar", "$", 1.0, Some(1))
 
+    def storage(id: Option[Int] = Some(1)) = new Storage("Parex", storageType, currencyType, 10.0, id)
+
     "deserialize" should {
         val data = Map("name" -> "Parex", "id" -> 1d, "amount" -> "10.0",
             "type" -> Serializer(classOf[StorageType]).serialize(storageType),
             "currency_type" -> Serializer(classOf[CurrencyType]).serialize(currencyType))
         val result = StorageSerializer.deserialize(data)
-        checkFields(result, 1, "Bill", 10.0)
+        checkFields(result, 1, "Parex", 10.0)
     }
 
     "serialize" should {
         "not fail if id is Some" in {
-            var result = StorageSerializer.serialize(new Storage("Bill", storageType, currencyType, 10.0, Some(1)))
+            val result = StorageSerializer.serialize(storage())
             "result must not be empty" in {
                 result must notBeEmpty
             }
             checkPair(result, "id", 1)
-            checkPair(result, "name", "Bill")
+            checkPair(result, "name", "Parex")
             checkPair(result, "amount", "10.0")
         }
         "not fail if id is None" in {
-            var result = StorageSerializer.serialize(new Storage("Bill", storageType, currencyType, 10.0))
+            val result = StorageSerializer.serialize(storage(None))
             "result must not be empty" in {
                 result must notBeEmpty
             }
             result must notHaveKey("id")
-            checkPair(result, "name", "Bill")
+            checkPair(result, "name", "Parex")
             checkPair(result, "amount", "10.0")
         }
 

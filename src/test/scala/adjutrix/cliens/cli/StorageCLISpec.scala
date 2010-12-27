@@ -11,8 +11,8 @@ import adjutrix.cliens.model.{StorageSpec, Storage}
 
 object StorageCLISpec extends CLISpec[Storage]("storage") {
     def givenModel = {
-        new Storage("Parex", StorageSpec.storageType, StorageSpec.currencyType, 10, Some(5))
+        StorageSpec.storage(Some(5))
     }
 
-    def expectedRowSummary = "id -> 5, name -> Parex, amount -> 10, currency -> Dollar, type -> Bill"
+    def expectedRowSummary = "id -> 5, name -> Parex, amount -> 10.0, currency -> Dollar, type -> Bill"
 }

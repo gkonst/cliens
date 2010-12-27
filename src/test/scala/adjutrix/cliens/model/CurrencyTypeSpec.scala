@@ -29,7 +29,7 @@ object CurrencyTypeSpec extends ModelSpec {
 
     "serialize" should {
         "not fail if id is Some" in {
-            var result = CurrencyTypeSerializer.serialize(new CurrencyType("Dollar", "$", BigDecimal("1.0"), Some(1)))
+            val result = CurrencyTypeSerializer.serialize(new CurrencyType("Dollar", "$", BigDecimal("1.0"), Some(1)))
             "result must not be empty" in {
                 result must notBeEmpty
             }
@@ -39,7 +39,7 @@ object CurrencyTypeSpec extends ModelSpec {
             checkPair(result, "rate", "1.0")
         }
         "not fail if id is None" in {
-            var result = CurrencyTypeSerializer.serialize(new CurrencyType("Dollar", "$", BigDecimal("1.0")))
+            val result = CurrencyTypeSerializer.serialize(new CurrencyType("Dollar", "$", BigDecimal("1.0")))
             "result must not be empty" in {
                 result must notBeEmpty
             }
