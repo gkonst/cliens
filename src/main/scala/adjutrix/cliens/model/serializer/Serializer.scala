@@ -36,12 +36,6 @@ trait Serializer[T <: Model] {
         }
     }
 
-    def getOldId(data: Map[String, Any]) = data.get("id").get match {
-        case x: Int => x
-        case x: Double => x.toInt
-        case x => throw new IllegalArgumentException("Unknown id type : " + x.asInstanceOf[Object].getClass)
-    }
-
     def getId(data: Map[String, Any]): Option[Int] = data.get("id") match {
         case Some(x) => x
         match {
