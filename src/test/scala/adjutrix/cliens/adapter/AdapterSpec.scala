@@ -5,6 +5,11 @@ import adjutrix.cliens.model.Model
 import adjutrix.cliens.conf.TestConfiguration
 
 
+/**
+ * Specification for {@link Adapter} class and its subclasses.
+ *
+ * @author konstantin_grigoriev
+ */
 object AdapterSpec extends Specification with TestConfiguration {
 
     //    "createData should return valid string" in {
