@@ -10,10 +10,15 @@ import adjutrix.cliens.model.Model
  */
 abstract class CLI[T <: Model](configuration: Configuration) {
 
+    def header: String = String.format("%-5s", "Id")
+
+    val headerLine = "".padTo(header.size, "-").reduceLeft(_ + "" + _)
+
     def list(items: List[T]) =
         items.foreach(item => row(item))
 
     def optionRow(item: Option[T]) {
+        printHeader
         item match {
             case Some(x) => row(x)
             case None => println("Not found")
@@ -30,7 +35,7 @@ abstract class CLI[T <: Model](configuration: Configuration) {
 
     def rowSummary(item: T) = {
         item.id match {
-            case Some(x) => "id -> " + x
+            case Some(x) => String.format("%-5s", x.toString)
             case None => ""
         }
     }
@@ -39,9 +44,21 @@ abstract class CLI[T <: Model](configuration: Configuration) {
         rowSummary(item)
     }
 
-    def optionList(data: Option[List[T]]) =
+    def printHeaderLine: Unit = {
+        println(headerLine)
+    }
+
+    def printHeader: Unit = {
+        printHeaderLine
+        println(header)
+        printHeaderLine
+    }
+
+    def optionList(data: Option[List[T]]) = {
+        printHeader
         data match {
             case Some(items) => list(items)
             case None => println("No data found")
         }
+    }
 }

@@ -2,6 +2,7 @@ package adjutrix.cliens.cli
 
 import CLISpec.CLISpec
 import adjutrix.cliens.model.{StorageSpec, Storage}
+import collection.immutable.List
 
 /**
  * Specification for {@link StorageCLI}.
@@ -14,5 +15,7 @@ object StorageCLISpec extends CLISpec[Storage]("storage") {
         StorageSpec.storage(Some(5))
     }
 
-    def expectedRowSummary = "id -> 5, name -> Parex, amount -> 10.0, currency -> Dollar, type -> Bill"
+    def expectedRowSummaryValues = List("5", "Parex", "10.0", "$", "Bill")
+
+    def expectedHeaderValues = List("Id", "Name", "Amount", "Type")
 }
