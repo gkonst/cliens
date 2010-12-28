@@ -38,9 +38,12 @@ object CategorySpec extends ModelSpec {
         }
     }
 
+    def category(id: Option[Int] = None, defaultStorage: Option[Storage] = None) = new Category("Food", CategoryType.INCOME,
+        defaultStorage, id)
+
     "serialize" should {
         "not fail if id is Some" in {
-            val result = CategorySerializer.serialize(new Category("Food", CategoryType.INCOME, id = Some(1)))
+            val result = CategorySerializer.serialize(category(Some(1)))
             "result must not be empty" in {
                 result must notBeEmpty
             }
@@ -49,7 +52,7 @@ object CategorySpec extends ModelSpec {
             checkPair(result, "type", CategoryType.INCOME.id)
         }
         "not fail if id is None" in {
-            val result = CategorySerializer.serialize(new Category("Food", CategoryType.INCOME))
+            val result = CategorySerializer.serialize(category())
             "result must not be empty" in {
                 result must notBeEmpty
             }
@@ -58,7 +61,7 @@ object CategorySpec extends ModelSpec {
             checkPair(result, "type", CategoryType.INCOME.id)
         }
         "not fail if id is None and defaultStorage is Some" in {
-            val result = CategorySerializer.serialize(new Category("Food", CategoryType.INCOME, Some(StorageSpec.storage(Some(2)))))
+            val result = CategorySerializer.serialize(category(None, Some(StorageSpec.storage(Some(2)))))
             "result must not be empty" in {
                 result must notBeEmpty
             }

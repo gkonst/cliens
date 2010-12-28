@@ -9,5 +9,13 @@ import adjutrix.cliens.model.Category
  * @author konstantin_grigoriev
  */
 class CategoryCLI(configuration: Configuration) extends CLI[Category](configuration: Configuration) {
-    val summary = Array("id", "name", "type", "default_storage.name")
+    override def header = super.header + String.format("%-10s %-20s %-20s", "Type", "Name", "Default Storage")
+
+    override def rowSummary(item: Category) = {
+        super.rowSummary(item) + String.format("%-10s %-20s %-20s", item.categoryType, item.name,
+            item.defaultStorage match {
+                case Some(x) => x.name
+                case None => None
+            })
+    }
 }
