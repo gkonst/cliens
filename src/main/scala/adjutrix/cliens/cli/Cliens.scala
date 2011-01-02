@@ -36,8 +36,8 @@ object Cliens {
         })
         if (parser.parse(args)) {
             val adapter = AdapterFactory(config, config.entity)
-            val printer = CLIFactory(config, config.entity)
-            printer.optionList(adapter.findAll)
+            val cli = CLIFactory(config, config.entity)
+            cli.optionList(adapter.findAll)
         }
     }
 
@@ -51,8 +51,8 @@ object Cliens {
         })
         if (parser.parse(args)) {
             val adapter = AdapterFactory(config, config.entity)
-            val printer = CLIFactory(config, config.entity)
-            printer.optionRow(adapter.findById(id))
+            val cli = CLIFactory(config, config.entity)
+            cli.optionRow(adapter.findById(id))
         }
     }
 }
