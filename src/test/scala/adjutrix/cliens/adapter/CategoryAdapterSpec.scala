@@ -11,7 +11,7 @@ import adjutrix.cliens.model.{Model, CategoryType, Category}
 object CategoryAdapterSpec extends AdapterSpecification[Category, CategoryAdapter]("category") {
 
 
-    override val fixtureId = 40
+    override val fixtureId = 4
 
     def checkFields(result: Category) = {
         "result must have name" in {
