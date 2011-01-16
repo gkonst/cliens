@@ -11,5 +11,5 @@ import adjutrix.cliens.model.Category
 class CategoryAdapter(configuration: Configuration) extends Adapter[Category](configuration: Configuration) {
     val baseUrl = "category"
 
-    def findExpenseCategories = executeGet(absoluteBaseUrl, Option(Map[String, Any]("type" -> 0)))
+    def findExpenseCategories = find(Option(Map[String, Any]("type" -> 0)))
 }

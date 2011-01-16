@@ -29,16 +29,11 @@ abstract class Adapter[T <: Model](configuration: Configuration) extends Logging
 
     import Method._
 
-    def findAll(): Option[List[T]] = executeGet(absoluteBaseUrl, None)
+    def findAll(): Option[List[T]] = baseConvertResponse(executeGetMultiResult(absoluteBaseUrl, None))
 
-    def findById(id: Int): Option[T] = executeGet(absoluteBaseUrl + String.valueOf(id), None) match {
-        case Some(x) => x.size match {
-            case 1 => Some(x.head)
-            case 0 => None
-            case _ => throw new IllegalArgumentException("Multi result returned")
-        }
-        case None => None
-    }
+    def find(data: Option[Map[String, Any]]): Option[List[T]] = baseConvertResponse(executeGetMultiResult(absoluteBaseUrl, data))
+
+    def findById(id: Int): Option[T] = executeGetSingleResult(absoluteBaseUrl + String.valueOf(id), None).map(serializer.deserialize)
 
     def delete(id: Int) {
         debug(" > delete..." + id)
@@ -55,10 +50,6 @@ abstract class Adapter[T <: Model](configuration: Configuration) extends Logging
         debug(" < create...Ok " + data)
         data
     }
-
-    //    def convertRequestData(entity: T): Option[Map[String, Any]]
-    //
-    //    def convertResponseData(data: Map[String, Any]): T
 
     def absoluteBaseUrl = configuration.url + "/" + baseUrl + "/"
 
@@ -87,10 +78,22 @@ abstract class Adapter[T <: Model](configuration: Configuration) extends Logging
         connection
     }
 
-    def executeGet(url: String, data: Option[Map[String, Any]]): Option[List[T]] = {
+    def executeGetSingleResult(url: String, data: Option[Map[String, Any]]): Option[Map[String, Any]] = {
         val connection = getConnection(GET, url + createQueryParameters(data))
         connection.getResponseCode match {
-            case HttpURLConnection.HTTP_OK => baseConvertResponse(processJSONStream(connection.getInputStream))
+            case HttpURLConnection.HTTP_OK => processJSONObject(connection.getInputStream)
+            case HttpURLConnection.HTTP_NOT_FOUND => None
+            case code => {
+                throw new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString)
+            }
+        }
+    }
+
+    def executeGetMultiResult(url: String, data: Option[Map[String, Any]]): Option[List[Map[String, Any]]] = {
+        val connection = getConnection(GET, url + createQueryParameters(data))
+        connection.getResponseCode match {
+            case HttpURLConnection.HTTP_OK => processJSONList(connection.getInputStream)
+            case HttpURLConnection.HTTP_NOT_FOUND => None
             case code => {
                 throw new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString)
             }
@@ -112,12 +115,12 @@ abstract class Adapter[T <: Model](configuration: Configuration) extends Logging
         }
     }
 
-    def executePost(url: String, data: Map[String, Any]) = {
+    def executePost(url: String, data: Map[String, Any]): Option[Map[String, Any]] = {
         val connection = getConnection(POST, url)
         writeData(connection, data)
         connection.getResponseCode match {
-            case HttpURLConnection.HTTP_OK => processJSONStream(connection.getInputStream)
-            case HttpURLConnection.HTTP_BAD_REQUEST => throw new ValidationException(processJSONStream(connection.getErrorStream))
+            case HttpURLConnection.HTTP_OK => processJSONObject(connection.getInputStream)
+            case HttpURLConnection.HTTP_BAD_REQUEST => throw new ValidationException(processJSONList(connection.getErrorStream))
             case code => {
                 throw new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString)
             }
@@ -128,18 +131,25 @@ abstract class Adapter[T <: Model](configuration: Configuration) extends Logging
         val connection = getConnection(PUT, url)
         writeData(connection, data)
         connection.getResponseCode match {
-            case HttpURLConnection.HTTP_OK => processJSONStream(connection.getInputStream)
-            case HttpURLConnection.HTTP_BAD_REQUEST => throw new ValidationException(processJSONStream(connection.getErrorStream))
+            case HttpURLConnection.HTTP_OK => processJSONObject(connection.getInputStream)
+            case HttpURLConnection.HTTP_BAD_REQUEST => throw new ValidationException(processJSONList(connection.getErrorStream))
             case code => {
                 throw new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString)
             }
         }
     }
 
-    def processJSONStream(stream: InputStream) = processJSON(fromInputStream(stream).getLines.mkString)
+    def parseJSON(stream: InputStream): Option[Any] = {
+        parseFull(fromInputStream(stream).getLines.mkString)
+    }
 
-    def processJSON(input: String) = parseFull(input).asInstanceOf[Option[List[Map[String, Any]]]]
+    def processJSONList(stream: InputStream): Option[List[Map[String, Any]]] = {
+        parseJSON(stream).asInstanceOf[Option[List[Map[String, Any]]]]
+    }
 
+    def processJSONObject(stream: InputStream): Option[Map[String, Any]] = {
+        parseJSON(stream).asInstanceOf[Option[Map[String, Any]]]
+    }
 }
 
 /**
@@ -148,6 +158,6 @@ abstract class Adapter[T <: Model](configuration: Configuration) extends Logging
  *
  * @author konstantin_grigoriev
  */
-class ValidationException(errors: Option[Any]) extends Exception {
+class ValidationException(errors: Option[List[Map[String, Any]]]) extends Exception {
     override def getMessage = "ValidationException : " + errors
 }
