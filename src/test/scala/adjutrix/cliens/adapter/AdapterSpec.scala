@@ -24,7 +24,7 @@ object AdapterSpec extends Specification with TestConfiguration {
      */
     abstract class AdapterSpecification[M <: Model, T <: Adapter[M]](adapterName: String) extends Specification with TestConfiguration {
 
-        val fixtureId = 10
+        val fixtureId = 1
         val unknownId = 0
 
         val adapter = AdapterFactory(conf, adapterName).asInstanceOf[T]
