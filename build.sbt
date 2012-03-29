@@ -8,10 +8,19 @@ scalaVersion := "2.8.1"
 
 // Add multiple dependencies
 libraryDependencies ++= Seq(
-    "commons-codec" % "commons-codec" % "1.4",
-    "org.scala-tools.testing" %% "specs" % "1.6.6" % "test",
-    "org.mockito" % "mockito-all" % "1.8.5" % "test"
+    "commons-codec" % "commons-codec" % "1.6",
+    "org.scala-tools.testing" %% "specs" % "1.6.6" % "it,test",
+    "org.mockito" % "mockito-all" % "1.9.0" % "it,test"
 )
+
+
+testOptions in IntegrationTest += Tests.Setup( () => {
+    "sh setup_it.sh" !
+})
+
+testOptions in IntegrationTest += Tests.Cleanup( () => {
+    "sh cleanup_it.sh" !
+})
 
 parallelExecution in Test := false
 
