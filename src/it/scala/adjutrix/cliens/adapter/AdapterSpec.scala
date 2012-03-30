@@ -1,11 +1,13 @@
 package adjutrix.cliens.adapter
 
 import org.specs2.mutable.Specification
-import adjutrix.cliens.conf.TestConfiguration1
 import adjutrix.cliens.model.Model
 import org.specs2.specification.Example
+import adjutrix.cliens.conf.Configuration
 
-abstract class AdapterSpec[M <: Model, T <: Adapter[M]](adapterName: String) extends Specification with TestConfiguration1 {
+abstract class AdapterSpec[M <: Model, T <: Adapter[M]](adapterName: String) extends Specification {
+  Configuration.baseDir = "target"
+  val conf = Configuration.load
   val fixtureId = 1
   val unknownId = 0
   val adapter = AdapterFactory(conf, adapterName).asInstanceOf[T]
