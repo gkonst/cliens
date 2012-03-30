@@ -6,7 +6,7 @@ package adjutrix.cliens.conf
  *
  * @author Konstantin_Grigoriev
  */
-trait TestConfiguration {
+trait TestConfiguration1 {
     Configuration.baseDir = "target"
     val conf = Configuration.load
 }
