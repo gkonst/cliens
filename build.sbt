@@ -17,7 +17,7 @@ libraryDependencies ++= Seq(
 
 selectedProfile := Profile.dev
 
-testOptions in Test <++= (name, selectedProfile) map {
+testOptions in IntegrationTest <++= (name, selectedProfile) map {
   (n, profile) =>
     profile match {
       case Some(Profile.ci) => Seq(
