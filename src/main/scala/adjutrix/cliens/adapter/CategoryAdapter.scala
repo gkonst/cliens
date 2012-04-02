@@ -8,8 +8,8 @@ import adjutrix.cliens.model.Category
  *
  * @author konstantin_grigoriev
  */
-class CategoryAdapter(configuration: Configuration) extends Adapter[Category](configuration: Configuration) {
-    val baseUrl = "category"
+class CategoryAdapter(implicit configuration: Configuration) extends Adapter[Category](configuration: Configuration) {
+  val baseUrl = "category"
 
-    def findExpenseCategories = find(Option(Map[String, Any]("type" -> 0)))
+  def findExpenseCategories = find(Option(Map[String, Any]("type" -> 0)))
 }

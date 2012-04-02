@@ -9,10 +9,10 @@ import adjutrix.cliens.model.Model
  * @author konstantin_grigoriev
  */
 object AdapterFactory {
-    def apply(configuration: Configuration, adapter: String): Adapter[Model] = adapter match {
-        case "storage" => new StorageAdapter(configuration).asInstanceOf[Adapter[Model]]
-        case "category" => new CategoryAdapter(configuration).asInstanceOf[Adapter[Model]]
-        case "expense" => new ExpenseAdapter(configuration).asInstanceOf[Adapter[Model]]
-        case _ => throw new UnsupportedOperationException("Unknown adapter : " + adapter)
-    }
+  def apply(implicit configuration: Configuration, adapter: String): Adapter[Model] = adapter match {
+    case "storage" => new StorageAdapter().asInstanceOf[Adapter[Model]]
+    case "category" => new CategoryAdapter().asInstanceOf[Adapter[Model]]
+    case "expense" => new ExpenseAdapter().asInstanceOf[Adapter[Model]]
+    case _ => throw new UnsupportedOperationException("Unknown adapter : " + adapter)
+  }
 }

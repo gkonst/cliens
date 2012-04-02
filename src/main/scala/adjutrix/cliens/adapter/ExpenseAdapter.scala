@@ -8,6 +8,6 @@ import adjutrix.cliens.model.Model
  *
  * @author konstantin_grigoriev
  */
-class ExpenseAdapter(configuration: Configuration) extends Adapter[Model](configuration: Configuration) {
-    val baseUrl = "expense"
+class ExpenseAdapter(implicit configuration: Configuration) extends Adapter[Model](configuration: Configuration) {
+  val baseUrl = "expense"
 }

@@ -8,6 +8,6 @@ import adjutrix.cliens.model.Storage
  *
  * @author konstantin_grigoriev
  */
-class StorageAdapter(configuration: Configuration) extends Adapter[Storage](configuration: Configuration) {
-    val baseUrl = "storage"
+class StorageAdapter(implicit configuration: Configuration) extends Adapter[Storage](configuration: Configuration) {
+  val baseUrl = "storage"
 }

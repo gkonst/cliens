@@ -19,6 +19,7 @@ libraryDependencies ++= Seq(
 selectedProfile := Profile.dev
 
 testOptions in Test += Tests.Argument("console", "junitxml")
+
 testOptions in IntegrationTest += Tests.Argument("console", "junitxml")
 
 testOptions in IntegrationTest <++= (name, selectedProfile) map {
@@ -32,7 +33,7 @@ testOptions in IntegrationTest <++= (name, selectedProfile) map {
           "sh cleanup_it.sh".!
         }))
       case _ => Seq(Tests.Setup(() => {
-        println("current profile : " + profile)
+        printf("current profile : %s", profile)
       }))
     }
 }
