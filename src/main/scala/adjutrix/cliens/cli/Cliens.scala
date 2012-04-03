@@ -1,8 +1,8 @@
 package adjutrix.cliens.cli
 
-import org.github.scopt.OptionParser
 import adjutrix.cliens.conf.Configuration
 import adjutrix.cliens.adapter.AdapterFactory
+import scopt.mutable.OptionParser
 
 object Cliens {
   val config = Configuration.load

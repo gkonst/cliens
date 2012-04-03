@@ -10,6 +10,7 @@ scalaVersion := "2.9.1"
 
 libraryDependencies ++= Seq(
   "commons-codec" % "commons-codec" % "1.6",
+  "com.github.scopt" %% "scopt" % "2.0.0",
   "org.scala-tools.testing" %% "specs" % "1.6.9" % "it,test",
   "org.specs2" %% "specs2" % "1.8.2" % "it,test",
   "org.mockito" % "mockito-all" % "1.9.0" % "it,test",
@@ -17,6 +18,8 @@ libraryDependencies ++= Seq(
 )
 
 selectedProfile := Profile.dev
+
+seq(ScctPlugin.scctSettings: _*)
 
 testOptions in Test += Tests.Argument("console", "junitxml")
 
