@@ -11,8 +11,9 @@ scalaVersion := "2.9.1"
 libraryDependencies ++= Seq(
   "commons-codec" % "commons-codec" % "1.6",
   "com.github.scopt" %% "scopt" % "2.0.0",
+  "net.liftweb" %% "lift-json" % "2.4",
   "org.scala-tools.testing" %% "specs" % "1.6.9" % "it,test",
-  "org.specs2" %% "specs2" % "1.8.2" % "it,test",
+  "org.specs2" %% "specs2" % "1.9" % "it,test",
   "org.mockito" % "mockito-all" % "1.9.0" % "it,test",
   "junit" % "junit" % "4.10" % "it,test"
 )
