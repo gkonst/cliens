@@ -5,17 +5,17 @@ import net.liftweb.json.JsonAST.{JDouble, JInt, JValue}
 import net.liftweb.json._
 
 object JSONSerializer {
-  def apply[T <: Model](cls: Class[T]): JSONSerializer[T] = {
+  def apply[T <: Model, S <: JSONSerializer[T]](cls: Class[T]): S = {
     if (cls == classOf[Storage]) {
-      StorageSerializer.asInstanceOf[JSONSerializer[T]]
+      StorageSerializer.asInstanceOf[S]
     } else if (cls == classOf[Category]) {
-      CategorySerializer.asInstanceOf[JSONSerializer[T]]
+      CategorySerializer.asInstanceOf[S]
     } else if (cls == classOf[CurrencyType]) {
-      CurrencyTypeSerializer.asInstanceOf[JSONSerializer[T]]
+      CurrencyTypeSerializer.asInstanceOf[S]
     } else if (cls == classOf[StorageType]) {
-      StorageTypeSerializer.asInstanceOf[JSONSerializer[T]]
+      StorageTypeSerializer.asInstanceOf[S]
     } else {
-      throw new UnsupportedOperationException("JSONSerializer for model " + cls + " not found")
+      throw new UnsupportedOperationException("Serializer for model " + cls + " not found")
     }
   }
 }
