@@ -1,24 +1,12 @@
 package adjutrix.cliens.model
 
-import org.specs.Specification
+import org.specs2.mutable.Specification
 
-/**
- * Base class for specifying models.
- *
- * @author Konstantin_Grigoriev
- */
+abstract class ModelSpec extends Specification {
 
-class ModelSpec extends Specification {
-
-    def checkPair(result: Map[String, Any], key: String, value: Any) {
-        "result must have " + key + " and equal " + value in {
-            result must havePair((key, value))
-        }
+  def modelShouldHaveId(result: Model, id: Int) = {
+    "result must have id and equal " + id in {
+      result.id must (beSome[Int] and equalTo(Some(id)))
     }
-
-    def checkId(result: Model, id: Int) {
-        "result must have id and equal " + id in {
-            result.id must (beSome[Int] and equalTo(Some(id)))
-        }
-    }
+  }
 }
