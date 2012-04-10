@@ -1,6 +1,5 @@
 package adjutrix.cliens.adapter
 
-import org.apache.commons.codec.binary.Base64
 import java.net.{HttpURLConnection, URL}
 import scala.io.Source.fromInputStream
 import adjutrix.cliens.util.Logging
@@ -10,6 +9,7 @@ import adjutrix.cliens.model.Model
 import java.lang.reflect.ParameterizedType
 import adjutrix.cliens.model.serializer.JSONSerializer
 import io.Source
+import net.iharder.Base64
 
 /**
  * Base adapter implementation. Encapsulates core CRUD methods for working with Adjutrix API.
@@ -18,7 +18,7 @@ import io.Source
  */
 abstract class Adapter[T <: Model](configuration: Configuration) extends Logging {
   val baseUrl: String
-  val auth = "Basic " + new String(Base64.encodeBase64((configuration.username + ":" + configuration.password).getBytes))
+  val auth = "Basic " + Base64.encodeBytes((configuration.username + ":" + configuration.password).getBytes)
   val modelClass = this.getClass.getGenericSuperclass.asInstanceOf[ParameterizedType].getActualTypeArguments.head.asInstanceOf[Class[T]]
   val serializer: JSONSerializer[T] = JSONSerializer(modelClass)
 

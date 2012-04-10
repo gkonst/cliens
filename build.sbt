@@ -9,7 +9,7 @@ organization := "Konstantin_Grigoriev"
 scalaVersion := "2.9.1"
 
 libraryDependencies ++= Seq(
-  "commons-codec" % "commons-codec" % "1.6",
+  "net.iharder" % "base64" % "2.3.8",
   "com.github.scopt" %% "scopt" % "2.0.0",
   "net.liftweb" %% "lift-json" % "2.4",
   "org.scala-tools.testing" %% "specs" % "1.6.9" % "it,test",
