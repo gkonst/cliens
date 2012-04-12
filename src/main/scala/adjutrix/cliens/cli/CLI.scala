@@ -10,55 +10,56 @@ import adjutrix.cliens.model.Model
  */
 abstract class CLI[T <: Model](configuration: Configuration) {
 
-    def header: String = String.format("%-5s", "Id")
+  def header: String = String.format("%-5s", "Id")
 
-    val headerLine = "".padTo(header.size, "-").reduceLeft(_ + "" + _)
+  val headerLine = "".padTo(header.size, "-").reduceLeft(_ + "" + _)
 
-    def list(items: List[T]) =
-        items.foreach(item => row(item))
+  def list(items: Seq[T]) {
+    items.foreach(item => row(item))
+  }
 
-    def optionRow(item: Option[T]) {
-        printHeader
-        item match {
-            case Some(x) => row(x)
-            case None => println("Not found")
-        }
+  def optionRow(item: Option[T]) {
+    printHeader()
+    item match {
+      case Some(x) => row(x)
+      case None => println("Not found")
     }
+  }
 
-    def row(item: T) {
-        if (configuration.showFull) {
-            println(rowFull(item))
-        } else {
-            println(rowSummary(item))
-        }
+  def row(item: T) {
+    if (configuration.showFull) {
+      println(rowFull(item))
+    } else {
+      println(rowSummary(item))
     }
+  }
 
-    def rowSummary(item: T) = {
-        item.id match {
-            case Some(x) => String.format("%-5s", x.toString)
-            case None => ""
-        }
+  def rowSummary(item: T) = {
+    item.id match {
+      case Some(x) => String.format("%-5s", x.toString)
+      case None => ""
     }
+  }
 
-    def rowFull(item: T) = {
-        rowSummary(item)
-    }
+  def rowFull(item: T) = {
+    rowSummary(item)
+  }
 
-    def printHeaderLine: Unit = {
-        println(headerLine)
-    }
+  def printHeaderLine() {
+    println(headerLine)
+  }
 
-    def printHeader: Unit = {
-        printHeaderLine
-        println(header)
-        printHeaderLine
-    }
+  def printHeader() {
+    printHeaderLine()
+    println(header)
+    printHeaderLine()
+  }
 
-    def optionList(data: Option[List[T]]) = {
-        printHeader
-        data match {
-            case Some(items) => list(items)
-            case None => println("No data found")
-        }
+  def optionList(data: Option[Seq[T]]) {
+    printHeader()
+    data match {
+      case Some(items) => list(items)
+      case None => println("No data found")
     }
+  }
 }

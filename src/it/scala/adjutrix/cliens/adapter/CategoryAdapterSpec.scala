@@ -7,7 +7,7 @@ class CategoryAdapterSpec extends AdapterSpec[Category, CategoryAdapter]("catego
   "CategoryAdapter.findExpenseCategories" should {
     val result = adapter.findExpenseCategories
     "return Some of List" in {
-      result must beSome[List[_ <: Model]]
+      result must beSome[Seq[_ <: Model]]
     }
     "return entities with EXPENSE CategoryType" in {
       result.get must have(_.categoryType == CategoryType.EXPENSE)
