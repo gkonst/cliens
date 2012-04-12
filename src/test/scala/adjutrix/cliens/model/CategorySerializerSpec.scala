@@ -3,9 +3,13 @@ package adjutrix.cliens.model
 import CategoryType._
 import serializer.CategorySerializer
 import ModelsFactory._
-import net.liftweb.json._
 
 class CategorySerializerSpec extends ModelSpec {
+
+  lazy val categoryWithoutDefaultStorageJSON = loadFileFromClasspathToString("/categoryWithoutDefaultStorage.json")
+  lazy val categoryWithoutIdAndDefaultStorageJSON = loadFileFromClasspathToString("/categoryWithoutIdAndDefaultStorage.json")
+  lazy val categoryJSON = loadFileFromClasspathToString("/category.json")
+  lazy val categoriesJSON = loadFileFromClasspathToString("/categories.json")
 
   def modelShouldHaveFields(result: Category, id: Int, name: String, categoryType: CategoryType) = {
     modelShouldHaveId(result, id)
@@ -19,56 +23,51 @@ class CategorySerializerSpec extends ModelSpec {
 
   "deserialize" should {
     "not fail if defaultStorage is None" in {
-      val result = CategorySerializer.deserialize("""{"name" : "Food", "id" : 1, "categoryType" : 1}""")
+      val result = CategorySerializer.deserialize(categoryWithoutDefaultStorageJSON)
       modelShouldHaveFields(result, 1, "Food", CategoryType.INCOME)
     }
     "not fail if defaultStorage is Some" in {
-      val data = """{"name" : "Food", "id" : 1, "categoryType" : 1,
-                     "defaultStorage" : {"name" : " Parex", "storageType" : {"name" : "Bill", "id" : 1},
-                                         "currencyType" : {"name" : "Dollar", "abbr" : "$", "rate" : 1.0, "id" : 1},
-                                         "amount" : 10.0,
-                                         "id" : 1}}"""
-      val result = CategorySerializer.deserialize(data)
+      val result = CategorySerializer.deserialize(categoryJSON)
       modelShouldHaveFields(result, 1, "Food", CategoryType.INCOME)
       "result must have defaultStorage and be Some[Storage]" in {
-        result.defaultStorage must beSome[Storage]
-        "with id equal 1" in {
-          result.defaultStorage.get.id must beEqualTo(Some(1))
-        }
+        result.defaultStorage must beSome[Storage] and (result.defaultStorage.get.id must beEqualTo(Some(1)))
       }
+    }
+  }
+
+  "deserializeAll" should {
+    "not fail" in {
+      val result = CategorySerializer.deserializeAll(categoriesJSON)
+      result must not beEmpty
     }
   }
 
   "serialize" should {
     "not fail if id is Some" in {
-      val result = CategorySerializer.serialize(category(Some(1)))
+      val result = CategorySerializer.serializePretty(category(Some(1)))
       "result must not be empty" in {
         result must not beEmpty
       }
       "result must be correct" in {
-        result must equalTo("""{"name":"Food","categoryType":1,"id":1}""")
+        result must equalTo(categoryWithoutDefaultStorageJSON)
       }
     }
     "not fail if id is None" in {
-      val result = CategorySerializer.serialize(category())
+      val result = CategorySerializer.serializePretty(category())
       "result must not be empty" in {
         result must not beEmpty
       }
       "result must be correct" in {
-        result must equalTo("""{"name":"Food","categoryType":1}""")
+        result must equalTo(categoryWithoutIdAndDefaultStorageJSON)
       }
     }
-    "not fail if id is None and defaultStorage is Some" in {
-      val result = CategorySerializer.serialize(category(id = None, defaultStorage = Some(storage(Some(2)))))
+    "not fail if id is Some and defaultStorage is Some" in {
+      val result = CategorySerializer.serializePretty(category(id = Some(1), defaultStorage = Some(storage(Some(1)))))
       "result must not be empty" in {
         result must not beEmpty
       }
       "result must be correct" in {
-        result must equalTo(compact(render(parse("""{"name" : "Food", "categoryType" : 1,
-                                "defaultStorage" : {"name" : "Parex", "storageType" : {"name" : "Bill", "id" : 1},
-                                                    "currencyType" : {"name" : "Dollar", "abbr" : "$", "rate" : 1.0, "id" : 1},
-                                                    "amount" : 10.0,
-                                                    "id" : 2}}"""))))
+        result must equalTo(categoryJSON)
       }
     }
   }

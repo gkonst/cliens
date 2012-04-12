@@ -1,0 +1,14 @@
+{
+  "name":"Parex",
+  "type":{
+    "name":"Bill",
+    "id":1
+  },
+  "currency_type":{
+    "name":"Dollar",
+    "abbr":"$",
+    "rate":1.0,
+    "id":1
+  },
+  "amount":10.0
+}

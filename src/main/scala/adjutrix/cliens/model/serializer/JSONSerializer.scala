@@ -3,6 +3,9 @@ package adjutrix.cliens.model.serializer
 import adjutrix.cliens.model._
 import net.liftweb.json.JsonAST.{JDouble, JInt, JValue}
 import net.liftweb.json._
+import io.Source
+import text.Document
+import java.io.StringWriter
 
 object JSONSerializer {
   def apply[T <: Model, S <: JSONSerializer[T]](cls: Class[T]): S = {
@@ -20,16 +23,44 @@ object JSONSerializer {
   }
 }
 
-abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) {
+trait Serializer[T <: Model] {
+  def deserialize(data: Source): T = deserialize(data.mkString)
+
+  def deserializeAll(data: Source): Seq[T] = deserializeAll(data.mkString)
+
+  def deserializeAll(data: String): Seq[T]
+
+  def deserialize(data: String): T
+
+  def serialize(entity: T): String
+
+  def serializePretty(entity: T): String
+}
+
+abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Serializer[T] {
   implicit val formats = DefaultFormats + BigDecimalSerializer + new EnumerationSerializer(CategoryType)
 
   def deserialize(data: String) = {
-    Serialization.read(data)
+    transformToEntity(parse(data)).extract
   }
 
+  def deserializeAll(data: String) = transformToEntity(parse(data)).extract[List[T]]
+
   def serialize(entity: T) = {
-    Serialization.write(entity)
+    innerSerialize(entity, Printer.compact[StringWriter])
   }
+
+  def serializePretty(entity: T) = {
+    innerSerialize(entity, Printer.pretty[StringWriter])
+  }
+
+  private def innerSerialize(entity: T, printerFunction: (Document, StringWriter) => StringWriter) = {
+    printerFunction(render(transformToJSON(Extraction.decompose(entity))), new StringWriter()).toString
+  }
+
+  protected def transformToJSON(json: JValue) = json
+
+  protected def transformToEntity(json: JValue) = json
 }
 
 object BigDecimalSerializer extends net.liftweb.json.Serializer[BigDecimal] {

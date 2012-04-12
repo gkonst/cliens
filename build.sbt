@@ -20,7 +20,7 @@ libraryDependencies ++= Seq(
 
 selectedProfile := Profile.dev
 
-seq(ScctPlugin.scctSettings: _*)
+//seq(ScctPlugin.scctSettings: _*)
 
 testOptions in Test += Tests.Argument("console", "junitxml")
 

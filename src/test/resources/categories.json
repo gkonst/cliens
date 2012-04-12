@@ -1,0 +1,46 @@
+[
+    {
+        "changed_date": "2011-11-14 16:27:08",
+        "name": "FoodFixture",
+        "parent_category": null,
+        "default_storage": null,
+        "created_date": "2009-01-01 00:00:00",
+        "active": true,
+        "shared": false,
+        "type": 0,
+        "id": 1
+    },
+    {
+        "changed_date": "2011-11-14 16:27:08",
+        "name": "HomeFixture",
+        "parent_category": null,
+        "default_storage": null,
+        "created_date": "2009-01-01 00:00:00",
+        "active": true,
+        "shared": true,
+        "type": 0,
+        "id": 8
+    },
+    {
+        "changed_date": "2011-11-14 16:27:08",
+        "name": "SalaryFixture",
+        "parent_category": null,
+        "default_storage": null,
+        "created_date": "2009-01-01 00:00:00",
+        "active": true,
+        "shared": false,
+        "type": 1,
+        "id": 3
+    },
+    {
+        "changed_date": "2011-11-14 16:27:08",
+        "name": "TransportFixture",
+        "parent_category": null,
+        "default_storage": null,
+        "created_date": "2009-01-01 00:00:00",
+        "active": true,
+        "shared": false,
+        "type": 0,
+        "id": 2
+    }
+]
