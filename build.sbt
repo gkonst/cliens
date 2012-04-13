@@ -12,6 +12,9 @@ libraryDependencies ++= Seq(
   "net.iharder" % "base64" % "2.3.8",
   "com.github.scopt" %% "scopt" % "2.0.0",
   "net.liftweb" %% "lift-json" % "2.4",
+  "org.clapper" %% "grizzled-slf4j" % "0.6.8",
+  "ch.qos.logback" % "logback-classic" % "1.0.1",
+  // tests
   "org.scala-tools.testing" %% "specs" % "1.6.9" % "it,test",
   "org.specs2" %% "specs2" % "1.9" % "it,test",
   "org.mockito" % "mockito-all" % "1.9.0" % "it,test",

@@ -2,7 +2,8 @@ package adjutrix.cliens.conf
 
 import java.util.Properties
 import java.io.{InputStream, FileOutputStream, FileInputStream, File}
-import adjutrix.cliens.util.{Logging, StreamUtil}
+import adjutrix.cliens.util.StreamUtil
+import grizzled.slf4j.Logging
 
 /**
  * Configuration model class, used to store and transfer configuration related values.

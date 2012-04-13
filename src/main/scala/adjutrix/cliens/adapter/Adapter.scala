@@ -2,7 +2,6 @@ package adjutrix.cliens.adapter
 
 import java.net.{HttpURLConnection, URL}
 import scala.io.Source.fromInputStream
-import adjutrix.cliens.util.Logging
 import java.io.OutputStreamWriter
 import adjutrix.cliens.conf.Configuration
 import adjutrix.cliens.model.Model
@@ -11,6 +10,7 @@ import io.Source
 import net.iharder.Base64
 import adjutrix.cliens.model.serializer.Serializer
 import adjutrix.cliens.model.serializer.json.JSONSerializer
+import grizzled.slf4j.Logging
 
 /**
  * Base adapter implementation. Encapsulates core CRUD methods for working with Adjutrix API.
