@@ -1,9 +1,8 @@
 package adjutrix.cliens.conf
 
 import java.util.Properties
-import java.io.{InputStream, FileOutputStream, FileInputStream, File}
-import adjutrix.cliens.util.StreamUtil
 import grizzled.slf4j.Logging
+import java.io._
 
 /**
  * Configuration model class, used to store and transfer configuration related values.
@@ -33,19 +32,29 @@ object Configuration extends Logging {
       createDefault()
     }
     val properties = new Properties
-    StreamUtil.withCloseable[FileInputStream](() => new FileInputStream(file),
-      fis => properties.load(fis))
+    withCloseable[FileInputStream](() => new FileInputStream(file), fis => properties.load(fis))
     Configuration(properties.getProperty("url"), properties.getProperty("username"),
       properties.getProperty("password"))
   }
 
   def createDefault() {
     val properties = new Properties
-    StreamUtil.withCloseable[InputStream](() => classOf[Configuration]
-      .getResourceAsStream("/default.configuration.properties"),
+    withCloseable[InputStream](() => classOf[Configuration].getResourceAsStream("/default.configuration.properties"),
       fis => properties.load(fis))
-    file.getParentFile.mkdirs
-    StreamUtil.withCloseable[FileOutputStream](() => new FileOutputStream(file),
+    file.getParentFile.mkdirs()
+    withCloseable[FileOutputStream](() => new FileOutputStream(file),
       fos => properties.store(fos, "Default properties"))
+  }
+
+  def withCloseable[T <: Closeable](create: () => T, operate: T => Unit) {
+    var closeable: T = null.asInstanceOf[T]
+    try {
+      closeable = create()
+      operate(closeable)
+    } finally {
+      if (closeable != null) {
+        closeable.close()
+      }
+    }
   }
 }
