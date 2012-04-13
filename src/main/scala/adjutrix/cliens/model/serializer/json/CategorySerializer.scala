@@ -1,4 +1,4 @@
-package adjutrix.cliens.model.serializer
+package adjutrix.cliens.model.serializer.json
 
 import adjutrix.cliens.model.Category
 import net.liftweb.json._
@@ -13,7 +13,7 @@ object CategorySerializer extends JSONSerializer[Category] {
       case JField("type", x) => JField("categoryType", x)
     }
 
-  override protected def transformToJSON(json: JValue) = json transform {
+  override def transformToJSON(json: JValue) = json transform {
     case JField("defaultStorage", x) => StorageSerializer.transformToJSON(JField("default_storage", x))
   } transform {
     case JField("categoryType", x) => JField("type", x)

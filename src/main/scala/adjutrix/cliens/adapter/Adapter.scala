@@ -9,7 +9,8 @@ import adjutrix.cliens.model.Model
 import java.lang.reflect.ParameterizedType
 import io.Source
 import net.iharder.Base64
-import adjutrix.cliens.model.serializer.{Serializer, JSONSerializer}
+import adjutrix.cliens.model.serializer.Serializer
+import adjutrix.cliens.model.serializer.json.JSONSerializer
 
 /**
  * Base adapter implementation. Encapsulates core CRUD methods for working with Adjutrix API.

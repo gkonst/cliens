@@ -1,9 +1,10 @@
-package adjutrix.cliens.model
+package adjutrix.cliens.model.serializer.json
 
-import serializer.StorageSerializer
-import ModelsFactory._
+import adjutrix.cliens.model.serializer.SerializerSpec
+import adjutrix.cliens.model.Storage
+import adjutrix.cliens.model.ModelsFactory.storage
 
-class StorageSerializerSpec extends ModelSpec {
+class StorageSerializerSpec extends SerializerSpec {
 
   lazy val storageJSON = loadFileFromClasspathToString("/storage.json")
   lazy val storageWithoutIdJSON = loadFileFromClasspathToString("/storageWithoutId.json")

@@ -1,8 +1,9 @@
-package adjutrix.cliens.model
+package adjutrix.cliens.model.serializer.json
 
-import serializer.StorageTypeSerializer
+import adjutrix.cliens.model.serializer.SerializerSpec
+import adjutrix.cliens.model.StorageType
 
-class StorageTypeSerializerSpec extends ModelSpec {
+class StorageTypeSerializerSpec extends SerializerSpec {
   def modelShouldHaveFields(result: StorageType, id: Int, name: String) = {
     modelShouldHaveId(result, id)
     "result must have name and equal " + name in {

@@ -1,4 +1,4 @@
-package adjutrix.cliens.model.serializer
+package adjutrix.cliens.model.serializer.json
 
 import adjutrix.cliens.model.StorageType
 

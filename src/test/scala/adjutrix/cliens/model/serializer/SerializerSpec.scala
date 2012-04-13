@@ -1,9 +1,10 @@
-package adjutrix.cliens.model
+package adjutrix.cliens.model.serializer
 
 import org.specs2.mutable.Specification
 import io.Source
+import adjutrix.cliens.model.Model
 
-abstract class ModelSpec extends Specification {
+abstract class SerializerSpec extends Specification {
 
   def loadFileFromClasspathToString(filename: String) = Source.fromURL(getClass.getResource(filename)).mkString
 

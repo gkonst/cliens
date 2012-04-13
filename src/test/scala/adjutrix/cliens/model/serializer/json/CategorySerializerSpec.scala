@@ -1,10 +1,11 @@
-package adjutrix.cliens.model
+package adjutrix.cliens.model.serializer.json
 
-import CategoryType._
-import serializer.CategorySerializer
-import ModelsFactory._
+import adjutrix.cliens.model.serializer.SerializerSpec
+import adjutrix.cliens.model.CategoryType.CategoryType
+import adjutrix.cliens.model.{Storage, CategoryType, Category}
+import adjutrix.cliens.model.ModelsFactory.{storage, category}
 
-class CategorySerializerSpec extends ModelSpec {
+class CategorySerializerSpec extends SerializerSpec {
 
   lazy val categoryWithoutDefaultStorageJSON = loadFileFromClasspathToString("/categoryWithoutDefaultStorage.json")
   lazy val categoryWithoutIdAndDefaultStorageJSON = loadFileFromClasspathToString("/categoryWithoutIdAndDefaultStorage.json")

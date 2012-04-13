@@ -1,41 +1,11 @@
-package adjutrix.cliens.model.serializer
+package adjutrix.cliens.model.serializer.json
 
 import adjutrix.cliens.model._
 import net.liftweb.json.JsonAST.{JDouble, JInt, JValue}
-import net.liftweb.json._
-import io.Source
+import serializer.Serializer
 import text.Document
 import java.io.StringWriter
-
-object JSONSerializer {
-  def apply[T <: Model, S <: JSONSerializer[T]](cls: Class[T]): S = {
-    if (cls == classOf[Storage]) {
-      StorageSerializer.asInstanceOf[S]
-    } else if (cls == classOf[Category]) {
-      CategorySerializer.asInstanceOf[S]
-    } else if (cls == classOf[CurrencyType]) {
-      CurrencyTypeSerializer.asInstanceOf[S]
-    } else if (cls == classOf[StorageType]) {
-      StorageTypeSerializer.asInstanceOf[S]
-    } else {
-      throw new UnsupportedOperationException("Serializer for model " + cls + " not found")
-    }
-  }
-}
-
-trait Serializer[T <: Model] {
-  def deserialize(data: Source): T = deserialize(data.mkString)
-
-  def deserializeAll(data: Source): Seq[T] = deserializeAll(data.mkString)
-
-  def deserializeAll(data: String): Seq[T]
-
-  def deserialize(data: String): T
-
-  def serialize(entity: T): String
-
-  def serializePretty(entity: T): String
-}
+import net.liftweb.json._
 
 abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Serializer[T] {
   implicit val formats = DefaultFormats + BigDecimalSerializer + new EnumerationSerializer(CategoryType)
@@ -61,6 +31,22 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
   protected def transformToJSON(json: JValue) = json
 
   protected def transformToEntity(json: JValue) = json
+}
+
+object JSONSerializer {
+  def apply[T <: Model, S <: JSONSerializer[T]](cls: Class[T]): S = {
+    if (cls == classOf[Storage]) {
+      StorageSerializer.asInstanceOf[S]
+    } else if (cls == classOf[Category]) {
+      CategorySerializer.asInstanceOf[S]
+    } else if (cls == classOf[CurrencyType]) {
+      CurrencyTypeSerializer.asInstanceOf[S]
+    } else if (cls == classOf[StorageType]) {
+      StorageTypeSerializer.asInstanceOf[S]
+    } else {
+      throw new UnsupportedOperationException("Serializer for model " + cls + " not found")
+    }
+  }
 }
 
 object BigDecimalSerializer extends net.liftweb.json.Serializer[BigDecimal] {

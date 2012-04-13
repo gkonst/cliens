@@ -1,8 +1,9 @@
-package adjutrix.cliens.model
+package adjutrix.cliens.model.serializer.json
 
-import serializer.CurrencyTypeSerializer
+import adjutrix.cliens.model.serializer.SerializerSpec
+import adjutrix.cliens.model.CurrencyType
 
-class CurrencyTypeSerializerSpec extends ModelSpec {
+class CurrencyTypeSerializerSpec extends SerializerSpec {
   def modelShouldHaveFields(result: CurrencyType, id: Int, name: String, abbr: String, rate: BigDecimal) = {
     modelShouldHaveId(result, id)
     "result must have name equal " + name in {
