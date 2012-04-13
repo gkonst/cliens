@@ -1,13 +1,14 @@
 package adjutrix.cliens.cli
 
-import adjutrix.cliens.conf.Configuration
 import adjutrix.cliens.model.Expense
+import adjutrix.cliens.conf.Configurable
 
 /**
  * CLI implementation for 'Expense'.
  *
  * @author konstantin_grigoriev
  */
-class ExpenseCLI(configuration: Configuration) extends CLI[Expense](configuration: Configuration) {
+class ExpenseCLI(options: CLIOption) extends CLI[Expense](options) {
+  this: Configurable =>
 
 }

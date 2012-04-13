@@ -7,10 +7,9 @@ import adjutrix.cliens.conf.Configuration
 
 abstract class AdapterSpec[M <: Model, T <: Adapter[M]](adapterName: String) extends Specification {
   Configuration.baseDir = "target"
-  val conf = Configuration.load
   val fixtureId = 1
   val unknownId = 0
-  val adapter = AdapterFactory(conf, adapterName).asInstanceOf[T]
+  val adapter = AdapterFactory(adapterName).asInstanceOf[T]
   val fullAdapterName = adapterName.capitalize + "Adapter"
 
   fullAdapterName + ".findAll" should {

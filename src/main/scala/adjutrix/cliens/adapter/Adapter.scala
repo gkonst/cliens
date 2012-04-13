@@ -3,25 +3,24 @@ package adjutrix.cliens.adapter
 import java.net.{HttpURLConnection, URL}
 import scala.io.Source.fromInputStream
 import java.io.OutputStreamWriter
-import adjutrix.cliens.conf.Configuration
 import adjutrix.cliens.model.Model
-import java.lang.reflect.ParameterizedType
 import io.Source
 import net.iharder.Base64
 import adjutrix.cliens.model.serializer.Serializer
 import adjutrix.cliens.model.serializer.json.JSONSerializer
 import grizzled.slf4j.Logging
+import adjutrix.cliens.conf.Configurable
 
 /**
  * Base adapter implementation. Encapsulates core CRUD methods for working with Adjutrix API.
  *
  * @author konstantin_grigoriev
  */
-abstract class Adapter[T <: Model](configuration: Configuration) extends Logging {
+abstract class Adapter[T <: Model](implicit mf: Manifest[T]) extends Logging {
+  this: Configurable =>
   val baseUrl: String
   val auth = "Basic " + Base64.encodeBytes((configuration.username + ":" + configuration.password).getBytes)
-  val modelClass = this.getClass.getGenericSuperclass.asInstanceOf[ParameterizedType].getActualTypeArguments.head.asInstanceOf[Class[T]]
-  val serializer: Serializer[T] = JSONSerializer(modelClass)
+  val serializer: Serializer[T] = JSONSerializer(mf.erasure.asInstanceOf[Class[T]])
 
   object Method extends Enumeration {
     type Method = Value

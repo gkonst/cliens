@@ -1,14 +1,15 @@
 package adjutrix.cliens.cli
 
-import adjutrix.cliens.conf.Configuration
 import adjutrix.cliens.model.Model
+import adjutrix.cliens.conf.Configurable
 
 /**
  * Base CLI implementation. Used to communicate with user using console. 
  *
  * @author konstantin_grigoriev
  */
-abstract class CLI[T <: Model](configuration: Configuration, options: CLIOption) {
+abstract class CLI[T <: Model](options: CLIOption) {
+  this: Configurable =>
 
   def header: String = String.format("%-5s", "Id")
 
@@ -28,7 +29,7 @@ abstract class CLI[T <: Model](configuration: Configuration, options: CLIOption)
 
   def row(item: T) {
     options match {
-      case Verbose => println(rowFull(item))
+      case Verbose(other) => println(rowFull(item))
       case _ => println(rowSummary(item))
     }
   }

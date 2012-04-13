@@ -1,7 +1,7 @@
 package adjutrix.cliens.adapter
 
-import adjutrix.cliens.conf.Configuration
 import adjutrix.cliens.model.Model
+import adjutrix.cliens.conf.PropertiesConfigurable
 
 /**
  * Factory object for adapters. Injects configuration.
@@ -9,10 +9,10 @@ import adjutrix.cliens.model.Model
  * @author konstantin_grigoriev
  */
 object AdapterFactory {
-  def apply(implicit configuration: Configuration, adapter: String): Adapter[Model] = adapter match {
-    case "storage" => new StorageAdapter().asInstanceOf[Adapter[Model]]
-    case "category" => new CategoryAdapter().asInstanceOf[Adapter[Model]]
-    case "expense" => new ExpenseAdapter().asInstanceOf[Adapter[Model]]
+  def apply(adapter: String): Adapter[Model] = adapter match {
+    case "storage" => (new StorageAdapter() with PropertiesConfigurable).asInstanceOf[Adapter[Model]]
+    case "category" => (new CategoryAdapter() with PropertiesConfigurable).asInstanceOf[Adapter[Model]]
+    case "expense" => (new ExpenseAdapter() with PropertiesConfigurable).asInstanceOf[Adapter[Model]]
     case _ => throw new UnsupportedOperationException("Unknown adapter : " + adapter)
   }
 }

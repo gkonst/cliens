@@ -1,12 +1,10 @@
 package adjutrix.cliens.cli
 
-import adjutrix.cliens.conf.Configuration
 import adjutrix.cliens.adapter.AdapterFactory
 import scopt.mutable.OptionParser
 
 object Cliens {
-  val config = Configuration.load
-  var entity: String
+  var entity: String = null
   var options: CLIOption = NoOption()
 
   val parser = new OptionParser("cliens") {
@@ -34,9 +32,9 @@ object Cliens {
       v: Boolean => options = Verbose(options)
     })
     if (parser.parse(args)) {
-      val adapter = AdapterFactory(config, entity)
-      val cli = CLIFactory(config, entity)
-      cli.optionList(adapter.findAll)
+      val adapter = AdapterFactory(entity)
+      val cli = CLIFactory(entity, options)
+      cli.optionList(adapter.findAll())
     }
   }
 
@@ -49,8 +47,8 @@ object Cliens {
       v: String => id = Integer.valueOf(v).intValue
     })
     if (parser.parse(args)) {
-      val adapter = AdapterFactory(config, entity)
-      val cli = CLIFactory(config, entity)
+      val adapter = AdapterFactory(entity)
+      val cli = CLIFactory(entity, options)
       cli.optionRow(adapter.findById(id))
     }
   }
