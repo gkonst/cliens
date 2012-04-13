@@ -18,7 +18,7 @@ class CurrencyTypeSerializerSpec extends ModelSpec {
 
   "deserialize" should {
     "return correct result" in {
-      val result = CurrencyTypeSerializer.deserialize("""{"name":"Dollar","abbr":"$","rate":1.0,"id":1}""")
+      val result = CurrencyTypeSerializer.deserialize("""{"name":"Dollar","abbr":"$","rate":"1.0","id":1}""")
       modelShouldHaveFields(result, 1, "Dollar", "$", BigDecimal("1.0"))
     }
   }
@@ -30,7 +30,7 @@ class CurrencyTypeSerializerSpec extends ModelSpec {
         result must not beEmpty
       }
       "result must be correct" in {
-        result must equalTo("""{"name":"Dollar","abbr":"$","rate":1.0,"id":1}""")
+        result must equalTo("""{"name":"Dollar","abbr":"$","rate":"1.0","id":1}""")
       }
     }
     "not fail if id is None" in {
@@ -39,7 +39,7 @@ class CurrencyTypeSerializerSpec extends ModelSpec {
         result must not beEmpty
       }
       "result must be correct" in {
-        result must equalTo("""{"name":"Dollar","abbr":"$","rate":1.0}""")
+        result must equalTo("""{"name":"Dollar","abbr":"$","rate":"1.0"}""")
       }
     }
   }
