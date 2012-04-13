@@ -8,7 +8,7 @@ import adjutrix.cliens.model.Model
  *
  * @author konstantin_grigoriev
  */
-abstract class CLI[T <: Model](configuration: Configuration) {
+abstract class CLI[T <: Model](configuration: Configuration, options: CLIOption) {
 
   def header: String = String.format("%-5s", "Id")
 
@@ -27,10 +27,9 @@ abstract class CLI[T <: Model](configuration: Configuration) {
   }
 
   def row(item: T) {
-    if (configuration.showFull) {
-      println(rowFull(item))
-    } else {
-      println(rowSummary(item))
+    options match {
+      case Verbose => println(rowFull(item))
+      case _ => println(rowSummary(item))
     }
   }
 
@@ -63,3 +62,9 @@ abstract class CLI[T <: Model](configuration: Configuration) {
     }
   }
 }
+
+sealed trait CLIOption
+
+case class NoOption() extends CLIOption
+
+case class Verbose(anotherOption: CLIOption) extends CLIOption

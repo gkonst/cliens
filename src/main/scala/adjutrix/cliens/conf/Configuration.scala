@@ -11,9 +11,7 @@ import java.io._
  */
 case class Configuration(url: String,
                          username: String,
-                         password: String,
-                         var showFull: Boolean = false,
-                         var entity: String = null)
+                         password: String)
 
 /**
  * Configuration object, used as factory for configurations. Can load or save configurations.
