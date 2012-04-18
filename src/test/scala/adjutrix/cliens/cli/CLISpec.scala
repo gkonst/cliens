@@ -1,11 +1,12 @@
 package adjutrix.cliens.cli
 
 import org.specs.Specification
-import adjutrix.cliens.conf.TestConfiguration
 import adjutrix.cliens.model.Model
 import java.lang.String
+import adjutrix.cliens.conf.PropertiesConfiguration
 
-abstract class CLISpec[T <: Model] extends Specification with TestConfiguration {
+abstract class CLISpec[T <: Model] extends Specification {
+  implicit val configuration = PropertiesConfiguration.loadFromDefault()
 
   val cli: CLI[T]
 

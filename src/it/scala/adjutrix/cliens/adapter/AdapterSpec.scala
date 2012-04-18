@@ -3,11 +3,10 @@ package adjutrix.cliens.adapter
 import org.specs2.mutable.Specification
 import adjutrix.cliens.model.Model
 import org.specs2.specification.Example
-import adjutrix.cliens.conf.Configuration
+import adjutrix.cliens.conf.PropertiesConfiguration
 
 abstract class AdapterSpec[M <: Model] extends Specification {
-  Configuration.baseDir = "target"
-  implicit val configuration = Configuration.load
+  implicit val configuration = PropertiesConfiguration.loadFromDefault()
   val fixtureId = 1
   val unknownId = 0
   val adapter: Adapter[M]
