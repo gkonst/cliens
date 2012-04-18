@@ -9,15 +9,14 @@ import net.iharder.Base64
 import adjutrix.cliens.model.serializer.Serializer
 import adjutrix.cliens.model.serializer.json.JSONSerializer
 import grizzled.slf4j.Logging
-import adjutrix.cliens.conf.Configurable
+import adjutrix.cliens.conf.Configuration
 
 /**
  * Base adapter implementation. Encapsulates core CRUD methods for working with Adjutrix API.
  *
  * @author konstantin_grigoriev
  */
-abstract class Adapter[T <: Model](implicit mf: Manifest[T]) extends Logging {
-  this: Configurable =>
+abstract class Adapter[T <: Model](configuration: Configuration)(implicit mf: Manifest[T]) extends Logging {
   val baseUrl: String
   val auth = "Basic " + Base64.encodeBytes((configuration.username + ":" + configuration.password).getBytes)
   val serializer: Serializer[T] = JSONSerializer(mf.erasure.asInstanceOf[Class[T]])

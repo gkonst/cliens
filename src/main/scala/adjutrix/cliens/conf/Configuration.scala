@@ -31,7 +31,7 @@ object Configuration extends Logging {
     }
     val properties = new Properties
     withCloseable[FileInputStream](() => new FileInputStream(file), fis => properties.load(fis))
-    Configuration(properties.getProperty("url"), properties.getProperty("username"),
+    new Configuration(properties.getProperty("url"), properties.getProperty("username"),
       properties.getProperty("password"))
   }
 

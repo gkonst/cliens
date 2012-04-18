@@ -2,7 +2,9 @@ package adjutrix.cliens.adapter
 
 import adjutrix.cliens.model.{CurrencyType, StorageType, Storage}
 
-class StorageAdapterSpec extends AdapterSpec[Storage, StorageAdapter]("storage") {
+class StorageAdapterSpec extends AdapterSpec[Storage] {
+
+  lazy val adapter = new StorageAdapter()
 
   def specifyFields(result: Storage) = {
     "result must have name" in {

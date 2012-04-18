@@ -1,14 +1,13 @@
 package adjutrix.cliens.adapter
 
+import adjutrix.cliens.conf.Configuration
 import adjutrix.cliens.model.Storage
-import adjutrix.cliens.conf.Configurable
 
 /**
  * Adapter impl for working with 'Storage'.
  *
  * @author konstantin_grigoriev
  */
-class StorageAdapter extends Adapter[Storage] {
-  this: Configurable =>
+class StorageAdapter(implicit configuration: Configuration) extends Adapter[Storage](configuration) {
   val baseUrl = "storage"
 }

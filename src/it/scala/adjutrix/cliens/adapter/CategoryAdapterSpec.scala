@@ -2,7 +2,9 @@ package adjutrix.cliens.adapter
 
 import adjutrix.cliens.model.{Model, CategoryType, Category}
 
-class CategoryAdapterSpec extends AdapterSpec[Category, CategoryAdapter]("category") {
+class CategoryAdapterSpec extends AdapterSpec[Category] {
+
+  lazy val adapter = new CategoryAdapter()
 
   "CategoryAdapter.findExpenseCategories" should {
     val result = adapter.findExpenseCategories

@@ -1,15 +1,14 @@
 package adjutrix.cliens.cli
 
 import adjutrix.cliens.model.Storage
-import adjutrix.cliens.conf.Configurable
+import adjutrix.cliens.conf.Configuration
 
 /**
  * CLI implementation for 'Storage'.
  *
  * @author konstantin_grigoriev
  */
-class StorageCLI(options: CLIOption) extends CLI[Storage](options) {
-  this: Configurable =>
+class StorageCLI(implicit configuration: Configuration) extends CLI[Storage](configuration) {
 
   override def header = super.header + String.format("%-25s %-20s %-20s", "Name", "Amount", "Type")
 

@@ -1,33 +1,33 @@
 package adjutrix.cliens.cli
 
 import adjutrix.cliens.model.Model
-import adjutrix.cliens.conf.Configurable
+import scala.Predef._
+import adjutrix.cliens.conf.Configuration
 
 /**
  * Base CLI implementation. Used to communicate with user using console. 
  *
  * @author konstantin_grigoriev
  */
-abstract class CLI[T <: Model](options: CLIOption) {
-  this: Configurable =>
+abstract class CLI[T <: Model](configuration: Configuration) {
 
   def header: String = String.format("%-5s", "Id")
 
   val headerLine = "".padTo(header.size, "-").reduceLeft(_ + "" + _)
 
-  def list(items: Seq[T]) {
-    items.foreach(item => row(item))
+  def list(items: Seq[T], options: CLIOption) {
+    items.foreach(item => row(item, options))
   }
 
-  def optionRow(item: Option[T]) {
+  def optionRow(item: Option[T], options: CLIOption) {
     printHeader()
     item match {
-      case Some(x) => row(x)
+      case Some(x) => row(x, options)
       case None => println("Not found")
     }
   }
 
-  def row(item: T) {
+  def row(item: T, options: CLIOption) {
     options match {
       case Verbose(other) => println(rowFull(item))
       case _ => println(rowSummary(item))
@@ -55,10 +55,10 @@ abstract class CLI[T <: Model](options: CLIOption) {
     printHeaderLine()
   }
 
-  def optionList(data: Option[Seq[T]]) {
+  def optionList(data: Option[Seq[T]], options: CLIOption) {
     printHeader()
     data match {
-      case Some(items) => list(items)
+      case Some(items) => list(items, options)
       case None => println("No data found")
     }
   }

@@ -1,7 +1,7 @@
 package adjutrix.cliens.model
 
 sealed trait Model {
-  val id: Option[Int]
+  def id: Option[Int]
 }
 
 case class CurrencyType(name: String,

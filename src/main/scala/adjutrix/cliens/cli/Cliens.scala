@@ -1,7 +1,7 @@
 package adjutrix.cliens.cli
 
-import adjutrix.cliens.adapter.AdapterFactory
 import scopt.mutable.OptionParser
+import adjutrix.cliens.service.Service
 
 object Cliens {
   var entity: String = null
@@ -32,9 +32,7 @@ object Cliens {
       v: Boolean => options = Verbose(options)
     })
     if (parser.parse(args)) {
-      val adapter = AdapterFactory(entity)
-      val cli = CLIFactory(entity, options)
-      cli.optionList(adapter.findAll())
+      Service(entity).list(options)
     }
   }
 
@@ -47,9 +45,7 @@ object Cliens {
       v: String => id = Integer.valueOf(v).intValue
     })
     if (parser.parse(args)) {
-      val adapter = AdapterFactory(entity)
-      val cli = CLIFactory(entity, options)
-      cli.optionRow(adapter.findById(id))
+      Service(entity).view(id, options)
     }
   }
 }

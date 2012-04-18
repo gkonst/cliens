@@ -1,15 +1,14 @@
 package adjutrix.cliens.cli
 
 import adjutrix.cliens.model.Category
-import adjutrix.cliens.conf.Configurable
+import adjutrix.cliens.conf.Configuration
 
 /**
  * CLI implementation for 'Category'.
  *
  * @author konstantin_grigoriev
  */
-class CategoryCLI(options: CLIOption) extends CLI[Category](options) {
-  this: Configurable =>
+class CategoryCLI(implicit configuration: Configuration) extends CLI[Category](configuration) {
 
   override def header = super.header + String.format("%-10s %-20s %-20s", "Type", "Name", "Default Storage")
 

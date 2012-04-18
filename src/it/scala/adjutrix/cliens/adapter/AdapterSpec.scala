@@ -5,12 +5,13 @@ import adjutrix.cliens.model.Model
 import org.specs2.specification.Example
 import adjutrix.cliens.conf.Configuration
 
-abstract class AdapterSpec[M <: Model, T <: Adapter[M]](adapterName: String) extends Specification {
+abstract class AdapterSpec[M <: Model] extends Specification {
   Configuration.baseDir = "target"
+  implicit val configuration = Configuration.load
   val fixtureId = 1
   val unknownId = 0
-  val adapter = AdapterFactory(adapterName).asInstanceOf[T]
-  val fullAdapterName = adapterName.capitalize + "Adapter"
+  val adapter: Adapter[M]
+  lazy val fullAdapterName = adapter.getClass.getSimpleName
 
   fullAdapterName + ".findAll" should {
     val result = adapter.findAll()
