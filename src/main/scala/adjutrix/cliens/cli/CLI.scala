@@ -3,19 +3,28 @@ package adjutrix.cliens.cli
 import adjutrix.cliens.model.Model
 import scala.Predef._
 import adjutrix.cliens.conf.Configuration
+import java.io.{InputStream, PrintStream}
 
 /**
  * Base CLI implementation. Used to communicate with user using console. 
  *
  * @author konstantin_grigoriev
  */
-abstract class CLI[T <: Model](configuration: Configuration) {
+abstract class CLI[T <: Model](configuration: Configuration, out: PrintStream = System.out, in: InputStream = System.in) {
 
-  def header: String = String.format("%-5s", "Id")
+  private val headerLine = "-" * header.size
 
-  val headerLine = "".padTo(header.size, "-").reduceLeft(_ + "" + _)
+  protected[cli] def header: String = String.format("%-5s", "Id")
 
-  def list(items: Seq[T], options: CLIOption) {
+  def optionList(data: Option[Seq[T]], options: CLIOption) {
+    printHeader()
+    data match {
+      case Some(items) => list(items, options)
+      case None => out.println("No data found")
+    }
+  }
+
+  private def list(items: Seq[T], options: CLIOption) {
     items.foreach(item => row(item, options))
   }
 
@@ -23,44 +32,36 @@ abstract class CLI[T <: Model](configuration: Configuration) {
     printHeader()
     item match {
       case Some(x) => row(x, options)
-      case None => println("Not found")
+      case None => out.println("Not found")
     }
   }
 
-  def row(item: T, options: CLIOption) {
+  private def row(item: T, options: CLIOption) {
     options match {
-      case Verbose(other) => println(rowFull(item))
-      case _ => println(rowSummary(item))
+      case Verbose(other) => out.println(rowVerbose(item))
+      case _ => out.println(rowSummary(item))
     }
   }
 
-  def rowSummary(item: T) = {
+  protected[cli] def rowSummary(item: T) = {
     item.id match {
       case Some(x) => String.format("%-5s", x.toString)
       case None => ""
     }
   }
 
-  def rowFull(item: T) = {
+  protected[cli] def rowVerbose(item: T) = {
     rowSummary(item)
   }
 
-  def printHeaderLine() {
-    println(headerLine)
+  private def printHeaderLine() {
+    out.println(headerLine)
   }
 
-  def printHeader() {
+  private def printHeader() {
     printHeaderLine()
-    println(header)
+    out.println(header)
     printHeaderLine()
-  }
-
-  def optionList(data: Option[Seq[T]], options: CLIOption) {
-    printHeader()
-    data match {
-      case Some(items) => list(items, options)
-      case None => println("No data found")
-    }
   }
 }
 
