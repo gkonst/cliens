@@ -61,7 +61,7 @@ object BigDecimalSerializer extends net.liftweb.json.Serializer[BigDecimal] {
   }
 
   def serialize(implicit format: Formats): PartialFunction[Any, JValue] = {
-    case d: BigDecimal => JDouble(d.doubleValue)
+    case d: BigDecimal => JDouble(d.doubleValue())
   }
 }
 

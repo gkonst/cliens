@@ -28,26 +28,21 @@ object PropertiesConfiguration extends Logging {
 
   def loadFromStream(stream: InputStream) = {
     val properties = new Properties
-    withCloseable[InputStream](() => stream, fis => properties.load(fis))
+    withCloseable[InputStream](stream, fis => properties.load(fis))
     new PropertiesConfiguration(properties)
   }
 
   def save(configuration: PropertiesConfiguration, toFile: File = defaultConfigurationFilePath) = {
     toFile.getParentFile.mkdirs()
-    withCloseable[FileOutputStream](() => new FileOutputStream(toFile),
-      fos => configuration.properties.store(fos, "Default properties"))
+    withCloseable[OutputStream](new FileOutputStream(toFile), fos => configuration.properties.store(fos, "Default properties"))
     configuration
   }
 
-  private def withCloseable[T <: Closeable](create: () => T, operate: T => Unit) {
-    var closeable: T = null.asInstanceOf[T]
+  private def withCloseable[T <: Closeable](closeable: T, operate: T => Unit) {
     try {
-      closeable = create()
       operate(closeable)
     } finally {
-      if (closeable != null) {
-        closeable.close()
-      }
+      closeable.close()
     }
   }
 }
