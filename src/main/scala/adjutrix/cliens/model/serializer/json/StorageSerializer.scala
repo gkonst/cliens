@@ -1,13 +1,13 @@
 package adjutrix.cliens.model.serializer.json
 
 import adjutrix.cliens.model.Storage
-import net.liftweb.json.JsonAST.{JString, JDouble, JField, JValue}
+import net.liftweb.json.JsonAST._
 
 object StorageSerializer extends JSONSerializer[Storage] {
   override def transformToJSON(json: JValue) =
     json transform {
-      case JField("storageType", x) => JField("type", x)
-      case JField("currencyType", x) => CurrencyTypeSerializer.transformToJSON(JField("currency_type", x))
+      case JField("storageType", x) => JField("type", x \ "id")
+      case JField("currencyType", x: JObject) => JField("currency_type", x \ "id")
       case JField("amount", JDouble(x)) => JField("amount", JString(x.toString))
     }
 

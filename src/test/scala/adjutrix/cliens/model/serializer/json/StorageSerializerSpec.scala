@@ -7,7 +7,9 @@ import adjutrix.cliens.model.ModelsFactory.storage
 class StorageSerializerSpec extends SerializerSpec {
 
   lazy val storageJSON = loadFileFromClasspathToString("/storage.json")
+  lazy val storageSerializedJSON = loadFileFromClasspathToString("/storageSerialized.json")
   lazy val storageWithoutIdJSON = loadFileFromClasspathToString("/storageWithoutId.json")
+  lazy val storageWithoutIdSerializedJSON = loadFileFromClasspathToString("/storageWithoutIdSerialized.json")
 
   def modelShouldHaveFields(result: Storage, id: Int, name: String, amount: BigDecimal) = {
     "result must have storageType" in {
@@ -38,7 +40,7 @@ class StorageSerializerSpec extends SerializerSpec {
         result must not beEmpty
       }
       "result must be correct" in {
-        result must equalTo(storageJSON)
+        result must equalTo(storageSerializedJSON)
       }
     }
     "not fail if id is None" in {
@@ -47,7 +49,7 @@ class StorageSerializerSpec extends SerializerSpec {
         result must not beEmpty
       }
       "result must be correct" in {
-        result must equalTo(storageWithoutIdJSON)
+        result must equalTo(storageWithoutIdSerializedJSON)
       }
     }
   }
