@@ -5,11 +5,16 @@ import adjutrix.cliens.model.ModelsFactory._
 
 class StorageCLISpec extends CLISpec[Storage] {
 
-  lazy val cli = new StorageCLI()
+  def produceCLI = new StorageCLI with MockedIO
 
-  def givenModel = storage(Some(5))
+  def givenModel(id: Int) = storage(Some(id))
 
-  def expectedRowSummaryValues = List("5", "Parex", "10.0", "$", "Bill")
+  val expectedHeader = "------------------------------------------------------------------------\n" +
+    "Id   Name                      Amount               Type                \n" +
+    "------------------------------------------------------------------------\n"
 
-  def expectedHeaderValues = List("Id", "Name", "Amount", "Type")
+  val expectedSomeForRow = "1    Parex                     10.0 $               Bill                \n"
+
+  val expectedSomeForList = "1    Parex                     10.0 $               Bill                \n" +
+    "2    Parex                     10.0 $               Bill                \n"
 }

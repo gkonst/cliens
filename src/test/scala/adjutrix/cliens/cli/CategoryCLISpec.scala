@@ -5,11 +5,16 @@ import adjutrix.cliens.model.ModelsFactory._
 
 class CategoryCLISpec extends CLISpec[Category] {
 
-  lazy val cli = new CategoryCLI()
+  def produceCLI = new CategoryCLI with MockedIO
 
-  def givenModel = category(Some(4))
+  def givenModel(id: Int) = category(Some(id))
 
-  def expectedRowSummaryValues = List("4", "Food", "INCOME")
+  val expectedHeader = "---------------------------------------------------------\n" +
+    "Id   Type       Name                 Default Storage     \n" +
+    "---------------------------------------------------------\n"
 
-  def expectedHeaderValues = List("Id", "Name", "Type", "Default Storage")
+  val expectedSomeForRow = "1    INCOME     Food                 None                \n"
+
+  val expectedSomeForList = "1    INCOME     Food                 None                \n" +
+    "2    INCOME     Food                 None                \n"
 }

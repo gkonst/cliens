@@ -15,7 +15,6 @@ libraryDependencies ++= Seq(
   "org.clapper" %% "grizzled-slf4j" % "0.6.8",
   "ch.qos.logback" % "logback-classic" % "1.0.1",
   // tests
-  "org.scala-tools.testing" %% "specs" % "1.6.9" % "it,test",
   "org.specs2" %% "specs2" % "1.9" % "it,test",
   "org.mockito" % "mockito-all" % "1.9.0" % "it,test",
   "junit" % "junit" % "4.10" % "it,test"

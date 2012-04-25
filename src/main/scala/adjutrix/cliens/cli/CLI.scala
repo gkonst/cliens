@@ -10,7 +10,7 @@ import java.io.{InputStream, PrintStream}
  *
  * @author konstantin_grigoriev
  */
-abstract class CLI[T <: Model](configuration: Configuration, out: PrintStream = System.out, in: InputStream = System.in) {
+abstract class CLI[T <: Model](configuration: Configuration) extends SystemIO {
 
   private val headerLine = "-" * header.size
 
@@ -43,30 +43,32 @@ abstract class CLI[T <: Model](configuration: Configuration, out: PrintStream = 
     }
   }
 
-  protected[cli] def rowSummary(item: T) = {
-    item.id match {
-      case Some(x) => String.format("%-5s", x.toString)
-      case None => ""
-    }
+  protected[cli] def rowSummary(item: T) = item.id match {
+    case Some(x) => String.format("%-5s", x.toString)
+    case None => ""
   }
 
-  protected[cli] def rowVerbose(item: T) = {
-    rowSummary(item)
-  }
+  protected[cli] def rowVerbose(item: T) = rowSummary(item)
 
-  private def printHeaderLine() {
+  protected[cli] def printHeaderLine() {
     out.println(headerLine)
   }
 
-  private def printHeader() {
+  protected[cli] def printHeader() {
     printHeaderLine()
     out.println(header)
     printHeaderLine()
   }
 }
 
+trait SystemIO {
+  def in: InputStream = System.in
+
+  def out: PrintStream = System.out
+}
+
 sealed trait CLIOption
 
 case class NoOption() extends CLIOption
 
-case class Verbose(anotherOption: CLIOption) extends CLIOption
+case class Verbose(anotherOption: CLIOption = NoOption()) extends CLIOption
