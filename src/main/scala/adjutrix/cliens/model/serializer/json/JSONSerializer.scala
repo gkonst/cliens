@@ -6,9 +6,10 @@ import serializer.Serializer
 import text.Document
 import java.io.StringWriter
 import net.liftweb.json._
+import ext.EnumSerializer
 
 abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Serializer[T] {
-  implicit val formats = DefaultFormats + BigDecimalSerializer + new EnumerationSerializer(CategoryType)
+  implicit val formats = DefaultFormats + BigDecimalSerializer + new EnumSerializer(CategoryType)
 
   def deserialize(data: String) = {
     transformToEntity(parse(data)).extract
@@ -62,20 +63,5 @@ object BigDecimalSerializer extends net.liftweb.json.Serializer[BigDecimal] {
 
   def serialize(implicit format: Formats): PartialFunction[Any, JValue] = {
     case d: BigDecimal => JDouble(d.doubleValue())
-  }
-}
-
-class EnumerationSerializer[E <: Enumeration : ClassManifest](enum: E) extends net.liftweb.json.Serializer[E#Value] {
-  private val EnumerationClass = classOf[E#Value]
-
-  def deserialize(implicit format: Formats): PartialFunction[(TypeInfo, JValue), E#Value] = {
-    case (TypeInfo(EnumerationClass, _), json) => json match {
-      case JInt(value) => enum.values.filter(_.id == value).head
-      case value => throw new MappingException("Can't convert " + value + " to " + EnumerationClass)
-    }
-  }
-
-  def serialize(implicit format: Formats): PartialFunction[Any, JValue] = {
-    case value: E#Value => JInt(value.id)
   }
 }

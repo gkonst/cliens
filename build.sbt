@@ -12,6 +12,7 @@ libraryDependencies ++= Seq(
   "net.iharder" % "base64" % "2.3.8",
   "com.github.scopt" %% "scopt" % "2.0.0",
   "net.liftweb" %% "lift-json" % "2.4",
+  "net.liftweb" %% "lift-json-ext" % "2.4",
   "org.clapper" %% "grizzled-slf4j" % "0.6.8",
   "ch.qos.logback" % "logback-classic" % "1.0.1",
   // tests
