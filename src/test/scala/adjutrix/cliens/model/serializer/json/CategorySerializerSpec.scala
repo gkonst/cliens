@@ -10,6 +10,7 @@ class CategorySerializerSpec extends SerializerSpec {
   lazy val categoryWithoutDefaultStorageJSON = loadFileFromClasspathToString("/categoryWithoutDefaultStorage.json")
   lazy val categoryWithoutIdAndDefaultStorageJSON = loadFileFromClasspathToString("/categoryWithoutIdAndDefaultStorage.json")
   lazy val categoryJSON = loadFileFromClasspathToString("/category.json")
+  lazy val categorySerializedJSON = loadFileFromClasspathToString("/categorySerialized.json")
   lazy val categoriesJSON = loadFileFromClasspathToString("/categories.json")
 
   def modelShouldHaveFields(result: Category, id: Int, name: String, categoryType: CategoryType) = {
@@ -68,7 +69,7 @@ class CategorySerializerSpec extends SerializerSpec {
         result must not beEmpty
       }
       "result must be correct" in {
-        result must equalTo(categoryJSON)
+        result must equalTo(categorySerializedJSON)
       }
     }
   }

@@ -14,7 +14,7 @@ object CategorySerializer extends JSONSerializer[Category] {
     }
 
   override def transformToJSON(json: JValue) = json transform {
-    case JField("defaultStorage", x) => StorageSerializer.transformToJSON(JField("default_storage", x))
+    case JField("defaultStorage", x) => JField("default_storage", x \ "id")
   } transform {
     case JField("categoryType", x) => JField("type", x)
   }
