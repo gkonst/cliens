@@ -36,22 +36,21 @@ abstract class AdapterSpec[M <: Model] extends Specification {
     }
   }
 
-  // TODO re-implement
-  //  fullAdapterName + ".create" should {
-  //    val given = createModel
-  //    val result = adapter.create(given)
-  //    try {
-  //      "result be Some[Model]" in {
-  //        result must beSome[Model]
-  //      }
-  //      "result must have id" in {
-  //        result.get.id must beSome[Int]
-  //      }
-  //      specifyFields(result.get)
-  //    } finally {
-  //      adapter.delete(result.get.id.get)
-  //    }
-  //  }
+  fullAdapterName + ".create should return correct result" in {
+    val given = createModel
+    val result = adapter.create(given)
+    try {
+      "result be Some[Model]" in {
+        result must beSome[Model]
+      }
+      "result must have id" in {
+        result.get.id must beSome[Int]
+      }
+      specifyFields(result.get)
+    } finally {
+      adapter.delete(result.get.id.get)
+    }
+  }
 
   def createModel: M
 

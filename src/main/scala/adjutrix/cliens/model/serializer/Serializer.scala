@@ -15,4 +15,6 @@ trait Serializer[T <: Model] {
   def serialize(entity: T): String
 
   def serializePretty(entity: T): String
+
+  def contentType: String
 }

@@ -17,11 +17,11 @@ import adjutrix.cliens.conf.Configuration
  * @author konstantin_grigoriev
  */
 abstract class Adapter[T <: Model](configuration: Configuration)(implicit mf: Manifest[T]) extends Logging {
-  val baseUrl: String
-  val auth = "Basic " + Base64.encodeBytes((configuration.username + ":" + configuration.password).getBytes)
-  val serializer: Serializer[T] = JSONSerializer(mf.erasure.asInstanceOf[Class[T]])
+  protected val baseUrl: String
+  protected val auth = "Basic " + Base64.encodeBytes((configuration.username + ":" + configuration.password).getBytes)
+  protected val serializer: Serializer[T] = JSONSerializer(mf.erasure.asInstanceOf[Class[T]])
 
-  object Method extends Enumeration {
+  protected object Method extends Enumeration {
     type Method = Value
     val GET, POST, DELETE, PUT = Value
   }
@@ -42,29 +42,33 @@ abstract class Adapter[T <: Model](configuration: Configuration)(implicit mf: Ma
 
   def create(entity: T): Option[T] = {
     debug(" > create..." + entity)
-    val data = executePost(absoluteBaseUrl, serializer.serialize(entity)) map serializer.deserialize
+    val data = executePost(absoluteBaseUrl, serializer.serialize(entity), serializer.contentType) map serializer.deserialize
     debug(" < create...Ok " + data)
     data
   }
 
-  def absoluteBaseUrl = configuration.url + "/" + baseUrl + "/"
+  protected def absoluteBaseUrl = configuration.url + "/" + baseUrl + "/"
 
-  def writeData(connection: HttpURLConnection, data: String) {
+  protected def writeData(connection: HttpURLConnection, data: String, contentType: String) {
+    connection.setRequestProperty("Content-Type", contentType)
     connection.setDoOutput(true)
     val out = new OutputStreamWriter(connection.getOutputStream)
     debug("request data : " + data)
-    out.write(data)
-    out.close()
+    try {
+      out.write(data)
+    } finally {
+      out.close()
+    }
   }
 
-  def createData(data: Map[String, Any]) = data.map(it => it._1 + "=" + it._2).reduceLeft(_ + "&" + _)
+  protected def createData(data: Map[String, Any]) = data.map(it => it._1 + "=" + it._2).reduceLeft(_ + "&" + _)
 
-  def createQueryParameters(data: Option[Map[String, Any]]) = data match {
+  protected def createQueryParameters(data: Option[Map[String, Any]]) = data match {
     case Some(parameters) => "?" + createData(parameters)
     case None => ""
   }
 
-  def getConnection(method: Method, requestUrl: String) = {
+  protected def getConnection(method: Method, requestUrl: String) = {
     debug("request url : " + requestUrl)
     val connection = new URL(requestUrl).openConnection.asInstanceOf[HttpURLConnection]
     debug(" auth : " + auth)
@@ -73,7 +77,7 @@ abstract class Adapter[T <: Model](configuration: Configuration)(implicit mf: Ma
     connection
   }
 
-  def executeGet(url: String, data: Option[Map[String, Any]] = None): Option[Source] = {
+  protected def executeGet(url: String, data: Option[Map[String, Any]] = None): Option[Source] = {
     val connection = getConnection(GET, url + createQueryParameters(data))
     connection.getResponseCode match {
       case HttpURLConnection.HTTP_OK => Some(Source.fromInputStream(connection.getInputStream))
@@ -82,7 +86,7 @@ abstract class Adapter[T <: Model](configuration: Configuration)(implicit mf: Ma
     }
   }
 
-  def executeDelete(url: String, data: Option[Map[String, Any]] = None) {
+  protected def executeDelete(url: String, data: Option[Map[String, Any]] = None) {
     val connection = getConnection(DELETE, url + createQueryParameters(data))
     connection.getResponseCode match {
       case HttpURLConnection.HTTP_NO_CONTENT => Unit
@@ -90,9 +94,9 @@ abstract class Adapter[T <: Model](configuration: Configuration)(implicit mf: Ma
     }
   }
 
-  def executePost(url: String, data: String): Option[Source] = {
+  protected def executePost(url: String, data: String, contentType: String): Option[Source] = {
     val connection = getConnection(POST, url)
-    writeData(connection, data)
+    writeData(connection, data, contentType)
     connection.getResponseCode match {
       case HttpURLConnection.HTTP_OK => Some(Source.fromInputStream(connection.getInputStream))
       //      case HttpURLConnection.HTTP_BAD_REQUEST => throw new ValidationException(processJSONList(connection.getErrorStream))
@@ -100,9 +104,9 @@ abstract class Adapter[T <: Model](configuration: Configuration)(implicit mf: Ma
     }
   }
 
-  def executePut(url: String, data: String): Option[Source] = {
+  protected def executePut(url: String, data: String, contentType: String): Option[Source] = {
     val connection = getConnection(PUT, url)
-    writeData(connection, data)
+    writeData(connection, data, contentType)
     connection.getResponseCode match {
       case HttpURLConnection.HTTP_OK => Some(Source.fromInputStream(connection.getInputStream))
       //      case HttpURLConnection.HTTP_BAD_REQUEST => throw new ValidationException(processJSONList(connection.getErrorStream))

@@ -11,6 +11,9 @@ import ext.EnumSerializer
 abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Serializer[T] {
   implicit val formats = DefaultFormats + BigDecimalSerializer + new EnumSerializer(CategoryType)
 
+
+  val contentType = "application/json; charset=utf-8"
+
   def deserialize(data: String) = {
     transformToEntity(parse(data)).extract
   }
