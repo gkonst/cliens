@@ -66,9 +66,3 @@ trait SystemIO {
 
   def out: PrintStream = System.out
 }
-
-sealed trait CLIOption
-
-case class NoOption() extends CLIOption
-
-case class Verbose(anotherOption: CLIOption = NoOption()) extends CLIOption
