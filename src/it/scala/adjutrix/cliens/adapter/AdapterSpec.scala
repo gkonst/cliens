@@ -3,10 +3,9 @@ package adjutrix.cliens.adapter
 import org.specs2.mutable.Specification
 import adjutrix.cliens.model.Model
 import org.specs2.specification.Example
-import adjutrix.cliens.conf.PropertiesConfiguration
+import adjutrix.cliens.conf.DefaultConfiguration
 
-abstract class AdapterSpec[M <: Model] extends Specification {
-  implicit val configuration = PropertiesConfiguration.loadFromDefault()
+abstract class AdapterSpec[M <: Model] extends Specification with DefaultConfiguration {
   val fixtureId = 1
   val unknownId = 0
   val adapter: Adapter[M]
