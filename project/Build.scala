@@ -16,6 +16,8 @@ object Build extends Build {
   // setting to make the functionality be accessible from the outside (e.g., the terminal)
   val selectedProfile = SettingKey[Option[Profile]]("selected-profile", "Uses resources for the specified profile.")
 
+  lazy val IntegrationTest = config("it") extend (Test)
+
   lazy val root =
     Project("root", file("."))
       .configs(IntegrationTest)

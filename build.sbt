@@ -29,9 +29,9 @@ scalacOptions ++= Seq("-unchecked", "-deprecation")
 
 testOptions in Test += Tests.Argument("console", "junitxml")
 
-testOptions in IntegrationTest += Tests.Argument("console", "junitxml")
+testOptions in Build.IntegrationTest += Tests.Argument("console", "junitxml")
 
-testOptions in IntegrationTest <++= (name, selectedProfile) map {
+testOptions in Build.IntegrationTest <++= (name, selectedProfile) map {
   (n, profile) =>
     profile match {
       case Some(Profile.ci) => Seq(
