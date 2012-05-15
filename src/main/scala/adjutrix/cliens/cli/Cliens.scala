@@ -1,9 +1,9 @@
 package adjutrix.cliens.cli
 
 import scopt.mutable.OptionParser
-import adjutrix.cliens.service.Service
+import adjutrix.cliens.service.{ServiceFactory, Service}
 
-object Cliens {
+class Cliens(serviceFactory: ServiceFactory = Service) {
   var entity: String = null
   var options: CLIOption = NoOption()
 
@@ -18,8 +18,6 @@ object Cliens {
       Console.err.println("\nError: missing argument: <action>\n\nUsage: cliens <action>\n")
       return
     }
-    entity = null
-    options = null
     val action = args.head
     action match {
       case "list" => list(args.tail)
@@ -32,7 +30,7 @@ object Cliens {
       v: Boolean => options = Verbose(options)
     })
     if (parser.parse(args)) {
-      Service(entity).list(options)
+      serviceFactory(entity).list(options)
     }
   }
 
@@ -45,7 +43,13 @@ object Cliens {
       v: String => id = Integer.valueOf(v).intValue
     })
     if (parser.parse(args)) {
-      Service(entity).view(id, options)
+      serviceFactory(entity).view(id, options)
     }
+  }
+}
+
+object Cliens {
+  def main(args: Array[String]) {
+    new Cliens().main(args)
   }
 }

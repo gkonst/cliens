@@ -15,7 +15,11 @@ class Service[M <: Model](val adapter: Adapter[M], val cli: CLI[M]) {
   }
 }
 
-object Service extends PropertiesConfigurable {
+trait ServiceFactory {
+  def apply(name: String): Service[_]
+}
+
+object Service extends ServiceFactory with PropertiesConfigurable {
   def apply(name: String): Service[_] = name match {
     case "category" => new Service[Category](new CategoryAdapter(), new CategoryCLI())
     case "storage" => new Service[Storage](new StorageAdapter(), new StorageCLI())
