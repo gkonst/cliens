@@ -15,4 +15,6 @@ class StorageCLI(implicit configuration: Configuration) extends CLI[Storage](con
   override def rowSummary(item: Storage) = {
     super.rowSummary(item) + String.format("%-25s %-20s %-20s", item.name, item.amount + " " + item.currencyType.abbr, item.storageType.name)
   }
+
+  def create() = throw new UnsupportedOperationException()
 }

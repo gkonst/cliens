@@ -3,7 +3,7 @@ package adjutrix.cliens.cli
 import adjutrix.cliens.model.Model
 import scala.Predef._
 import adjutrix.cliens.conf.Configuration
-import java.io.{InputStream, PrintStream}
+import java.io.{BufferedReader, PrintStream}
 
 /**
  * Base CLI implementation. Used to communicate with user using console. 
@@ -36,6 +36,13 @@ abstract class CLI[T <: Model](configuration: Configuration) extends SystemIO {
     }
   }
 
+  def create(): T
+
+  def readLine(prompt: String, args: Any*) = {
+    out.printf(prompt, args)
+    in.readLine()
+  }
+
   private def row(item: T, options: CLIOption) {
     options match {
       case Verbose(other) => out.println(rowVerbose(item))
@@ -62,7 +69,7 @@ abstract class CLI[T <: Model](configuration: Configuration) extends SystemIO {
 }
 
 trait SystemIO {
-  def in: InputStream = System.in
+  def in: BufferedReader = Console.in
 
-  def out: PrintStream = System.out
+  def out: PrintStream = Console.out
 }

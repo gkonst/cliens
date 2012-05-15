@@ -1,7 +1,7 @@
 package adjutrix.cliens.cli
 
-import adjutrix.cliens.model.Category
 import adjutrix.cliens.conf.Configuration
+import adjutrix.cliens.model.Category
 
 /**
  * CLI implementation for 'Category'.
@@ -19,4 +19,6 @@ class CategoryCLI(implicit configuration: Configuration) extends CLI[Category](c
         case None => None
       })
   }
+
+  def create() = Category(readLine("Name: "), readLine("Type: ").toInt)
 }

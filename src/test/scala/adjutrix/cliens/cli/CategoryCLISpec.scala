@@ -1,7 +1,7 @@
 package adjutrix.cliens.cli
 
-import adjutrix.cliens.model.Category
 import adjutrix.cliens.model.ModelsFactory._
+import adjutrix.cliens.model.{CategoryType, Category}
 
 class CategoryCLISpec extends CLISpec[Category] {
 
@@ -17,4 +17,9 @@ class CategoryCLISpec extends CLISpec[Category] {
 
   val expectedSomeForList = "1    INCOME     Food                 None                \n" +
     "2    INCOME     Food                 None                \n"
+
+  "create should return correct result" in new CLIScope {
+    cli.stringToIn("Foo\n1\n")
+    cli.create() must beEqualTo(Category("Foo", CategoryType.INCOME))
+  }
 }

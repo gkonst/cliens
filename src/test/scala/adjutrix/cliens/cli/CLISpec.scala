@@ -2,21 +2,30 @@ package adjutrix.cliens.cli
 
 
 import adjutrix.cliens.model.Model
-import adjutrix.cliens.conf.PropertiesConfiguration
 import org.specs2.mutable.Specification
-import java.io.{PrintStream, ByteArrayOutputStream}
 import org.specs2.specification.Scope
+import java.io._
+import scala.concurrent.ops._
+import adjutrix.cliens.conf.DefaultConfiguration
 
-abstract class CLISpec[T <: Model] extends Specification {
-  implicit val configuration = PropertiesConfiguration.loadFromDefault()
+abstract class CLISpec[T <: Model] extends Specification with DefaultConfiguration {
 
   trait MockedIO extends SystemIO {
     val baos = new ByteArrayOutputStream()
+    val pis = new PipedInputStream()
+    val pos = new PipedOutputStream(pis)
 
     override val out: PrintStream = new PrintStream(baos)
-    //    override val in = _
+    override val in = new BufferedReader(new InputStreamReader(pis))
 
     def outToString = baos.toString
+
+    def stringToIn(data: String) {
+      spawn {
+        pos.write(data.getBytes)
+        pos.flush()
+      }
+    }
   }
 
   def produceCLI: CLI[T] with MockedIO
