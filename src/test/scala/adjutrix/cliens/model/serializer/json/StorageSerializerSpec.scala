@@ -2,7 +2,7 @@ package adjutrix.cliens.model.serializer.json
 
 import adjutrix.cliens.model.serializer.SerializerSpec
 import adjutrix.cliens.model.Storage
-import adjutrix.cliens.model.ModelsFactory.storage
+import adjutrix.cliens.model.ModelsFactory._
 
 class StorageSerializerSpec extends SerializerSpec {
 
@@ -11,46 +11,18 @@ class StorageSerializerSpec extends SerializerSpec {
   lazy val storageWithoutIdJSON = loadFileFromClasspathToString("/storageWithoutId.json")
   lazy val storageWithoutIdSerializedJSON = loadFileFromClasspathToString("/storageWithoutIdSerialized.json")
 
-  def modelShouldHaveFields(result: Storage, id: Int, name: String, amount: BigDecimal) = {
-    "result must have storageType" in {
-      result.storageType must not beNull
-    }
-    "result must have currencyType" in {
-      result.currencyType must not beNull
-    }
-    "result must have amount equal " + amount in {
-      result.amount must equalTo(amount)
-    }
-    "result must have name equal " + name in {
-      result.name must equalTo(name)
-    }
-  }
-
   "deserialize" should {
     "return correct result" in {
-      val result = StorageSerializer.deserialize(storageJSON)
-      modelShouldHaveFields(result, 1, "Parex", 10.0)
+      StorageSerializer.deserialize(storageJSON) must beEqualTo(Storage("Parex", storageType, currencyType, 10.0, Some(1)))
     }
   }
 
   "serialize" should {
     "not fail if id is Some" in {
-      val result = StorageSerializer.serializePretty(storage())
-      "result must not be empty" in {
-        result must not beEmpty
-      }
-      "result must be correct" in {
-        result must equalTo(storageSerializedJSON)
-      }
+      StorageSerializer.serializePretty(storage()) must equalTo(storageSerializedJSON)
     }
     "not fail if id is None" in {
-      val result = StorageSerializer.serializePretty(storage(id = None))
-      "result must not be empty" in {
-        result must not beEmpty
-      }
-      "result must be correct" in {
-        result must equalTo(storageWithoutIdSerializedJSON)
-      }
+      StorageSerializer.serializePretty(storage(id = None)) must equalTo(storageWithoutIdSerializedJSON)
     }
   }
 }
