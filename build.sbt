@@ -6,17 +6,17 @@ version := "0.0.1"
 
 organization := "Konstantin_Grigoriev"
 
-scalaVersion := "2.9.1"
+scalaVersion := "2.9.2"
 
 libraryDependencies ++= Seq(
   "net.iharder" % "base64" % "2.3.8",
-  "com.github.scopt" %% "scopt" % "2.0.0",
-  "net.liftweb" %% "lift-json" % "2.4",
-  "net.liftweb" %% "lift-json-ext" % "2.4",
-  "org.clapper" %% "grizzled-slf4j" % "0.6.8",
-  "ch.qos.logback" % "logback-classic" % "1.0.1",
+  "com.github.scopt" % "scopt_2.9.1" % "2.0.1",
+  "net.liftweb" % "lift-json_2.9.1" % "2.4",
+  "net.liftweb" % "lift-json-ext_2.9.1" % "2.4",
+  "org.clapper" %% "grizzled-slf4j" % "0.6.9",
+  "ch.qos.logback" % "logback-classic" % "1.0.3",
   // tests
-  "org.specs2" %% "specs2" % "1.9" % "it,test",
+  "org.specs2" %% "specs2" % "1.10" % "it,test",
   "org.mockito" % "mockito-all" % "1.9.0" % "it,test",
   "junit" % "junit" % "4.10" % "it,test"
 )
