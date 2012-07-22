@@ -9,6 +9,7 @@ import adjutrix.cliens.model.serializer.Serializer
  *
  * @author konstantin_grigoriev
  */
-class StorageAdapter(implicit configuration: Configuration, serializer: Serializer[Storage]) extends Adapter[Storage](configuration) {
+class StorageAdapter(implicit configuration: Configuration,
+                     serializer: Serializer[Storage]) extends Adapter[Storage] {
   val baseUrl = "storage"
 }

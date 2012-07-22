@@ -15,7 +15,9 @@ import adjutrix.cliens.conf.Configuration
  *
  * @author konstantin_grigoriev
  */
-abstract class Adapter[T <: Model](configuration: Configuration)(implicit mf: Manifest[T], serializer: Serializer[T]) extends Logging {
+abstract class Adapter[T <: Model](implicit mf: Manifest[T],
+                                   configuration: Configuration,
+                                   serializer: Serializer[T]) extends Logging {
   protected val baseUrl: String
   protected val auth = "Basic " + Base64.encodeBytes((configuration.username + ":" + configuration.password).getBytes)
 

@@ -8,7 +8,7 @@ import adjutrix.cliens.model.Category
  *
  * @author konstantin_grigoriev
  */
-class CategoryCLI(implicit configuration: Configuration) extends CLI[Category](configuration) {
+class CategoryCLI(implicit configuration: Configuration) extends CLI[Category] {
 
   override def header = super.header + String.format("%-10s %-20s %-20s", "Type", "Name", "Default Storage")
 

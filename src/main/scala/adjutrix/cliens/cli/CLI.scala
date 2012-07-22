@@ -10,7 +10,7 @@ import java.io.{BufferedReader, PrintStream}
  *
  * @author konstantin_grigoriev
  */
-abstract class CLI[T <: Model](configuration: Configuration) extends SystemIO {
+abstract class CLI[T <: Model](implicit configuration: Configuration) extends SystemIO {
 
   private val headerLine = "-" * header.size
 

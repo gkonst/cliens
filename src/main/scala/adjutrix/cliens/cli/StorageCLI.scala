@@ -8,7 +8,7 @@ import adjutrix.cliens.conf.Configuration
  *
  * @author konstantin_grigoriev
  */
-class StorageCLI(implicit configuration: Configuration) extends CLI[Storage](configuration) {
+class StorageCLI(implicit configuration: Configuration) extends CLI[Storage] {
 
   override def header = super.header + String.format("%-25s %-20s %-20s", "Name", "Amount", "Type")
 

@@ -9,6 +9,7 @@ import adjutrix.cliens.model.serializer.Serializer
  *
  * @author konstantin_grigoriev
  */
-class ExpenseAdapter(implicit configuration: Configuration, serializer: Serializer[Expense]) extends Adapter[Expense](configuration) {
+class ExpenseAdapter(implicit configuration: Configuration,
+                     serializer: Serializer[Expense]) extends Adapter[Expense] {
   val baseUrl = "expense"
 }

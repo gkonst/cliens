@@ -9,7 +9,8 @@ import adjutrix.cliens.model.serializer.Serializer
  *
  * @author konstantin_grigoriev
  */
-class CategoryAdapter(implicit configuration: Configuration, serializer: Serializer[Category]) extends Adapter[Category](configuration) {
+class CategoryAdapter(implicit configuration: Configuration,
+                      serializer: Serializer[Category]) extends Adapter[Category] {
   val baseUrl = "category"
 
   def findExpenseCategories = find(Option(Map[String, Any]("type" -> 0)))

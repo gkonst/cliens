@@ -8,6 +8,6 @@ import adjutrix.cliens.conf.Configuration
  *
  * @author konstantin_grigoriev
  */
-class ExpenseCLI(implicit configuration: Configuration) extends CLI[Expense](configuration) {
+class ExpenseCLI(implicit configuration: Configuration) extends CLI[Expense] {
   def create() = throw new UnsupportedOperationException()
 }
