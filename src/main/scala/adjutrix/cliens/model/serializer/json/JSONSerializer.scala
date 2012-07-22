@@ -11,7 +11,6 @@ import ext.EnumSerializer
 abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Serializer[T] {
   implicit val formats = DefaultFormats + BigDecimalSerializer + new EnumSerializer(CategoryType)
 
-
   val contentType = "application/json; charset=utf-8"
 
   def deserialize(data: String) = {
@@ -37,20 +36,9 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
   protected def transformToEntity(json: JValue) = json
 }
 
-object JSONSerializer {
-  def apply[T <: Model, S <: JSONSerializer[T]](cls: Class[T]): S = {
-    if (cls == classOf[Storage]) {
-      StorageSerializer.asInstanceOf[S]
-    } else if (cls == classOf[Category]) {
-      CategorySerializer.asInstanceOf[S]
-    } else if (cls == classOf[CurrencyType]) {
-      CurrencyTypeSerializer.asInstanceOf[S]
-    } else if (cls == classOf[StorageType]) {
-      StorageTypeSerializer.asInstanceOf[S]
-    } else {
-      throw new UnsupportedOperationException("Serializer for model " + cls + " not found")
-    }
-  }
+trait JSONSerializers {
+  implicit val storageSerializer = StorageSerializer
+  implicit val categorySerializer = CategorySerializer
 }
 
 object BigDecimalSerializer extends net.liftweb.json.Serializer[BigDecimal] {

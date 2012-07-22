@@ -7,7 +7,6 @@ import adjutrix.cliens.model.Model
 import io.Source
 import net.iharder.Base64
 import adjutrix.cliens.model.serializer.Serializer
-import adjutrix.cliens.model.serializer.json.JSONSerializer
 import grizzled.slf4j.Logging
 import adjutrix.cliens.conf.Configuration
 
@@ -16,10 +15,9 @@ import adjutrix.cliens.conf.Configuration
  *
  * @author konstantin_grigoriev
  */
-abstract class Adapter[T <: Model](configuration: Configuration)(implicit mf: Manifest[T]) extends Logging {
+abstract class Adapter[T <: Model](configuration: Configuration)(implicit mf: Manifest[T], serializer: Serializer[T]) extends Logging {
   protected val baseUrl: String
   protected val auth = "Basic " + Base64.encodeBytes((configuration.username + ":" + configuration.password).getBytes)
-  protected val serializer: Serializer[T] = JSONSerializer(mf.erasure.asInstanceOf[Class[T]])
 
   protected object Method extends Enumeration {
     type Method = Value

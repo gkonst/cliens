@@ -4,8 +4,9 @@ import org.specs2.mutable.Specification
 import adjutrix.cliens.model.Model
 import org.specs2.specification.Example
 import adjutrix.cliens.conf.DefaultConfiguration
+import adjutrix.cliens.model.serializer.json.JSONSerializers
 
-abstract class AdapterSpec[M <: Model] extends Specification with DefaultConfiguration {
+abstract class AdapterSpec[M <: Model] extends Specification with DefaultConfiguration with JSONSerializers {
   val fixtureId = 1
   val unknownId = 0
   val adapter: Adapter[M]
