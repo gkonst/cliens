@@ -33,10 +33,12 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
 
   protected def transformToJSON(json: JValue) = json transform {
     case JField("id", JInt(x)) => JField("id", JString(x.toString()))
+    case JField("resourceURI", x) => JField("resource_uri", x)
   }
 
   protected def transformToEntity(json: JValue) = json transform {
     case JField("id", JString(x)) => JField("id", JInt(x.toInt))
+    case JField("resource_uri", x) => JField("resourceURI", x)
   }
 }
 
