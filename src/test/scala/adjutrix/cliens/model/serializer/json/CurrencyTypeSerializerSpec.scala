@@ -8,8 +8,8 @@ class CurrencyTypeSerializerSpec extends SerializerSpec {
   "deserialize" should {
     "return correct result" in {
       CurrencyTypeSerializer.deserialize(
-        """{"name":"Dollar",
-            "abbr":"$",
+        """{"abbr":"$",
+            "name":"Dollar",
             "rate":"1.0",
             "id":"1",
             "resource_uri": "/api/v1/currencytype/1/"}""") must beEqualTo(

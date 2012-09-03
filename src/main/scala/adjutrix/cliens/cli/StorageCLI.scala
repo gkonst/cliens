@@ -1,6 +1,6 @@
 package adjutrix.cliens.cli
 
-import adjutrix.cliens.model.Storage
+import adjutrix.cliens.model._
 import adjutrix.cliens.conf.Configuration
 
 /**

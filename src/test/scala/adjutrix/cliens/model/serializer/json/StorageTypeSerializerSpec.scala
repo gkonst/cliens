@@ -15,7 +15,7 @@ class StorageTypeSerializerSpec extends SerializerSpec {
   }
   "serialize" should {
     "not fail if id is Some" in {
-      StorageTypeSerializer.serialize(StorageType("Bill", Some(1), Some("/api/v1/storagetype/1/"))) must equalTo( """{"name":"Bill","id":"1","resource_uri":"/api/v1/storagetype/1/"}""")
+      StorageTypeSerializer.serialize(StorageType("Bill", Some(1), Some("/api/v1/storagetype/1/"))) must equalTo( """{"id":"1","name":"Bill","resource_uri":"/api/v1/storagetype/1/"}""")
     }
     "not fail if id is None" in {
       StorageTypeSerializer.serialize(StorageType("Bill")) must equalTo( """{"name":"Bill"}""")

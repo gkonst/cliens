@@ -1,8 +1,15 @@
 package adjutrix.cliens.model
 
-sealed abstract class Model {
+sealed abstract class Model extends Product {
   val id: Option[Int]
   val resourceURI: Option[String]
+}
+
+case class Related[T <: Model](resourceURI: String, value: Option[T] = None) {
+  def get = value match {
+    case Some(x) => x
+    case None => throw new IllegalStateException("Related fields is not filled.")
+  }
 }
 
 case class CurrencyType(name: String,
@@ -16,8 +23,8 @@ case class StorageType(name: String,
                        resourceURI: Option[String] = None) extends Model
 
 case class Storage(name: String,
-                   storageType: StorageType,
-                   currencyType: CurrencyType,
+                   storageType: Related[StorageType],
+                   currencyType: Related[CurrencyType],
                    amount: BigDecimal = 0,
                    id: Option[Int] = None,
                    resourceURI: Option[String] = None) extends Model

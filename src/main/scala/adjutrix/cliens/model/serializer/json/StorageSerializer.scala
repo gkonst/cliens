@@ -1,21 +1,21 @@
 package adjutrix.cliens.model.serializer.json
 
 import adjutrix.cliens.model.Storage
-import net.liftweb.json.JsonAST._
 
 object StorageSerializer extends JSONSerializer[Storage] {
-  override def transformToJSON(json: JValue) =
-    json transform {
-      case JField("storageType", x) => JField("type", x \ "id")
-      case JField("currencyType", x: JObject) => JField("currency_type", x \ "id")
-      case JField("amount", JDouble(x)) => JField("amount", JString(x.toString))
-    }
 
-  override def transformToEntity(json: JValue) =
-    json transform {
-      case JField("type", x) => JField("storageType", x)
-      case JField("currency_type", x) => CurrencyTypeSerializer.transformToEntity(JField("currencyType", x))
-      case JField("amount", JString(x)) => JField("amount", JDouble(x.toDouble))
-    }
+  override protected def transformToEntity = ({
+    case "storageType" => ("type", {
+      v => v
+    })
+    case "currencyType" => ("currency_type", {
+      v => v
+    })
+  }: PartialFunction[String, (String, (Any) => Any)]) orElse super.transformToEntity
+
+  override protected def transformToJson = ({
+    case ("storageType", v) => ("type", v)
+    case ("currencyType", v) => ("currency_type", v)
+  }: PartialFunction[(String, AnyRef), (String, AnyRef)]) orElse super.transformToJson
 }
 
