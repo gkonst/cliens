@@ -2,8 +2,9 @@ package adjutrix.cliens.model.serializer.json
 
 import adjutrix.cliens.model.serializer.SerializerSpec
 import adjutrix.cliens.model.StorageType
+import org.specs2.mutable.Specification
 
-class StorageTypeSerializerSpec extends SerializerSpec {
+class StorageTypeSerializerSpec extends Specification {
 
   "deserialize" should {
     "return correct result" in {

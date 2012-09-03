@@ -1,16 +1,17 @@
 package adjutrix.cliens.model.serializer.json
 
-import adjutrix.cliens.model.serializer.SerializerSpec
+import adjutrix.cliens.model.serializer._
 import adjutrix.cliens.model.{CategoryType, Category}
 import adjutrix.cliens.model.ModelsFactory.{storage, category}
+import org.specs2.mutable.Specification
 
-class CategorySerializerSpec extends SerializerSpec {
+class CategorySerializerSpec extends Specification {
 
-  lazy val categoryWithoutDefaultStorageJSON = loadFileFromClasspathToString("/categoryWithoutDefaultStorage.json")
-  lazy val categoryWithoutIdAndDefaultStorageJSON = loadFileFromClasspathToString("/categoryWithoutIdAndDefaultStorage.json")
-  lazy val categoryJSON = loadFileFromClasspathToString("/category.json")
-  lazy val categorySerializedJSON = loadFileFromClasspathToString("/categorySerialized.json")
-  lazy val categoriesJSON = loadFileFromClasspathToString("/categories.json")
+  lazy val categoryWithoutDefaultStorageJSON = loadFileFromClasspathToString("/json/categoryWithoutDefaultStorage.json")
+  lazy val categoryWithoutIdAndDefaultStorageJSON = loadFileFromClasspathToString("/json/categoryWithoutIdAndDefaultStorage.json")
+  lazy val categoryJSON = loadFileFromClasspathToString("/json/category.json")
+  lazy val categorySerializedJSON = loadFileFromClasspathToString("/json/categorySerialized.json")
+  lazy val categoriesJSON = loadFileFromClasspathToString("/json/categories.json")
 
   "deserialize" should {
     "not fail if defaultStorage is None" in {

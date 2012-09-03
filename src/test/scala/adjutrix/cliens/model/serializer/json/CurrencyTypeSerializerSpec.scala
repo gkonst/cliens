@@ -1,9 +1,9 @@
 package adjutrix.cliens.model.serializer.json
 
-import adjutrix.cliens.model.serializer.SerializerSpec
 import adjutrix.cliens.model.CurrencyType
+import org.specs2.mutable.Specification
 
-class CurrencyTypeSerializerSpec extends SerializerSpec {
+class CurrencyTypeSerializerSpec extends Specification {
 
   "deserialize" should {
     "return correct result" in {
