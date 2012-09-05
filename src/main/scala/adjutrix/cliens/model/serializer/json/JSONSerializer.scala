@@ -40,7 +40,7 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
           val (name, fieldType, valueConversion) = if (transformToEntity.isDefinedAt(field.getName)) {
             transformToEntity(field.getName)
           } else {
-            (snakeCase(field.getName), getFieldType(field), (x: Any) => x)
+            (snakify(field.getName), getFieldType(field), (x: Any) => x)
           }
 
           val value = getTreeParser(nodes.get(name)).readValueAs(fieldType)
@@ -71,7 +71,11 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
           _.invoke(value)
         }.getOrElse(field.get(value))
         if (fieldValue != None) {
-          val (newFieldName, newFieldValue) = transformToJson(field.getName, fieldValue)
+          val (newFieldName, newFieldValue) = if (transformToJson.isDefinedAt(field.getName, fieldValue)) {
+            transformToJson(field.getName, fieldValue)
+          } else {
+            (snakify(field.getName), fieldValue)
+          }
           provider.defaultSerializeField(newFieldName, newFieldValue, json)
         }
       }
@@ -85,16 +89,14 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
     case ("resourceURI", x) => ("resource_uri", x)
     case ("id", Some(id)) => ("id", id.toString)
     case (name, x: BigDecimal) => (name, x.toString())
-    case any => any
   }
 
   object Json extends JerksonJson {
-    val module = new SimpleModule("EnhancedDatesModule", new Version(0, 1, 0, "alpha"))
-    module.addSerializer(new DefaultSerializer(klass))
-    module.addDeserializer(klass, new DefaultJacksonDeserializer(klass))
-    module.addDeserializer(classOf[Related[_]], new RelatedDeserializer)
-    module.addSerializer(classOf[Related[_]], new RelatedSerializer)
-    mapper.registerModule(module)
+    mapper.registerModule(new SimpleModule("CliensModule", new Version(0, 1, 0, "alpha"))
+      .addSerializer(new DefaultSerializer(klass))
+      .addDeserializer(klass, new DefaultJacksonDeserializer(klass))
+      .addDeserializer(classOf[Related[_]], new RelatedDeserializer)
+      .addSerializer(classOf[Related[_]], new RelatedSerializer))
 
     def prettyPrint[A](obj: A): String = {
       val writer = new StringWriter
@@ -135,19 +137,6 @@ class RelatedDeserializer extends JsonDeserializer[Related[_]] {
     jp.getText
   }
 }
-
-//class EnumSerializer extends JsonSerializer[Enum[AnyRef]#Value] {
-//  def serialize(value: Enum[AnyRef]#Value, jgen: JsonGenerator, provider: SerializerProvider) {
-//    jgen.writeNumber(value.id)
-//  }
-//}
-//
-//class EnumDeserializer[E <: Enum[E]#Value](factory: Enum[E]) extends JsonDeserializer[E] {
-//
-//  def deserialize(jp: JsonParser, ctxt: DeserializationContext) = {
-//    factory.valueOf(jp.getIntValue)
-//  }
-//}
 
 trait JSONSerializers {
   implicit val storageSerializer = StorageSerializer
