@@ -10,8 +10,9 @@ import org.codehaus.jackson.JsonParser
 import com.codahale.jerkson.{Json => JerksonJson}
 import java.io.{Writer, StringWriter}
 import org.codehaus.jackson.util.DefaultPrettyPrinter
+import grizzled.slf4j.Logging
 
-abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Serializer[T] {
+abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Serializer[T] with Logging {
   private val klass = mf.erasure.asInstanceOf[Class[T]]
   private val fields = getFields(klass)
 
@@ -35,22 +36,27 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
       val values = fields.map {
         field =>
         // TODO refactor this
-          val (name, valueConversion) = transformToEntity(field.getName)
-          val value = getTreeParser(nodes.get(name)).readValueAs(getFieldType(field))
-          toAnyRef(valueConversion(value))
+          logger.debug("deserializing field..." + field.getName)
+          val (name, fieldType, valueConversion) = if (transformToEntity.isDefinedAt(field.getName)) {
+            transformToEntity(field.getName)
+          } else {
+            (snakeCase(field.getName), getFieldType(field), (x: Any) => x)
+          }
+
+          val value = getTreeParser(nodes.get(name)).readValueAs(fieldType)
+          toAnyRef(valueConversion(if (value == null && isOption(field)) None else value))
       }
       constructor.newInstance(values.toArray: _*).asInstanceOf[A]
     }
   }
 
-  protected def transformToEntity: PartialFunction[String, (String, (Any) => Any)] = {
-    case "resourceURI" => ("resource_uri", {
+  protected def transformToEntity: PartialFunction[String, (String, Class[_], (Any) => Any)] = {
+    case "resourceURI" => ("resource_uri", classOf[String], {
       case v: String => Some(v)
     })
-    case "id" => ("id", {
+    case "id" => ("id", classOf[String], {
       case v: String => Some(v.toInt)
     })
-    case any => (any, any => any)
   }
 
   class DefaultSerializer[A <: Product](klass: Class[A]) extends JsonSerializer[A] {
@@ -75,7 +81,7 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
     override def handledType() = klass
   }
 
-  protected def transformToJson: PartialFunction[(String, AnyRef), (String, AnyRef)] = {
+  protected def transformToJson: PartialFunction[(String, Any), (String, Any)] = {
     case ("resourceURI", x) => ("resource_uri", x)
     case ("id", Some(id)) => ("id", id.toString)
     case (name, x: BigDecimal) => (name, x.toString())
@@ -129,6 +135,19 @@ class RelatedDeserializer extends JsonDeserializer[Related[_]] {
     jp.getText
   }
 }
+
+//class EnumSerializer extends JsonSerializer[Enum[AnyRef]#Value] {
+//  def serialize(value: Enum[AnyRef]#Value, jgen: JsonGenerator, provider: SerializerProvider) {
+//    jgen.writeNumber(value.id)
+//  }
+//}
+//
+//class EnumDeserializer[E <: Enum[E]#Value](factory: Enum[E]) extends JsonDeserializer[E] {
+//
+//  def deserialize(jp: JsonParser, ctxt: DeserializationContext) = {
+//    factory.valueOf(jp.getIntValue)
+//  }
+//}
 
 trait JSONSerializers {
   implicit val storageSerializer = StorageSerializer

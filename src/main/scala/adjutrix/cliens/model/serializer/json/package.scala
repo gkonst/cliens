@@ -19,11 +19,16 @@ package object json {
 
   def getFields[A](klass: Class[A]) = for (f <- klass.getDeclaredFields if !f.getName.contains("$")) yield f
 
-  def getFieldType[A <: Product](field: Field) = {
-    if (field.getType == classOf[Option[_]]) {
-      field.getGenericType.asInstanceOf[ParameterizedType].getActualTypeArguments.head.asInstanceOf[Class[_]]
+  def getFieldType(field: Field) = {
+    if (isOption(field)) {
+      field.getGenericType.asInstanceOf[ParameterizedType].getActualTypeArguments.head match {
+        case x: Class[_] => x
+        case x: ParameterizedType => x.getRawType.asInstanceOf[Class[_]]
+      }
     } else {
       field.getType
     }
   }
+
+  def isOption(field: Field) = field.getType == classOf[Option[_]]
 }

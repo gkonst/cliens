@@ -38,9 +38,11 @@ object CategoryType extends Enumeration {
   }
 }
 
+import CategoryType._
+
 case class Category(name: String,
-                    categoryType: CategoryType.Value,
-                    defaultStorage: Option[Storage] = None,
+                    categoryType: CategoryType,
+                    defaultStorage: Option[Related[Storage]] = None,
                     id: Option[Int] = None,
                     resourceURI: Option[String] = None) extends Model
 

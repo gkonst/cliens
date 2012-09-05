@@ -7,7 +7,7 @@ class CategoryCLISpec extends CLISpec[Category] {
 
   def produceCLI = new CategoryCLI with MockedIO
 
-  def givenModel(id: Int) = category(Some(id))
+  def givenModel(id: Int) = category(Some(id), CategoryType.EXPENSE)
 
   val expectedHeader = "---------------------------------------------------------\n" +
     "Id   Type       Name                 Default Storage     \n" +
