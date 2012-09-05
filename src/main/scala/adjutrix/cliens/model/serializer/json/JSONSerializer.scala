@@ -11,6 +11,7 @@ import com.codahale.jerkson.{Json => JerksonJson}
 import java.io.{Writer, StringWriter}
 import org.codehaus.jackson.util.DefaultPrettyPrinter
 import grizzled.slf4j.Logging
+import java.lang.reflect.Field
 
 abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Serializer[T] with Logging {
   private val klass = mf.erasure.asInstanceOf[Class[T]]
@@ -35,18 +36,25 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
       val nodes = jp.readValueAsTree
       val values = fields.map {
         field =>
-        // TODO refactor this
           logger.debug("deserializing field..." + field.getName)
           val (name, fieldType, valueConversion) = if (transformToEntity.isDefinedAt(field.getName)) {
             transformToEntity(field.getName)
           } else {
-            (snakify(field.getName), getFieldType(field), (x: Any) => x)
+            (snakify(field.getName), getFieldType(field), handleOption(field))
           }
 
           val value = getTreeParser(nodes.get(name)).readValueAs(fieldType)
-          toAnyRef(valueConversion(if (value == null && isOption(field)) None else value))
+          toAnyRef(valueConversion(value))
       }
       constructor.newInstance(values.toArray: _*).asInstanceOf[A]
+    }
+  }
+
+  def handleOption(field: Field): Any => Any = {
+    if (isOption(field)) {
+      x => Option(x)
+    } else {
+      x => x
     }
   }
 

@@ -11,8 +11,13 @@ object ModelsFactory {
   def storageUnfilled(id: Option[Int] = Some(1)) =
     Storage("Parex", storageType.resourceURI, currencyType.resourceURI, 10.0, id, resourceURI("storage", id))
 
-  def category(id: Option[Int] = None, categoryType: CategoryType = INCOME, defaultStorage: Option[Storage] = None) =
+  def category(id: Option[Int] = None, categoryType: CategoryType = EXPENSE, defaultStorage: Option[Storage] = None) =
     Category("Food", categoryType, defaultStorage, id, resourceURI("category", id))
+
+  def categoryUnfilled(id: Option[Int] = None, categoryType: CategoryType = EXPENSE, defaultStorage: Option[Storage] = None) =
+    Category("Food", categoryType, defaultStorage.map {
+      _.resourceURI
+    }, id, resourceURI("category", id))
 
   def resourceURI(resourceName: String, id: Int): Option[String] = Some("/api/v1/%s/%s/".format(resourceName, id))
 

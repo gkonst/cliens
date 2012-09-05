@@ -1,6 +1,6 @@
 {
   "name":"Food",
-  "type":1,
+  "type":0,
   "default_storage":"/api/v1/storage/1/",
   "id":"1",
   "resource_uri":"/api/v1/category/1/"
