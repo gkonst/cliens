@@ -13,10 +13,10 @@ class CategoryCLISpec extends CLISpec[Category] {
     "Id   Type       Name                 Default Storage     \n" +
     "---------------------------------------------------------\n"
 
-  val expectedSomeForRow = "1    INCOME     Food                 None                \n"
+  val expectedSomeForRow = "1    EXPENSE    Food                 None                \n"
 
-  val expectedSomeForList = "1    INCOME     Food                 None                \n" +
-    "2    INCOME     Food                 None                \n"
+  val expectedSomeForList = "1    EXPENSE    Food                 None                \n" +
+    "2    EXPENSE    Food                 None                \n"
 
   "create should return correct result" in new CLIScope {
     cli.stringToIn("Foo\n1\n")
