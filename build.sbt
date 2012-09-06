@@ -51,3 +51,9 @@ testOptions in Build.IntegrationTest <++= (name, selectedProfile) map {
 }
 
 parallelExecution in Test := false
+
+resolvers += "repo.codahale.com" at "http://repo.codahale.com"
+
+resolvers += "typesafe" at "http://repo.typesafe.com/typesafe/repo"
+
+resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
