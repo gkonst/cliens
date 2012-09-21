@@ -26,12 +26,12 @@ class CategorySerializerSpec extends Specification {
     }
   }
 
-  //  "deserializeAll" should {
-  //    "not fail" in {
-  //      val result = CategorySerializer.deserializeAll(categoriesJSON)
-  //      result must not beEmpty
-  //    }
-  //  }
+  "deserializeAll" should {
+    "not fail" in {
+      val result = CategorySerializer.deserializeAll(categoriesJSON)
+      result must not beEmpty
+    }
+  }
 
   "serialize" should {
     "not fail if id is Some" in {
