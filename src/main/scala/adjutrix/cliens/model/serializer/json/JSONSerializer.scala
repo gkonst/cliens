@@ -146,7 +146,4 @@ class RelatedDeserializer extends JsonDeserializer[Related[_]] {
   }
 }
 
-trait JSONSerializers {
-  implicit val storageSerializer = StorageSerializer
-  implicit val categorySerializer = CategorySerializer
-}
+
