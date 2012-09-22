@@ -12,6 +12,14 @@ case class Related[T <: Model](resourceURI: String, value: Option[T] = None) {
   }
 }
 
+case class Pack[T <: Model](next: String, previous: String, objects: List[T]) extends Seq[T] {
+  def length = objects.length
+
+  def iterator = objects.iterator
+
+  def apply(idx: Int) = objects(idx)
+}
+
 case class CurrencyType(name: String,
                         abbr: String,
                         rate: BigDecimal,

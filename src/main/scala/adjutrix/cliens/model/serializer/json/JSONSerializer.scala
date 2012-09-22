@@ -12,6 +12,7 @@ import java.io.{Writer, StringWriter}
 import org.codehaus.jackson.util.DefaultPrettyPrinter
 import grizzled.slf4j.Logging
 import java.lang.reflect.Field
+import scala.collection.JavaConversions._
 
 abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Serializer[T] with Logging {
   private val klass = mf.erasure.asInstanceOf[Class[T]]
@@ -123,11 +124,26 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
       generator.writeObject(obj)
       generator.close()
     }
+
+    def parsePack[A <: Model](input: String)(implicit mf: Manifest[A]): Pack[A] = {
+      val jp = factory.createJsonParser(input)
+      val tree = jp.readValueAsTree()
+      def getTreeParser(field: JsonNode) = new TreeTraversingParser(if (field == null) NullNode.getInstance else field, jp.getCodec)
+      val meta = tree.get("meta")
+      val next = meta.get("next").asText()
+      val prev = meta.get("previous").asText()
+      val node = tree.get("objects")
+      val treeParser: TreeTraversingParser = getTreeParser(node)
+      treeParser.nextToken()
+      val objects: List[A] = treeParser.readValuesAs(mf.erasure).toList.asInstanceOf[List[A]]
+      Pack[A](next, prev, objects)
+    }
+
   }
 
   def deserialize(data: String) = Json.parse[T](data)
 
-  def deserializeAll(data: String) = Json.parse[List[T]](data)
+  def deserializeAll(data: String) = Json.parsePack[T](data)
 
   def serialize(entity: T) = Json.generate(entity)
 
@@ -145,5 +161,3 @@ class RelatedDeserializer extends JsonDeserializer[Related[_]] {
     jp.getText
   }
 }
-
-
