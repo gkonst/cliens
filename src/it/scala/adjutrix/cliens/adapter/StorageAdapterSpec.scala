@@ -1,6 +1,7 @@
 package adjutrix.cliens.adapter
 
-import adjutrix.cliens.model.{CurrencyType, StorageType, Storage}
+import adjutrix.cliens.model.Storage
+import adjutrix.cliens.model.ModelsFactory._
 
 class StorageAdapterSpec extends AdapterSpec[Storage] {
 
@@ -21,8 +22,5 @@ class StorageAdapterSpec extends AdapterSpec[Storage] {
     }
   }
 
-  def createModel = new Storage(name = "TestStorage",
-    storageType = new StorageType("Bill", Some(1)),
-    currencyType = new CurrencyType("Dollar", "$", 1.0, Some(1)),
-    amount = 0)
+  def createModel = storage()
 }

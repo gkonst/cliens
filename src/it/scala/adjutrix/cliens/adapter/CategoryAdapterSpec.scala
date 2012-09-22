@@ -1,6 +1,7 @@
 package adjutrix.cliens.adapter
 
 import adjutrix.cliens.model.{Model, CategoryType, Category}
+import adjutrix.cliens.model.ModelsFactory._
 
 class CategoryAdapterSpec extends AdapterSpec[Category] {
 
@@ -16,7 +17,7 @@ class CategoryAdapterSpec extends AdapterSpec[Category] {
     }
   }
 
-  def createModel = new Category(name = "TestCategory", categoryType = CategoryType.EXPENSE)
+  def createModel = category()
 
   def specifyFields(result: Category) = {
     "result must have name" in {
