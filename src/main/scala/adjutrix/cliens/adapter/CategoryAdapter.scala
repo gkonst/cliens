@@ -13,5 +13,5 @@ class CategoryAdapter(implicit configuration: Configuration,
                       serializer: Serializer[Category]) extends Adapter[Category] {
   val baseUrl = "category"
 
-  def findExpenseCategories = find(Option(Map[String, Any]("type" -> 0)))
+  def findExpenseCategories = find(Some(Map("type" -> 0)))
 }

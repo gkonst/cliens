@@ -73,14 +73,21 @@ abstract class Adapter[T <: Model](implicit mf: Manifest[T],
     val connection = new URL(requestUrl).openConnection.asInstanceOf[HttpURLConnection]
     debug(" auth : " + auth)
     connection.setRequestProperty("Authorization", auth)
+    connection.setRequestProperty("Accept", serializer.contentType)
     connection.setRequestMethod(method.toString)
     connection
+  }
+
+  protected def processHttpOk(connection: HttpURLConnection): Some[Source] = {
+    require(connection.getContentType == serializer.contentType,
+      "required content type is %s, but actual is %s".format(serializer.contentType, connection.getContentType))
+    Some(fromInputStream(connection.getInputStream))
   }
 
   protected def executeGet(url: String, data: Option[Map[String, Any]] = None): Option[Source] = {
     val connection = getConnection(GET, url + createQueryParameters(data))
     connection.getResponseCode match {
-      case HttpURLConnection.HTTP_OK => Some(Source.fromInputStream(connection.getInputStream))
+      case HttpURLConnection.HTTP_OK => processHttpOk(connection)
       case HttpURLConnection.HTTP_NOT_FOUND => None
       case code => throw new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString)
     }
@@ -98,7 +105,7 @@ abstract class Adapter[T <: Model](implicit mf: Manifest[T],
     val connection = getConnection(POST, url)
     writeData(connection, data, contentType)
     connection.getResponseCode match {
-      case HttpURLConnection.HTTP_OK => Some(Source.fromInputStream(connection.getInputStream))
+      case HttpURLConnection.HTTP_OK => processHttpOk(connection)
       //      case HttpURLConnection.HTTP_BAD_REQUEST => throw new ValidationException(processJSONList(connection.getErrorStream))
       case code => throw new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString)
     }
@@ -108,7 +115,7 @@ abstract class Adapter[T <: Model](implicit mf: Manifest[T],
     val connection = getConnection(PUT, url)
     writeData(connection, data, contentType)
     connection.getResponseCode match {
-      case HttpURLConnection.HTTP_OK => Some(Source.fromInputStream(connection.getInputStream))
+      case HttpURLConnection.HTTP_OK => processHttpOk(connection)
       //      case HttpURLConnection.HTTP_BAD_REQUEST => throw new ValidationException(processJSONList(connection.getErrorStream))
       case code => throw new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString)
     }
