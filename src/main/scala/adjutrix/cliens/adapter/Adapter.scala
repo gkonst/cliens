@@ -40,9 +40,9 @@ abstract class Adapter[T <: Model](implicit mf: Manifest[T],
     debug(" < delete...Ok")
   }
 
-  def create(entity: T): Option[T] = {
+  def create(entity: T): Either[Any, String] = {
     debug(" > create..." + entity)
-    val data = executePost(absoluteBaseUrl, serializer.serialize(entity), serializer.contentType) map serializer.deserialize
+    val data = executePost(absoluteBaseUrl, serializer.serialize(entity), serializer.contentType)
     debug(" < create...Ok " + data)
     data
   }
@@ -101,17 +101,20 @@ abstract class Adapter[T <: Model](implicit mf: Manifest[T],
     }
   }
 
-  protected def executePost(url: String, data: String, contentType: String): Option[Source] = {
+  protected def executePost(url: String, data: String, contentType: String): Either[Any, String] = {
     val connection = getConnection(POST, url)
     writeData(connection, data, contentType)
+    debug("response code : " + connection.getResponseCode)
     connection.getResponseCode match {
-      case HttpURLConnection.HTTP_OK => processHttpOk(connection)
+      case HttpURLConnection.HTTP_CREATED => Right(connection.getHeaderField("Location"))
+      // TODO handle badrequest, notfound, and so on???
       //      case HttpURLConnection.HTTP_BAD_REQUEST => throw new ValidationException(processJSONList(connection.getErrorStream))
-      case code => throw new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString)
+      case code => Left(new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString))
     }
   }
 
   protected def executePut(url: String, data: String, contentType: String): Option[Source] = {
+    // TODO implement
     val connection = getConnection(PUT, url)
     writeData(connection, data, contentType)
     connection.getResponseCode match {

@@ -1,7 +1,8 @@
 package adjutrix.cliens.adapter
 
 import org.specs2.mutable.Specification
-import adjutrix.cliens.model.Model
+import adjutrix.cliens.model._
+import adjutrix.cliens.model.ModelsFactory._
 import org.specs2.specification.Example
 import adjutrix.cliens.conf.DefaultConfiguration
 import adjutrix.cliens.model.serializer.json.JSONSerializers
@@ -39,16 +40,18 @@ abstract class AdapterSpec[M <: Model] extends Specification with DefaultConfigu
   fullAdapterName + ".create should return correct result" in {
     val given = createModel
     val result = adapter.create(given)
+    "result be Some[Model]" in {
+      result must beRight[String]
+    }
+    val id = toId(result.right.get)
     try {
-      "result be Some[Model]" in {
-        result must beSome[Model]
+      val created = adapter.findById(id)
+      "created be Some" in {
+        created must beSome[Model]
       }
-      "result must have id" in {
-        result.get.id must beSome[Int]
-      }
-      specifyFields(result.get)
+      specifyFields(created.get)
     } finally {
-      adapter.delete(result.get.id.get)
+      adapter.delete(id)
     }
   }
 
