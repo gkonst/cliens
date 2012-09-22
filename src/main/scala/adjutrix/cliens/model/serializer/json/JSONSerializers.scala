@@ -1,6 +1,8 @@
 package adjutrix.cliens.model.serializer.json
 
-trait JSONSerializers {
+import adjutrix.cliens.model.serializer.Serializers
+
+trait JSONSerializers extends Serializers {
   implicit val storageSerializer = StorageSerializer
   implicit val categorySerializer = CategorySerializer
 }
