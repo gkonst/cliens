@@ -5,7 +5,6 @@ import serializer.Serializer
 import org.codehaus.jackson.map._
 import module.SimpleModule
 import org.codehaus.jackson._
-import org.codehaus.jackson.node.{NullNode, TreeTraversingParser}
 import org.codehaus.jackson.JsonParser
 import com.codahale.jerkson.{Json => JerksonJson}
 import java.io.{Writer, StringWriter}
@@ -33,7 +32,6 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
         throw ctxt.mappingException(klass)
       }
 
-      def getTreeParser(field: JsonNode) = new TreeTraversingParser(if (field == null) NullNode.getInstance else field, jp.getCodec)
       val nodes = jp.readValueAsTree
       val values = fields.map {
         field =>
@@ -44,7 +42,7 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
             (snakify(field.getName), getFieldType(field), handleOption(field))
           }
 
-          val value = getTreeParser(nodes.get(name)).readValueAs(fieldType)
+          val value = getTreeParser(nodes.get(name), jp).readValueAs(fieldType)
           toAnyRef(valueConversion(value))
       }
       constructor.newInstance(values.toArray: _*).asInstanceOf[A]
@@ -128,15 +126,10 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
     def parsePack[A <: Model](input: String)(implicit mf: Manifest[A]): Pack[A] = {
       val jp = factory.createJsonParser(input)
       val tree = jp.readValueAsTree()
-      def getTreeParser(field: JsonNode) = new TreeTraversingParser(if (field == null) NullNode.getInstance else field, jp.getCodec)
       val meta = tree.get("meta")
-      val next = meta.get("next").asText()
-      val prev = meta.get("previous").asText()
-      val node = tree.get("objects")
-      val treeParser: TreeTraversingParser = getTreeParser(node)
-      treeParser.nextToken()
-      val objects: List[A] = treeParser.readValuesAs(mf.erasure).toList.asInstanceOf[List[A]]
-      Pack[A](next, prev, objects)
+      val treeParser = getTreeParser(tree.get("objects"), jp)
+      val objectsList = treeParser.readValuesAs(mf.erasure).toList.asInstanceOf[List[A]]
+      Pack[A](meta.get("next").asText(), meta.get("previous").asText(), objectsList)
     }
 
   }

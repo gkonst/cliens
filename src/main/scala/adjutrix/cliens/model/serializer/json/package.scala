@@ -1,6 +1,8 @@
 package adjutrix.cliens.model.serializer
 
 import java.lang.reflect.{ParameterizedType, Field}
+import org.codehaus.jackson.{JsonParser, JsonNode}
+import org.codehaus.jackson.node.{NullNode, TreeTraversingParser}
 
 package object json {
   def toAnyRef(x: Any): AnyRef = x match {
@@ -31,4 +33,14 @@ package object json {
   }
 
   def isOption(field: Field) = field.getType == classOf[Option[_]]
+
+  def snakify(word: String) = word.replaceAll("([A-Z]+)([A-Z][a-z])", "$1_$2").replaceAll("([a-z\\d])([A-Z])", "$1_$2").toLowerCase
+
+  def getTreeParser(field: JsonNode, jp: JsonParser) = {
+    val tp = new TreeTraversingParser(if (field == null) NullNode.getInstance else field, jp.getCodec)
+    if (tp.getCurrentToken == null) {
+      tp.nextToken()
+    }
+    tp
+  }
 }
