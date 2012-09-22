@@ -3,6 +3,10 @@ package adjutrix.cliens.model
 sealed abstract class Model extends Product {
   val id: Option[Int]
   val resourceURI: Option[String]
+
+  if (id.isDefined) {
+    require(resourceURI.isDefined, "If id is defined, resourceURI should also be defined")
+  }
 }
 
 case class Related[T <: Model](resourceURI: String, value: Option[T] = None) {
