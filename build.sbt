@@ -28,7 +28,7 @@ selectedProfile := Profile.dev
 
 scalacOptions ++= Seq("-unchecked", "-deprecation")
 
-seq(ScctPlugin.scctSettings: _*)
+seq(ScctPlugin.instrumentSettings: _*)
 
 testOptions in Test += Tests.Argument("console", "junitxml")
 
