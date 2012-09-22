@@ -12,8 +12,8 @@ libraryDependencies ++= Seq(
   "net.iharder" % "base64" % "2.3.8",
   "com.github.scopt" %% "scopt" % "2.1.0",
   "com.codahale" % "jerkson_2.9.1" % "0.5.0",
-  "org.clapper" %% "grizzled-slf4j" % "0.6.9",
-  "ch.qos.logback" % "logback-classic" % "1.0.6",
+  "org.clapper" %% "grizzled-slf4j" % "0.6.10",
+  "ch.qos.logback" % "logback-classic" % "1.0.7",
   // tests
   "org.specs2" %% "specs2" % "1.12.1" % "it,test",
   "org.mockito" % "mockito-all" % "1.9.0" % "it,test",
