@@ -15,9 +15,10 @@ libraryDependencies ++= Seq(
   "org.clapper" %% "grizzled-slf4j" % "0.6.10",
   "ch.qos.logback" % "logback-classic" % "1.0.7",
   // tests
-  "org.specs2" %% "specs2" % "1.12.1" % "it,test",
+  "org.specs2" %% "specs2" % "1.12.1" % "test",
   "org.mockito" % "mockito-all" % "1.9.0" % "it,test",
-  "junit" % "junit" % "4.10" % "it,test"
+  "junit" % "junit" % "4.10" % "it,test",
+  "org.scalatest" %% "scalatest" % "1.8" % "it,test"
 )
 
 ivyScala ~= {
@@ -30,9 +31,7 @@ scalacOptions ++= Seq("-unchecked", "-deprecation")
 
 seq(ScctPlugin.instrumentSettings: _*)
 
-testOptions in Test += Tests.Argument("console", "junitxml")
-
-testOptions in Build.IntegrationTest += Tests.Argument("console", "junitxml")
+testListeners <<= target.map(t => Seq(new eu.henkelmann.sbt.JUnitXmlTestsListener(t.getAbsolutePath)))
 
 testOptions in Build.IntegrationTest <++= (name, selectedProfile) map {
   (n, profile) =>

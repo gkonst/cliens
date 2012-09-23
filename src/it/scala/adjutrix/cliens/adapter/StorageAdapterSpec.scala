@@ -7,19 +7,11 @@ class StorageAdapterSpec extends AdapterSpec[Storage] {
 
   lazy val adapter = new StorageAdapter()
 
-  def specifyFields(result: Storage) = {
-    "result must have name" in {
-      result.name must not beNull
-    }
-    "result must have storageType" in {
-      result.storageType must not beNull
-    }
-    "result must have currencyType" in {
-      result.currencyType must not beNull
-    }
-    "result must have amount" in {
-      result.amount must not beNull
-    }
+  def specifyFields(result: Storage) {
+    result.name must not be null
+    result.storageType must not be null
+    result.currencyType must not be null
+    result.amount must not be null
   }
 
   def createModel = storage()
