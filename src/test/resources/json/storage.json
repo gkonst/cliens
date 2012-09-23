@@ -1,6 +1,6 @@
 {
   "name":"Parex",
-  "storage_type":"/api/v1/storagetype/1/",
+  "type":"/api/v1/storagetype/1/",
   "currency_type":"/api/v1/currencytype/1/",
   "amount":"10.0",
   "id":"1",
