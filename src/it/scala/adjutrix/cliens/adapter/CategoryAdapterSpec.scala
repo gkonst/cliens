@@ -5,7 +5,11 @@ import adjutrix.cliens.model.ModelsFactory._
 
 class CategoryAdapterSpec extends AdapterSpec[Category] {
 
-  lazy val adapter = new CategoryAdapter()
+  lazy val adapter = new CategoryAdapter
+
+  it should behave like findAllIsDefined()
+
+  it should behave like findByIdIsDefined(fixtureId = 1)
 
   "findExpenseCategories" should "return categories with type EXPENCE" in {
     val result = adapter.findExpenseCategories
@@ -13,7 +17,7 @@ class CategoryAdapterSpec extends AdapterSpec[Category] {
     result.get foreach (_.categoryType === CategoryType.EXPENSE)
   }
 
-  def createModel = category(None)
+  it should behave like createIsDefined(given = category(None))
 
   def specifyFields(result: Category) {
     result.name must not be null

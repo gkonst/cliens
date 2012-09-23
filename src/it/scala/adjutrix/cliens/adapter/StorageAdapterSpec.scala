@@ -5,7 +5,11 @@ import adjutrix.cliens.model.ModelsFactory._
 
 class StorageAdapterSpec extends AdapterSpec[Storage] {
 
-  lazy val adapter = new StorageAdapter()
+  lazy val adapter = new StorageAdapter
+
+  it should behave like findAllIsDefined()
+  it should behave like findByIdIsDefined(fixtureId = 1)
+  it should behave like createIsDefined(given = storage(None))
 
   def specifyFields(result: Storage) {
     result.name must not be null
@@ -13,6 +17,4 @@ class StorageAdapterSpec extends AdapterSpec[Storage] {
     result.currencyType must not be null
     result.amount must not be null
   }
-
-  def createModel = storage(None)
 }
