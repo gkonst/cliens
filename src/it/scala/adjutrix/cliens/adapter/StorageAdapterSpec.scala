@@ -14,5 +14,5 @@ class StorageAdapterSpec extends AdapterSpec[Storage] {
     result.amount must not be null
   }
 
-  def createModel = storage()
+  def createModel = storage(None)
 }

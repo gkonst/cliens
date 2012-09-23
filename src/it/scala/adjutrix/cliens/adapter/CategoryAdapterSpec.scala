@@ -13,7 +13,7 @@ class CategoryAdapterSpec extends AdapterSpec[Category] {
     result.get foreach (_.categoryType === CategoryType.EXPENSE)
   }
 
-  def createModel = category()
+  def createModel = category(None)
 
   def specifyFields(result: Category) {
     result.name must not be null
