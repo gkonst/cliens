@@ -10,6 +10,7 @@ class StorageAdapterSpec extends AdapterSpec[Storage] {
   it should behave like findAllIsDefined()
   it should behave like findByIdIsDefined(fixtureId = 1)
   it should behave like createIsDefined(given = storage(None))
+  it should behave like deleteIsDefined(given = storage(None))
 
   def specifyFields(result: Storage) {
     result.name must not be null

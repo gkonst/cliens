@@ -19,6 +19,8 @@ class CategoryAdapterSpec extends AdapterSpec[Category] {
 
   it should behave like createIsDefined(given = category(None))
 
+  it should behave like deleteIsDefined(given = category(None))
+
   def specifyFields(result: Category) {
     result.name must not be null
     result.categoryType must not be null

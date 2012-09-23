@@ -48,5 +48,14 @@ abstract class AdapterSpec[M <: Model] extends FlatSpec with MustMatchers with D
     // TODO add tests for validation
   }
 
+  def deleteIsDefined(given: => M) {
+    "delete" should "not fail" in {
+      val result = adapter.create(given)
+      result must be('right)
+      adapter.delete(toId(result.right.get))
+      adapter.findById(toId(result.right.get)) must be(None)
+    }
+  }
+
   def specifyFields(result: M)
 }
