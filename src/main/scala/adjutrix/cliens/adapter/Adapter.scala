@@ -7,8 +7,9 @@ import adjutrix.cliens.model.Model
 import io.Source
 import net.iharder.Base64
 import adjutrix.cliens.model.serializer.Serializer
-import grizzled.slf4j.Logging
+import grizzled.slf4j.Logger
 import adjutrix.cliens.conf.Configuration
+import adjutrix.cliens.LoggingUtilities._
 
 /**
  * Base adapter implementation. Encapsulates core CRUD methods for working with Adjutrix API.
@@ -17,7 +18,9 @@ import adjutrix.cliens.conf.Configuration
  */
 abstract class Adapter[T <: Model](implicit mf: Manifest[T],
                                    configuration: Configuration,
-                                   serializer: Serializer[T]) extends Logging {
+                                   serializer: Serializer[T]) {
+  private implicit lazy val logger = Logger(getClass)
+
   protected val baseUrl: String
   protected val auth = "Basic " + Base64.encodeBytes((configuration.username + ":" + configuration.password).getBytes)
 
@@ -32,20 +35,17 @@ abstract class Adapter[T <: Model](implicit mf: Manifest[T],
 
   def find(data: Option[Map[String, Any]]): Option[Seq[T]] = executeGet(absoluteBaseUrl, data) map serializer.deserializeAll
 
-  def findById(id: Int): Option[T] = executeGet(absoluteBaseUrl + String.valueOf(id)) map serializer.deserialize
+  def findById(id: Int): Option[T] =
+    executeGet(absoluteBaseUrl + id).map(serializer.deserialize)
+      .trace("findById")
 
-  def delete(id: Int) {
-    debug(" > delete..." + id)
-    executeDelete(absoluteBaseUrl + String.valueOf(id))
-    debug(" < delete...Ok")
-  }
+  def delete(id: Int): Either[Error, Unit] =
+    executeDelete(absoluteBaseUrl + id)
+      .trace("delete")
 
-  def create(entity: T): Either[Any, String] = {
-    debug(" > create..." + entity)
-    val data = executePost(absoluteBaseUrl, serializer.serialize(entity), serializer.contentType)
-    debug(" < create...Ok " + data)
-    data
-  }
+  def create(entity: T): Either[Any, String] =
+    executePost(absoluteBaseUrl, serializer.serialize(entity), serializer.contentType)
+      .trace("create")
 
   protected def absoluteBaseUrl = configuration.url + "/" + baseUrl + "/"
 
@@ -53,7 +53,7 @@ abstract class Adapter[T <: Model](implicit mf: Manifest[T],
     connection.setRequestProperty("Content-Type", contentType)
     connection.setDoOutput(true)
     val out = new OutputStreamWriter(connection.getOutputStream)
-    debug("request data : " + data)
+    data.trace(" data")
     try {
       out.write(data)
     } finally {
@@ -69,16 +69,15 @@ abstract class Adapter[T <: Model](implicit mf: Manifest[T],
   }
 
   protected def getConnection(method: Method, requestUrl: String) = {
-    debug("request url : " + requestUrl)
+    requestUrl.trace(" requestUrl")
     val connection = new URL(requestUrl).openConnection.asInstanceOf[HttpURLConnection]
-    debug(" auth : " + auth)
     connection.setRequestProperty("Authorization", auth)
     connection.setRequestProperty("Accept", serializer.contentType)
     connection.setRequestMethod(method.toString)
     connection
   }
 
-  protected def processHttpOk(connection: HttpURLConnection): Some[Source] = {
+  protected def processResponseWithResult(connection: HttpURLConnection): Some[Source] = {
     require(connection.getContentType == serializer.contentType,
       "required content type is %s, but actual is %s".format(serializer.contentType, connection.getContentType))
     Some(fromInputStream(connection.getInputStream))
@@ -87,29 +86,28 @@ abstract class Adapter[T <: Model](implicit mf: Manifest[T],
   protected def executeGet(url: String, data: Option[Map[String, Any]] = None): Option[Source] = {
     val connection = getConnection(GET, url + createQueryParameters(data))
     connection.getResponseCode match {
-      case HttpURLConnection.HTTP_OK => processHttpOk(connection)
+      case HttpURLConnection.HTTP_OK => processResponseWithResult(connection)
       case HttpURLConnection.HTTP_NOT_FOUND => None
       case code => throw new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString)
     }
   }
 
-  protected def executeDelete(url: String, data: Option[Map[String, Any]] = None) {
+  protected def executeDelete(url: String, data: Option[Map[String, Any]] = None): Either[Error, Unit] = {
     val connection = getConnection(DELETE, url + createQueryParameters(data))
     connection.getResponseCode match {
-      case HttpURLConnection.HTTP_NO_CONTENT => Unit
-      case code => throw new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString)
+      case HttpURLConnection.HTTP_NO_CONTENT => Right()
+      case code => Left(ServerError(code, connection.getErrorStream))
     }
   }
 
-  protected def executePost(url: String, data: String, contentType: String): Either[Any, String] = {
+  protected def executePost(url: String, data: String, contentType: String): Either[Error, String] = {
     val connection = getConnection(POST, url)
     writeData(connection, data, contentType)
-    debug("response code : " + connection.getResponseCode)
-    connection.getResponseCode match {
+    connection.getResponseCode.trace(" responseCode") match {
       case HttpURLConnection.HTTP_CREATED => Right(connection.getHeaderField("Location"))
-      // TODO handle badrequest, notfound, and so on???
-      //      case HttpURLConnection.HTTP_BAD_REQUEST => throw new ValidationException(processJSONList(connection.getErrorStream))
-      case code => Left(new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString))
+      // TODO parse error stream
+      case HttpURLConnection.HTTP_BAD_REQUEST => Left(ValidationError(connection.getErrorStream))
+      case code => Left(ServerError(code, connection.getErrorStream))
     }
   }
 
@@ -118,19 +116,15 @@ abstract class Adapter[T <: Model](implicit mf: Manifest[T],
     val connection = getConnection(PUT, url)
     writeData(connection, data, contentType)
     connection.getResponseCode match {
-      case HttpURLConnection.HTTP_OK => processHttpOk(connection)
+      case HttpURLConnection.HTTP_OK => processResponseWithResult(connection)
       //      case HttpURLConnection.HTTP_BAD_REQUEST => throw new ValidationException(processJSONList(connection.getErrorStream))
       case code => throw new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString)
     }
   }
 }
 
-/**
- * This exception is used when validation error occurs during create or update operation.
- * Contains detailed errors information.
- *
- * @author konstantin_grigoriev
- */
-class ValidationException(errors: Option[List[Map[String, Any]]]) extends Exception {
-  override def getMessage = "ValidationException : " + errors
-}
+sealed trait Error
+
+case class ServerError(code: Int, message: String) extends Error
+
+case class ValidationError(message: String) extends Error

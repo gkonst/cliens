@@ -45,7 +45,6 @@ abstract class AdapterSpec[M <: Model] extends FlatSpec with MustMatchers with D
         adapter.delete(toId(result.right.get))
       }
     }
-    // TODO add tests for validation
   }
 
   def deleteIsDefined(given: => M) {

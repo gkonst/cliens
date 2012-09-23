@@ -35,7 +35,7 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
       val nodes = jp.readValueAsTree
       val values = fields.map {
         field =>
-          logger.debug("deserializing field..." + field.getName)
+          logger.trace("deserializing field..." + field.getName)
           val (name, fieldType, valueConversion) = if (transformToEntity.isDefinedAt(field.getName)) {
             transformToEntity(field.getName)
           } else {

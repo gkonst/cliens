@@ -6,7 +6,8 @@ object ModelsFactory {
   val storageType = StorageType("Bill", Some(1), toResourceURI("storagetype", 1))
   val currencyType = CurrencyType("Dollar", "$", 1.0, Some(1), toResourceURI("currencytype", 1))
 
-  def storage(id: Option[Int] = Some(1)) = Storage("Parex", storageType, currencyType, 10.0, id, toResourceURI("storage", id))
+  def storage(id: Option[Int] = Some(1), name: String = "Parex") =
+    Storage(name, storageType, currencyType, 10.0, id, toResourceURI("storage", id))
 
   def storageUnfilled(id: Option[Int] = Some(1)) =
     Storage("Parex", storageType.resourceURI, currencyType.resourceURI, 10.0, id, toResourceURI("storage", id))
