@@ -13,8 +13,9 @@ class CategoryAdapterSpec extends AdapterSpec[Category] {
 
   "findExpenseCategories" should "return categories with type EXPENCE" in {
     val result = adapter.findExpenseCategories
-    result must be('defined)
-    result.get foreach (_.categoryType === CategoryType.EXPENSE)
+    result must be('right)
+    result.right.get must be('defined)
+    result.right.get.get foreach (_.categoryType === CategoryType.EXPENSE)
   }
 
   it should behave like createIsDefined(given = category(None))

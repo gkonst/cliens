@@ -1,6 +1,6 @@
 package adjutrix.cliens.adapter
 
-import adjutrix.cliens.model.Storage
+import adjutrix.cliens.model._
 import adjutrix.cliens.model.ModelsFactory._
 
 class StorageAdapterSpec extends AdapterSpec[Storage] {

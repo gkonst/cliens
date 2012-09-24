@@ -50,27 +50,27 @@ abstract class CLISpec[T <: Model] extends Specification with DefaultConfigurati
   }
 
   "optionRow return correct result in case of None" in new CLIScope {
-    cli.optionRow(None, NoOption())
+    cli.optionRow(Right(None), NoOption())
     cli.outToString must equalTo(expectedHeader + expectedNoneForRow)
   }
 
   "optionRow return correct result in case of Some" in new CLIScope {
-    cli.optionRow(Some(givenModel(1)), NoOption())
+    cli.optionRow(Right(Some(givenModel(1))), NoOption())
     cli.outToString must equalTo(expectedHeader + expectedSomeForRow)
   }
 
   "optionRow return correct result in case of Some and Verbose option" in new CLIScope {
-    cli.optionRow(Some(givenModel(1)), Verbose())
+    cli.optionRow(Right(Some(givenModel(1))), Verbose())
     cli.outToString must equalTo(expectedHeader + expectedSomeForRowVerbose)
   }
 
   "optionList return correct result in case of None" in new CLIScope {
-    cli.optionList(None, NoOption())
+    cli.optionList(Right(None), NoOption())
     cli.outToString must equalTo(expectedHeader + expectedNoneForList)
   }
 
   "optionList return correct result in case of Some" in new CLIScope {
-    cli.optionList(Some(List(givenModel(1), givenModel(2))), NoOption())
+    cli.optionList(Right(Some(List(givenModel(1), givenModel(2)))), NoOption())
     cli.outToString must equalTo(expectedHeader + expectedSomeForList)
   }
 

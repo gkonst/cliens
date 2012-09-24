@@ -10,6 +10,7 @@ import adjutrix.cliens.model.serializer.Serializer
 import grizzled.slf4j.Logger
 import adjutrix.cliens.conf.Configuration
 import adjutrix.cliens.LoggingUtilities._
+import adjutrix.cliens.model._
 
 /**
  * Base adapter implementation. Encapsulates core CRUD methods for working with Adjutrix API.
@@ -31,12 +32,13 @@ abstract class Adapter[T <: Model](implicit mf: Manifest[T],
 
   import Method._
 
-  def findAll(): Option[Seq[T]] = executeGet(absoluteBaseUrl) map serializer.deserializeAll
+  def findAll(): Either[Error, Option[Seq[T]]] = find(None)
 
-  def find(data: Option[Map[String, Any]]): Option[Seq[T]] = executeGet(absoluteBaseUrl, data) map serializer.deserializeAll
+  def find(data: Option[Map[String, Any]]): Either[Error, Option[Seq[T]]] = 
+    executeGet(absoluteBaseUrl, data).fold(l => Left(l), r => Right(r map serializer.deserializeAll))
 
-  def findById(id: Int): Option[T] =
-    executeGet(absoluteBaseUrl + id).map(serializer.deserialize)
+  def findById(id: Int): Either[Error, Option[T]] =
+    executeGet(absoluteBaseUrl + id).fold(l => Left(l), r => Right(r map serializer.deserialize))
       .trace("findById")
 
   def delete(id: Int): Either[Error, Unit] =
@@ -77,18 +79,18 @@ abstract class Adapter[T <: Model](implicit mf: Manifest[T],
     connection
   }
 
-  protected def processResponseWithResult(connection: HttpURLConnection): Some[Source] = {
+  protected def processResponseWithResult(connection: HttpURLConnection) = {
     require(connection.getContentType == serializer.contentType,
       "required content type is %s, but actual is %s".format(serializer.contentType, connection.getContentType))
-    Some(fromInputStream(connection.getInputStream))
+    Right(Some(fromInputStream(connection.getInputStream)))
   }
 
-  protected def executeGet(url: String, data: Option[Map[String, Any]] = None): Option[Source] = {
+  protected def executeGet(url: String, data: Option[Map[String, Any]] = None): Either[Error, Option[Source]] = {
     val connection = getConnection(GET, url + createQueryParameters(data))
     connection.getResponseCode match {
       case HttpURLConnection.HTTP_OK => processResponseWithResult(connection)
-      case HttpURLConnection.HTTP_NOT_FOUND => None
-      case code => throw new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString)
+      case HttpURLConnection.HTTP_NOT_FOUND => Right(None)
+      case code => Left(ServerError(code, connection.getErrorStream()))
     }
   }
 
@@ -113,18 +115,13 @@ abstract class Adapter[T <: Model](implicit mf: Manifest[T],
 
   protected def executePut(url: String, data: String, contentType: String): Option[Source] = {
     // TODO implement
-    val connection = getConnection(PUT, url)
-    writeData(connection, data, contentType)
-    connection.getResponseCode match {
-      case HttpURLConnection.HTTP_OK => processResponseWithResult(connection)
-      //      case HttpURLConnection.HTTP_BAD_REQUEST => throw new ValidationException(processJSONList(connection.getErrorStream))
-      case code => throw new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString)
-    }
+    // val connection = getConnection(PUT, url)
+    // writeData(connection, data, contentType)
+    // connection.getResponseCode match {
+    //   case HttpURLConnection.HTTP_OK => processResponseWithResult(connection)
+    //   //      case HttpURLConnection.HTTP_BAD_REQUEST => throw new ValidationException(processJSONList(connection.getErrorStream))
+    //   case code => throw new IllegalArgumentException(code + " " + fromInputStream(connection.getErrorStream).mkString)
+    // }
+    None
   }
 }
-
-sealed trait Error
-
-case class ServerError(code: Int, message: String) extends Error
-
-case class ValidationError(message: String) extends Error

@@ -12,24 +12,28 @@ abstract class AdapterSpec[M <: Model] extends FlatSpec with MustMatchers with D
   val adapter: Adapter[M]
 
   def findAllIsDefined() {
-    "findAll" should "return Some with non empty items" in {
+    "findAll" should "return Right(Some(non empty items)" in {
       val result = adapter.findAll()
-      result must be('defined)
-      result.get must not be ('empty)
-      result.get.foreach(_ must not be (null))
+      result must be('right)
+      result.right.get must be('defined)
+      result.right.get.get must not be ('empty)
+      result.right.get.get.foreach(_ must not be (null))
     }
   }
 
   def findByIdIsDefined(fixtureId: Int) {
-    "findById" should "return Some with id equesl to " + fixtureId in {
+    "findById" should "return Right(Some(item with id equesl to " + fixtureId + ")" in {
       val result = adapter.findById(fixtureId)
-      result must be('defined)
-      result.get.id must be(Some(fixtureId))
-      specifyFields(result.get)
+      result must be('right)
+      result.right.get must be('defined)
+      result.right.get.get.id must be(Some(fixtureId))
+      specifyFields(result.right.get.get)
     }
 
     it should "return None if nothing found" in {
-      adapter.findById(unknownId) must be(None)
+      val result = adapter.findById(unknownId)
+      result must be('right)
+      result.right.get must be(None)
     }
   }
 
@@ -39,8 +43,9 @@ abstract class AdapterSpec[M <: Model] extends FlatSpec with MustMatchers with D
       result must be('right)
       try {
         val created = adapter.findById(toId(result.right.get))
-        created must be('defined)
-        specifyFields(created.get)
+        created must be('right)
+        created.right.get must be('defined)
+        specifyFields(created.right.get.get)
       } finally {
         adapter.delete(toId(result.right.get))
       }
@@ -52,7 +57,9 @@ abstract class AdapterSpec[M <: Model] extends FlatSpec with MustMatchers with D
       val result = adapter.create(given)
       result must be('right)
       adapter.delete(toId(result.right.get))
-      adapter.findById(toId(result.right.get)) must be(None)
+      val found = adapter.findById(toId(result.right.get))
+      found must be('right)
+      found.right.get must be(None)
     }
   }
 
