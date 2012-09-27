@@ -1,8 +1,9 @@
-package adjutrix.cliens.adapter
+package adjutrix.cliens.adapter.cash
 
 import adjutrix.cliens.conf.Configuration
 import adjutrix.cliens.model.Expense
 import adjutrix.cliens.model.serializer.Serializer
+import adjutrix.cliens.adapter.Adapter
 
 /**
  * Adapter impl for working with 'Expense'.
