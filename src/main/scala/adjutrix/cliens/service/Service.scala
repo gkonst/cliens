@@ -4,7 +4,8 @@ import adjutrix.cliens.conf.PropertiesConfigurable
 import adjutrix.cliens.model.{Storage, Category, Model}
 import adjutrix.cliens.adapter.cash.{StorageAdapter, CategoryAdapter}
 import adjutrix.cliens.adapter.Adapter
-import adjutrix.cliens.cli.{CategoryCLI, StorageCLI, CLIOption, CLI}
+import adjutrix.cliens.cli.cash.{CategoryCLI, StorageCLI}
+import adjutrix.cliens.cli.{CLIOption, CLI}
 import adjutrix.cliens.model.serializer.json.JSONSerializers
 
 class Service[M <: Model](val adapter: Adapter[M], val cli: CLI[M]) {

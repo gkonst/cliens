@@ -1,7 +1,8 @@
-package adjutrix.cliens.cli
+package adjutrix.cliens.cli.cash
 
 import adjutrix.cliens.model.Expense
 import adjutrix.cliens.conf.Configuration
+import adjutrix.cliens.cli.CLI
 
 /**
  * CLI implementation for 'Expense'.

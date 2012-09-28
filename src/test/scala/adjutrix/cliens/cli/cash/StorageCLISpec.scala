@@ -1,7 +1,8 @@
-package adjutrix.cliens.cli
+package adjutrix.cliens.cli.cash
 
 import adjutrix.cliens.model.Storage
 import adjutrix.cliens.model.ModelsFactory._
+import adjutrix.cliens.cli.CLISpec
 
 class StorageCLISpec extends CLISpec[Storage] {
 

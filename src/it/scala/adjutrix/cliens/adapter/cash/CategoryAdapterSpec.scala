@@ -1,7 +1,8 @@
-package adjutrix.cliens.adapter
+package adjutrix.cliens.adapter.cash
 
 import adjutrix.cliens.model.{CategoryType, Category}
 import adjutrix.cliens.model.ModelsFactory._
+import adjutrix.cliens.adapter.AdapterSpec
 
 class CategoryAdapterSpec extends AdapterSpec[Category] {
 

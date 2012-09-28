@@ -1,7 +1,8 @@
-package adjutrix.cliens.cli
+package adjutrix.cliens.cli.cash
 
 import adjutrix.cliens.conf.Configuration
 import adjutrix.cliens.model.Category
+import adjutrix.cliens.cli.CLI
 
 /**
  * CLI implementation for 'Category'.

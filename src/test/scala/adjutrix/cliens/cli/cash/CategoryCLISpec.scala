@@ -1,7 +1,8 @@
-package adjutrix.cliens.cli
+package adjutrix.cliens.cli.cash
 
 import adjutrix.cliens.model.ModelsFactory._
 import adjutrix.cliens.model.{CategoryType, Category}
+import adjutrix.cliens.cli.CLISpec
 
 class CategoryCLISpec extends CLISpec[Category] {
 

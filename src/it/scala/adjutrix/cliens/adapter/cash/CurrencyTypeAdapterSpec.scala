@@ -1,6 +1,7 @@
-package adjutrix.cliens.adapter
+package adjutrix.cliens.adapter.cash
 
 import adjutrix.cliens.model.CurrencyType
+import adjutrix.cliens.adapter.AdapterSpec
 
 class CurrencyTypeAdapterSpec extends AdapterSpec[CurrencyType] {
   lazy val adapter = new CurrencyTypeAdapter
