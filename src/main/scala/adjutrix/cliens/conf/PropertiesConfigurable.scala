@@ -6,12 +6,14 @@ import java.io._
 import scala.Array
 
 trait PropertiesConfigurable extends Configurable {
-  implicit lazy val configuration = PropertiesConfiguration.loadOrCreateDefault()
+  implicit lazy val configuration = PropertiesConfiguration.configuration
 }
 
 object PropertiesConfiguration extends Logging {
 
   val defaultConfigurationFilePath = new File(Array(System.getProperty("user.home"), ".cliens", "configuration.properites").reduceLeft(_ + File.separator + _))
+
+  lazy val configuration = loadFromDefault()
 
   def loadOrCreateDefault(usingFile: File = defaultConfigurationFilePath) = {
     debug("loading configuration..." + usingFile)
