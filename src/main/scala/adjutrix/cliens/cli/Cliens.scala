@@ -3,7 +3,7 @@ package adjutrix.cliens.cli
 import scopt.mutable.OptionParser
 import adjutrix.cliens.cli.cash.CashCLI
 
-class Cliens() {
+class Cliens(cliFactory: CLIFactory = CashCLI) {
   var entity: String = null
   implicit var options: CLIOption = NoOption()
 
@@ -30,7 +30,7 @@ class Cliens() {
       v: Boolean => options = Verbose(options)
     })
     if (parser.parse(args)) {
-      CashCLI(entity) match {
+      cliFactory(entity) match {
         case cli: ListCLI[_] => cli.list
       }
     }
@@ -45,7 +45,7 @@ class Cliens() {
       v: String => id = Integer.valueOf(v).intValue
     })
     if (parser.parse(args)) {
-      CashCLI(entity) match {
+      cliFactory(entity) match {
         case cli: DetailCLI[_] => cli.detail(id)
       }
     }

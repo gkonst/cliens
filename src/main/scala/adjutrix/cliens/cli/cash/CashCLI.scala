@@ -1,9 +1,9 @@
 package adjutrix.cliens.cli.cash
 
-import adjutrix.cliens.cli.CLI
+import adjutrix.cliens.cli.{CLIFactory, CLI}
 import adjutrix.cliens.adapter.cash._
 
-object CashCLI {
+object CashCLI extends CLIFactory {
   def apply(name: String): CLI[_] = name match {
     case "category" => new CategoryCLI with CategoryAdapterComponent
     case "storage" => new StorageCLI with StorageAdapterComponent

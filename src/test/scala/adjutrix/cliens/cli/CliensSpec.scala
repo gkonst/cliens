@@ -1,32 +1,35 @@
 package adjutrix.cliens.cli
 
-import org.specs2.mutable.Specification
-import org.specs2.mock.Mockito
+import org.scalatest.mock.MockitoSugar
+import org.scalatest.FlatSpec
+import org.specs2.matcher.MustMatchers
+import adjutrix.cliens.model.Model
+import org.mockito.Mockito._
 
-class CliensSpec extends Specification with Mockito {
+class CliensSpec extends FlatSpec with MustMatchers with MockitoSugar {
 
-  // TODO implement test for Cliens
-  //  "list should call service.list" in new CliensScope {
-  //    cliens.main(Array("list", "category"))
-  //    there was one(serviceFactory).apply("category")
-  //    there was one(service).list(NoOption())
-  //  }
-  //
-  //  "view should call service.view" in new CliensScope {
-  //    cliens.main(Array("view", "storage", "1"))
-  //    there was one(serviceFactory).apply("storage")
-  //    there was one(service).view(1, NoOption())
-  //  }
-  //
-  //  trait CliensScope extends Scope {
-  //    val service = mock[Service[Model]]
-  //    val serviceFactory = spy(new MockedServiceFactory)
-  //    val cliens = new Cliens(serviceFactory)
-  //
-  //    class MockedServiceFactory extends ServiceFactory {
-  //      def apply(name: String) = service
-  //    }
-  //
-  //  }
+  "list" should "call cli.list" in new CliensContext {
+    cliens.main(Array("list", "category"))
+    verify(cliFactory, times(1)).apply("category")
+    verify(cli, times(1)).list(NoOption())
+  }
+
+
+  "view" should "call service.view" in new CliensContext {
+    cliens.main(Array("view", "storage", "1"))
+    verify(cliFactory, times(1)).apply("storage")
+    verify(cli, times(1)).detail(1)(NoOption())
+  }
+
+  trait CliensContext {
+    val cli = mock[ListCLI[Model]]
+    val cliFactory = spy(new MockedServiceFactory)
+    val cliens = new Cliens(cliFactory)
+
+    class MockedServiceFactory extends CLIFactory {
+      def apply(name: String) = cli
+    }
+
+  }
 
 }
