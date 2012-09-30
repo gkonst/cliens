@@ -1,15 +1,16 @@
 package adjutrix.cliens.cli.cash
 
 import adjutrix.cliens.model._
-import adjutrix.cliens.conf.Configuration
 import adjutrix.cliens.cli.CLI
+import adjutrix.cliens.adapter.cash.StorageAdapterComponent
 
 /**
  * CLI implementation for 'Storage'.
  *
  * @author konstantin_grigoriev
  */
-class StorageCLI(implicit configuration: Configuration) extends CLI[Storage] {
+trait StorageCLI extends CLI[Storage] {
+  self: StorageAdapterComponent =>
 
   override def header = super.header + String.format("%-25s %-20s %-20s", "Name", "Amount", "Type")
 

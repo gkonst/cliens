@@ -2,32 +2,36 @@ package adjutrix.cliens.cli
 
 import adjutrix.cliens.model._
 import scala.Predef._
-import adjutrix.cliens.conf.Configuration
-import java.io.{BufferedReader, PrintStream}
+import adjutrix.cliens.adapter.AdapterComponent
 
 /**
  * Base CLI implementation. Used to communicate with user using console. 
  *
  * @author konstantin_grigoriev
  */
-abstract class CLI[T <: Model](implicit configuration: Configuration) extends SystemIO {
+trait CLI[T <: Model] extends SystemIO {
+  self: AdapterComponent[T] =>
 
   private val headerLine = "-" * header.size
 
   protected[cli] def header: String = String.format("%-5s", "Id")
 
+  def list(options: CLIOption) {}
+
+  def view(id: Int, options: CLIOption) {}
+
   def optionList(data: Either[Error, Option[Seq[T]]], options: CLIOption) {
     handleError(data) {
       result =>
-      printHeader()
-      result match {
-        case Some(items) => list(items, options)
-        case None => out.println("No data found")
-      }
-    }      
+        printHeader()
+        result match {
+          case Some(items) => list(items, options)
+          case None => out.println("No data found")
+        }
+    }
   }
 
-  private def handleError[A](data: Either[Error, Option[A]])(f:Option[A] => Unit) {
+  private def handleError[A](data: Either[Error, Option[A]])(f: Option[A] => Unit) {
     data match {
       case Left(error) => printError(error)
       case Right(x) => f(x)
@@ -41,11 +45,11 @@ abstract class CLI[T <: Model](implicit configuration: Configuration) extends Sy
   def optionRow(data: Either[Error, Option[T]], options: CLIOption) {
     handleError(data) {
       result =>
-      printHeader()
-      result match {
-        case Some(x) => row(x, options)
-        case None => out.println("Not found")
-      }
+        printHeader()
+        result match {
+          case Some(x) => row(x, options)
+          case None => out.println("Not found")
+        }
     }
   }
 
@@ -80,13 +84,7 @@ abstract class CLI[T <: Model](implicit configuration: Configuration) extends Sy
     printHeaderLine()
   }
 
-  protected[cli] def printError(error:Error) {
+  protected[cli] def printError(error: Error) {
     out.println(error)
   }
-}
-
-trait SystemIO {
-  def in: BufferedReader = Console.in
-
-  def out: PrintStream = Console.out
 }

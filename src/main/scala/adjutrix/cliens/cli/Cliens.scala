@@ -1,9 +1,9 @@
 package adjutrix.cliens.cli
 
 import scopt.mutable.OptionParser
-import adjutrix.cliens.service.{ServiceFactory, Service}
+import adjutrix.cliens.cli.cash.CashCLI
 
-class Cliens(serviceFactory: ServiceFactory = Service) {
+class Cliens() {
   var entity: String = null
   var options: CLIOption = NoOption()
 
@@ -30,7 +30,7 @@ class Cliens(serviceFactory: ServiceFactory = Service) {
       v: Boolean => options = Verbose(options)
     })
     if (parser.parse(args)) {
-      serviceFactory(entity).list(options)
+      CashCLI(entity).list(options)
     }
   }
 
@@ -43,13 +43,11 @@ class Cliens(serviceFactory: ServiceFactory = Service) {
       v: String => id = Integer.valueOf(v).intValue
     })
     if (parser.parse(args)) {
-      serviceFactory(entity).view(id, options)
+      CashCLI(entity).view(id, options)
     }
   }
 }
 
-object Cliens {
-  def main(args: Array[String]) {
-    new Cliens().main(args)
-  }
+object Cliens extends App {
+  new Cliens().main(args)
 }
