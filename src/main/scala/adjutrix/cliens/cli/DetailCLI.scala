@@ -1,17 +1,13 @@
 package adjutrix.cliens.cli
 
-import adjutrix.cliens.model.{Error, Model}
-import adjutrix.cliens.adapter.AdapterComponent
+import adjutrix.cliens.model.Model
+import adjutrix.cliens.adapter.ReaderAdapterComponent
 
 trait DetailCLI[M <: Model] extends CLI[M] {
-  self: AdapterComponent[M] =>
+  self: ReaderAdapterComponent[M] =>
 
   def detail(id: Int)(implicit options: CLIOption) {
-    // TODO implement detail operation in CLI
-  }
-
-  protected def optionRow(data: Either[Error, Option[M]], options: CLIOption) {
-    handleError(data) {
+    handleError(adapter.findById(id)) {
       result =>
         printHeader()
         result match {

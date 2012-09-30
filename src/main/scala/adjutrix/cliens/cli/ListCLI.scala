@@ -1,17 +1,13 @@
 package adjutrix.cliens.cli
 
-import adjutrix.cliens.adapter.AdapterComponent
-import adjutrix.cliens.model.{Error, Model}
+import adjutrix.cliens.adapter.ReaderAdapterComponent
+import adjutrix.cliens.model.Model
 
 trait ListCLI[M <: Model] extends DetailCLI[M] {
-  self: AdapterComponent[M] =>
+  self: ReaderAdapterComponent[M] =>
 
   def list()(implicit options: CLIOption) {
-    // TODO implement list operation in CLI
-  }
-
-  def optionList(data: Either[Error, Option[Seq[M]]], options: CLIOption) {
-    handleError(data) {
+    handleError(adapter.findAll()) {
       result =>
         printHeader()
         result match {
