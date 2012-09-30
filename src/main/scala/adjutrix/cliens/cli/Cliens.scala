@@ -13,7 +13,7 @@ class Cliens(cliFactory: CLIFactory = CashCLI) {
     })
   }
 
-  def main(args: Array[String]) {
+  def run(args: Array[String]) {
     if (args.length == 0) {
       Console.err.println("\nError: missing argument: <action>\n\nUsage: cliens <action>\n")
       return
@@ -53,5 +53,5 @@ class Cliens(cliFactory: CLIFactory = CashCLI) {
 }
 
 object Cliens extends App {
-  new Cliens().main(args)
+  new Cliens().run(args)
 }

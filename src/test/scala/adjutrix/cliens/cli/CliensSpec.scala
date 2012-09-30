@@ -9,14 +9,14 @@ import org.mockito.Mockito._
 class CliensSpec extends FlatSpec with MustMatchers with MockitoSugar {
 
   "list" should "call cli.list" in new CliensContext {
-    cliens.main(Array("list", "category"))
+    cliens.run(Array("list", "category"))
     verify(cliFactory, times(1)).apply("category")
     verify(cli, times(1)).list(NoOption())
   }
 
 
   "view" should "call service.view" in new CliensContext {
-    cliens.main(Array("view", "storage", "1"))
+    cliens.run(Array("view", "storage", "1"))
     verify(cliFactory, times(1)).apply("storage")
     verify(cli, times(1)).detail(1)(NoOption())
   }
