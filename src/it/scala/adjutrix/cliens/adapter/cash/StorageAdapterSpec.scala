@@ -3,11 +3,8 @@ package adjutrix.cliens.adapter.cash
 import adjutrix.cliens.model._
 import adjutrix.cliens.model.ModelsFactory._
 import adjutrix.cliens.adapter.AdapterSpec
-import adjutrix.cliens.conf.PropertiesConfigurable
 
-class StorageAdapterSpec extends AdapterSpec[Storage] {
-
-  lazy val adapter = new StorageAdapter with PropertiesConfigurable with StorageProtocol
+class StorageAdapterSpec extends AdapterSpec[Storage] with StorageAdapterComponent {
 
   it should behave like findAllIsDefined()
   it should behave like findByIdIsDefined(fixtureId = 1)
