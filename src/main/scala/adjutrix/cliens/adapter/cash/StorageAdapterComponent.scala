@@ -22,6 +22,7 @@ trait StorageAdapterComponent extends ReaderAdapterComponent[Storage] {
     self: Configurable with Protocol[Storage] =>
 
     lazy val currencyTypeAdapter = new CurrencyTypeAdapterComponent {}.adapter
+    lazy val storageTypeAdapter = new StorageTypeAdapterComponent {}.adapter
 
     override def findAll() = {
       super.findAll() fold(l => Left(l), r => Right(r map {
@@ -30,8 +31,8 @@ trait StorageAdapterComponent extends ReaderAdapterComponent[Storage] {
     }
 
     def fullFill(storage: Storage): Storage = {
-      storage.copy(currencyType =
-        currencyTypeAdapter.findById(uriToId(storage.currencyType.resourceURI)).right.get.get)
+      storage.copy(currencyType = currencyTypeAdapter.findById(uriToId(storage.currencyType.resourceURI)).right.get.get,
+        storageType = storageTypeAdapter.findById(uriToId(storage.storageType.resourceURI)).right.get.get)
     }
   }
 
