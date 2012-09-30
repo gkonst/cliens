@@ -8,9 +8,10 @@ import adjutrix.cliens.model.serializer.json.cash.StorageSerializer
 
 trait StorageAdapterComponent extends ReaderAdapterComponent[Storage] {
 
-  lazy val adapter = new StorageAdapter with PropertiesConfigurable with JSONProtocol[Storage] {
-    lazy val serializer = StorageSerializer
-  }
+  lazy val adapter: StorageAdapter =
+    new StorageAdapter with PropertiesConfigurable with JSONProtocol[Storage] {
+      lazy val serializer = StorageSerializer
+    }
 
   trait StorageAdapter extends ReaderAdapter[Storage] {
     self: Configurable with Protocol[Storage] =>

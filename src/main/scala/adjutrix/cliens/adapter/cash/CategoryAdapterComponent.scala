@@ -8,9 +8,10 @@ import adjutrix.cliens.model.serializer.json.cash.CategorySerializer
 
 trait CategoryAdapterComponent extends ReaderAdapterComponent[Category] {
 
-  lazy val adapter = new CategoryAdapter with PropertiesConfigurable with JSONProtocol[Category] {
-    lazy val serializer = CategorySerializer
-  }
+  lazy val adapter: CategoryAdapter =
+    new CategoryAdapter with PropertiesConfigurable with JSONProtocol[Category] {
+      lazy val serializer = CategorySerializer
+    }
 
   trait CategoryAdapter extends ReaderAdapter[Category] {
     self: Configurable with Protocol[Category] =>

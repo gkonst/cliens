@@ -6,7 +6,7 @@ import adjutrix.cliens.model.Model
 trait ListCLI[M <: Model] extends DetailCLI[M] {
   self: ReaderAdapterComponent[M] =>
 
-  def list()(implicit options: CLIOption) {
+  def list(implicit options: CLIOption) {
     handleError(adapter.findAll()) {
       result =>
         printHeader()

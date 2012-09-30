@@ -31,7 +31,7 @@ class Cliens() {
     })
     if (parser.parse(args)) {
       CashCLI(entity) match {
-        case cli: ListCLI[_] => cli.list()
+        case cli: ListCLI[_] => cli.list
       }
     }
   }
