@@ -12,4 +12,6 @@ package object model {
   implicit def optStringToRelated[T <: Model](resourceURI: Option[String]) = Related[T](resourceURI.get, None)
 
   implicit def relatedToModel[T <: Model](related: Related[T]) = related.get
+
+  def uriToId(resourceURI: String) = resourceURI.split('/').last.toInt
 }

@@ -26,6 +26,4 @@ object ModelsFactory {
     case Some(x) => toResourceURI(resourceName, x)
     case None => None
   }
-
-  def toId(resourceURI: String) = resourceURI.split('/').last.toInt
 }

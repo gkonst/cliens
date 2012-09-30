@@ -1,7 +1,6 @@
 package adjutrix.cliens.adapter
 
 import adjutrix.cliens.model._
-import adjutrix.cliens.model.ModelsFactory._
 
 abstract class WriterAdapterSpec[M <: Model] extends AdapterSpec[M, WriterAdapterComponent[M]] {
   self: WriterAdapterComponent[M] =>
@@ -11,12 +10,12 @@ abstract class WriterAdapterSpec[M <: Model] extends AdapterSpec[M, WriterAdapte
       val result = adapter.create(given)
       result must be('right)
       try {
-        val created = adapter.findById(toId(result.right.get))
+        val created = adapter.findById(uriToId(result.right.get))
         created must be('right)
         created.right.get must be('defined)
         specifyFields(created.right.get.get)
       } finally {
-        adapter.delete(toId(result.right.get))
+        adapter.delete(uriToId(result.right.get))
       }
     }
   }
@@ -25,8 +24,8 @@ abstract class WriterAdapterSpec[M <: Model] extends AdapterSpec[M, WriterAdapte
     "delete" should "not fail" in {
       val result = adapter.create(given)
       result must be('right)
-      adapter.delete(toId(result.right.get))
-      val found = adapter.findById(toId(result.right.get))
+      adapter.delete(uriToId(result.right.get))
+      val found = adapter.findById(uriToId(result.right.get))
       found must be('right)
       found.right.get must be(None)
     }
