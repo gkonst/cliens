@@ -36,6 +36,8 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
       val values = fields.map {
         field =>
           logger.trace("deserializing field..." + field.getName)
+          // TODO refactor deserialize, maybe CBN could be used
+          // TODO refactor trandform, so we could re-use field renames
           val (name, fieldType, valueConversion) = if (transformToEntity.isDefinedAt(field.getName)) {
             transformToEntity(field.getName)
           } else {
@@ -73,7 +75,7 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
     def serialize(value: A, json: JsonGenerator, provider: SerializerProvider) {
       json.writeStartObject()
       for (field <- fields) {
-        // TODO refactor this
+        // TODO refactor serialize
         val fieldValue: Object = methods.get(field.getName).map {
           _.invoke(value)
         }.getOrElse(field.get(value))

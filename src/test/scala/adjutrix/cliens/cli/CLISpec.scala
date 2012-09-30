@@ -6,6 +6,7 @@ import org.specs2.mutable.Specification
 import adjutrix.cliens.conf.DefaultConfiguration
 
 abstract class CLISpec[T <: Model] extends Specification with DefaultConfiguration {
+  // TODO re-implement base CLI class
   //
   //  trait MockedIO extends SystemIO {
   //    val baos = new ByteArrayOutputStream()

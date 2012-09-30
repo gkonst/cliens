@@ -21,6 +21,7 @@ trait Adapter[T <: Model] {
 
   protected implicit lazy val logger = Logger(getClass)
 
+  // TODO think about HATEOS protocol
   protected def baseUrl: String
 
   protected val auth = "Basic " + Base64.encodeBytes((configuration.username + ":" + configuration.password).getBytes)
@@ -97,7 +98,7 @@ trait Adapter[T <: Model] {
   }
 
   protected def executePut(url: String, data: String, contentType: String): Option[Source] = {
-    // TODO implement
+    // TODO implement PUT
     // val connection = getConnection(PUT, url)
     // writeData(connection, data, contentType)
     // connection.getResponseCode match {

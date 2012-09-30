@@ -1,6 +1,7 @@
 package adjutrix.cliens.cli.cash
 
 
+// TODO implement test for Category CLI
 //class CategoryCLISpec extends CLISpec[Category] {
 //
 //  def produceCLI = new CategoryCLI with MockedIO

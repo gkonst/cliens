@@ -1,6 +1,6 @@
 package adjutrix.cliens.cli.cash
 
-
+// TODO implement test for Storage CLI
 //class StorageCLISpec extends CLISpec[Storage] {
 //
 //  def produceCLI = new StorageCLI with MockedIO

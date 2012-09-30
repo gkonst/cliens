@@ -5,6 +5,7 @@ import org.specs2.mock.Mockito
 
 class CliensSpec extends Specification with Mockito {
 
+  // TODO implement test for Cliens
   //  "list should call service.list" in new CliensScope {
   //    cliens.main(Array("list", "category"))
   //    there was one(serviceFactory).apply("category")

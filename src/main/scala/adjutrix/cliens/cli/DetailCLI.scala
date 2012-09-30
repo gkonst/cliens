@@ -7,7 +7,7 @@ trait DetailCLI[M <: Model] extends CLI[M] {
   self: AdapterComponent[M] =>
 
   def detail(id: Int)(implicit options: CLIOption) {
-
+    // TODO implement detail operation in CLI
   }
 
   protected def optionRow(data: Either[Error, Option[M]], options: CLIOption) {

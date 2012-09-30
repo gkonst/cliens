@@ -7,7 +7,7 @@ trait ListCLI[M <: Model] extends DetailCLI[M] {
   self: AdapterComponent[M] =>
 
   def list()(implicit options: CLIOption) {
-    // TODO implement
+    // TODO implement list operation in CLI
   }
 
   def optionList(data: Either[Error, Option[Seq[M]]], options: CLIOption) {
