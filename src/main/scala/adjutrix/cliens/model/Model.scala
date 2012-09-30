@@ -10,7 +10,7 @@ sealed abstract class Model extends Product {
 }
 
 case class Related[T <: Model](resourceURI: String, value: Option[T] = None) {
-  def get = value match {
+  def get: T = value match {
     case Some(x) => x
     case None => throw new IllegalStateException("Related fields is not filled.")
   }
