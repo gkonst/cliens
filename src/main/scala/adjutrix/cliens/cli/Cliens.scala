@@ -5,7 +5,7 @@ import adjutrix.cliens.cli.cash.CashCLI
 
 class Cliens() {
   var entity: String = null
-  var options: CLIOption = NoOption()
+  implicit var options: CLIOption = NoOption()
 
   val parser = new OptionParser("cliens") {
     arg("<entity>", "<entity> is name of entity to manipulate", {
@@ -30,7 +30,9 @@ class Cliens() {
       v: Boolean => options = Verbose(options)
     })
     if (parser.parse(args)) {
-      CashCLI(entity).list(options)
+      CashCLI(entity) match {
+        case cli: ListCLI[_] => cli.list()
+      }
     }
   }
 
@@ -43,7 +45,9 @@ class Cliens() {
       v: String => id = Integer.valueOf(v).intValue
     })
     if (parser.parse(args)) {
-      CashCLI(entity).view(id, options)
+      CashCLI(entity) match {
+        case cli: DetailCLI[_] => cli.detail(id)
+      }
     }
   }
 }

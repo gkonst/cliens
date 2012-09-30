@@ -1,15 +1,10 @@
 package adjutrix.cliens.cli.cash
 
 import adjutrix.cliens.model.Category
-import adjutrix.cliens.cli.CLI
+import adjutrix.cliens.cli.ListCLI
 import adjutrix.cliens.adapter.cash.CategoryAdapterComponent
 
-/**
- * CLI implementation for 'Category'.
- *
- * @author konstantin_grigoriev
- */
-trait CategoryCLI extends CLI[Category] {
+trait CategoryCLI extends ListCLI[Category] {
   self: CategoryAdapterComponent =>
 
   override def header = super.header + String.format("%-10s %-20s %-20s", "Type", "Name", "Default Storage")
@@ -21,6 +16,4 @@ trait CategoryCLI extends CLI[Category] {
         case None => None
       })
   }
-
-  def create() = Category(readLine("Name: "), readLine("Type: ").toInt)
 }
