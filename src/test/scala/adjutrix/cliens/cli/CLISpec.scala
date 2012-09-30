@@ -11,8 +11,6 @@ import adjutrix.cliens.adapter.Adapter
 
 abstract class CLISpec[M <: Model] extends FlatSpec with MustMatchers with MockitoSugar {
 
-  // TODO re-implement base CLI class
-
   trait MockedIO extends SystemIO {
     val baos = new ByteArrayOutputStream()
     val pis = new PipedInputStream()
