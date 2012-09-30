@@ -3,10 +3,11 @@ package adjutrix.cliens.adapter.cash
 import adjutrix.cliens.model.{CategoryType, Category}
 import adjutrix.cliens.model.ModelsFactory._
 import adjutrix.cliens.adapter.AdapterSpec
+import adjutrix.cliens.conf.PropertiesConfigurable
 
 class CategoryAdapterSpec extends AdapterSpec[Category] {
 
-  lazy val adapter = new CategoryAdapter
+  lazy val adapter = new CategoryAdapter with PropertiesConfigurable with CategoryProtocol
 
   it should behave like findAllIsDefined()
 

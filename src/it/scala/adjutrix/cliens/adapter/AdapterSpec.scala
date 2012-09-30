@@ -2,12 +2,10 @@ package adjutrix.cliens.adapter
 
 import adjutrix.cliens.model._
 import adjutrix.cliens.model.ModelsFactory._
-import adjutrix.cliens.conf.DefaultConfiguration
-import adjutrix.cliens.model.serializer.json.JSONSerializers
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.MustMatchers
 
-abstract class AdapterSpec[M <: Model] extends FlatSpec with MustMatchers with DefaultConfiguration with JSONSerializers {
+abstract class AdapterSpec[M <: Model] extends FlatSpec with MustMatchers {
   val unknownId = 0
   val adapter: Adapter[M]
 

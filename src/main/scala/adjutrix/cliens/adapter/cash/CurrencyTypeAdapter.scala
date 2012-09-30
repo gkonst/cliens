@@ -1,11 +1,12 @@
 package adjutrix.cliens.adapter.cash
 
 import adjutrix.cliens.model.CurrencyType
-import adjutrix.cliens.conf.Configuration
-import adjutrix.cliens.model.serializer.Serializer
+import adjutrix.cliens.conf.Configurable
 import adjutrix.cliens.adapter.Adapter
+import adjutrix.cliens.adapter.protocol.Protocol
 
-class CurrencyTypeAdapter(implicit configuration: Configuration,
-                          serializer: Serializer[CurrencyType]) extends Adapter[CurrencyType] {
+trait CurrencyTypeAdapter extends Adapter[CurrencyType] {
+  self: Configurable with Protocol[CurrencyType] =>
+
   protected val baseUrl = "currencytype"
 }

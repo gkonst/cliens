@@ -2,9 +2,10 @@ package adjutrix.cliens.adapter.cash
 
 import adjutrix.cliens.model.CurrencyType
 import adjutrix.cliens.adapter.AdapterSpec
+import adjutrix.cliens.conf.PropertiesConfigurable
 
 class CurrencyTypeAdapterSpec extends AdapterSpec[CurrencyType] {
-  lazy val adapter = new CurrencyTypeAdapter
+  lazy val adapter = new CurrencyTypeAdapter with PropertiesConfigurable with CurrencyTypeProtocol
 
   it should behave like findAllIsDefined()
   it should behave like findByIdIsDefined(fixtureId = 1)

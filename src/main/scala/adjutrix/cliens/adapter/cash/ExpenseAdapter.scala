@@ -1,16 +1,12 @@
 package adjutrix.cliens.adapter.cash
 
-import adjutrix.cliens.conf.Configuration
+import adjutrix.cliens.conf.Configurable
 import adjutrix.cliens.model.Expense
-import adjutrix.cliens.model.serializer.Serializer
 import adjutrix.cliens.adapter.Adapter
+import adjutrix.cliens.adapter.protocol.Protocol
 
-/**
- * Adapter impl for working with 'Expense'.
- *
- * @author konstantin_grigoriev
- */
-class ExpenseAdapter(implicit configuration: Configuration,
-                     serializer: Serializer[Expense]) extends Adapter[Expense] {
+trait ExpenseAdapter extends Adapter[Expense] {
+  self: Configurable with Protocol[Expense] =>
+
   val baseUrl = "expense"
 }

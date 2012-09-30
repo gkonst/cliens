@@ -1,14 +1,13 @@
 package adjutrix.cliens.adapter
 
 import java.net.{HttpURLConnection, URL}
+import protocol.Protocol
 import scala.io.Source.fromInputStream
 import java.io.OutputStreamWriter
-import adjutrix.cliens.model.Model
 import io.Source
 import net.iharder.Base64
-import adjutrix.cliens.model.serializer.Serializer
 import grizzled.slf4j.Logger
-import adjutrix.cliens.conf.{Configurable, Configuration}
+import adjutrix.cliens.conf.Configurable
 import adjutrix.cliens.LoggingUtilities._
 import adjutrix.cliens.model._
 
@@ -17,12 +16,13 @@ import adjutrix.cliens.model._
  *
  * @author konstantin_grigoriev
  */
-abstract class Adapter[T <: Model](implicit configuration: Configuration,
-                                   protected val serializer: Serializer[T]) {
+trait Adapter[T <: Model] {
+  self: Configurable with Protocol[T] =>
 
   protected implicit lazy val logger = Logger(getClass)
 
-  protected val baseUrl: String
+  protected def baseUrl: String
+
   protected val auth = "Basic " + Base64.encodeBytes((configuration.username + ":" + configuration.password).getBytes)
 
   protected object Method extends Enumeration {

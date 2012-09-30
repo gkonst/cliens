@@ -1,16 +1,12 @@
 package adjutrix.cliens.adapter.cash
 
-import adjutrix.cliens.conf.Configuration
+import adjutrix.cliens.conf.Configurable
 import adjutrix.cliens.model.Storage
-import adjutrix.cliens.model.serializer.Serializer
 import adjutrix.cliens.adapter.Adapter
+import adjutrix.cliens.adapter.protocol.Protocol
 
-/**
- * Adapter impl for working with 'Storage'.
- *
- * @author konstantin_grigoriev
- */
-class StorageAdapter(implicit configuration: Configuration,
-                     serializer: Serializer[Storage]) extends Adapter[Storage] {
+trait StorageAdapter extends Adapter[Storage] {
+  self: Configurable with Protocol[Storage] =>
+
   val baseUrl = "storage"
 }
