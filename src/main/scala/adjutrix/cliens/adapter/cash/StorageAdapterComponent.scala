@@ -4,7 +4,7 @@ import adjutrix.cliens.adapter.{ReaderAdapter, ReaderAdapterComponent}
 import adjutrix.cliens.model.Storage
 import adjutrix.cliens.conf.{Configurable, PropertiesConfigurable}
 import adjutrix.cliens.adapter.protocol.{JSONProtocol, Protocol}
-import adjutrix.cliens.model.serializer.json.StorageSerializer
+import adjutrix.cliens.model.serializer.json.cash.StorageSerializer
 
 trait StorageAdapterComponent extends ReaderAdapterComponent[Storage] {
 

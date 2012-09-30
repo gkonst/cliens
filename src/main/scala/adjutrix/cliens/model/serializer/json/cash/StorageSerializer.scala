@@ -1,6 +1,7 @@
-package adjutrix.cliens.model.serializer.json
+package adjutrix.cliens.model.serializer.json.cash
 
 import adjutrix.cliens.model._
+import serializer.json.JSONSerializer
 
 object StorageSerializer extends JSONSerializer[Storage] {
   override protected def transformToEntity = super.transformToEntity orElse {

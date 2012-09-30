@@ -1,7 +1,8 @@
-package adjutrix.cliens.model.serializer.json
+package adjutrix.cliens.model.serializer.json.cash
 
 import adjutrix.cliens.model.{CategoryType, Category}
 import CategoryType._
+import adjutrix.cliens.model.serializer.json.JSONSerializer
 
 object CategorySerializer extends JSONSerializer[Category] {
 

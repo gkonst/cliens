@@ -1,4 +1,4 @@
-package adjutrix.cliens.model.serializer.json
+package adjutrix.cliens.model.serializer.json.cash
 
 import adjutrix.cliens.model.StorageType
 import org.specs2.mutable.Specification

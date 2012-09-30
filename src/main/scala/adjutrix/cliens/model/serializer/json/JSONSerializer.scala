@@ -142,15 +142,3 @@ abstract class JSONSerializer[T <: Model](implicit mf: Manifest[T]) extends Seri
 
   def serializePretty(entity: T) = Json.prettyPrint(entity)
 }
-
-class RelatedSerializer extends JsonSerializer[Related[_]] {
-  def serialize(value: Related[_], jgen: JsonGenerator, provider: SerializerProvider) {
-    jgen.writeString(value.resourceURI)
-  }
-}
-
-class RelatedDeserializer extends JsonDeserializer[Related[_]] {
-  def deserialize(jp: JsonParser, ctxt: DeserializationContext) = {
-    jp.getText
-  }
-}

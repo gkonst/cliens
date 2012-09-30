@@ -4,7 +4,7 @@ import adjutrix.cliens.adapter.{ReaderAdapterComponent, ReaderAdapter}
 import adjutrix.cliens.model.Category
 import adjutrix.cliens.conf.{Configurable, PropertiesConfigurable}
 import adjutrix.cliens.adapter.protocol.{JSONProtocol, Protocol}
-import adjutrix.cliens.model.serializer.json.CategorySerializer
+import adjutrix.cliens.model.serializer.json.cash.CategorySerializer
 
 trait CategoryAdapterComponent extends ReaderAdapterComponent[Category] {
 

@@ -4,7 +4,7 @@ import adjutrix.cliens.model.CurrencyType
 import adjutrix.cliens.conf.{PropertiesConfigurable, Configurable}
 import adjutrix.cliens.adapter.{ReaderAdapter, ReaderAdapterComponent}
 import adjutrix.cliens.adapter.protocol.{JSONProtocol, Protocol}
-import adjutrix.cliens.model.serializer.json.CurrencyTypeSerializer
+import adjutrix.cliens.model.serializer.json.cash.CurrencyTypeSerializer
 
 trait CurrencyTypeAdapterComponent extends ReaderAdapterComponent[CurrencyType] {
 
