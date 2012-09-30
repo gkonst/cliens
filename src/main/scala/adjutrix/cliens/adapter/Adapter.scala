@@ -32,23 +32,6 @@ trait Adapter[T <: Model] {
 
   import Method._
 
-  def findAll(): Either[Error, Option[Seq[T]]] = find(None)
-
-  def find(data: Option[Map[String, Any]]): Either[Error, Option[Seq[T]]] =
-    executeGet(absoluteBaseUrl, data).fold(l => Left(l), r => Right(r map serializer.deserializeAll))
-
-  def findById(id: Int): Either[Error, Option[T]] =
-    executeGet(absoluteBaseUrl + id).fold(l => Left(l), r => Right(r map serializer.deserialize))
-      .trace("findById")
-
-  def delete(id: Int): Either[Error, Unit] =
-    executeDelete(absoluteBaseUrl + id)
-      .trace("delete")
-
-  def create(entity: T): Either[Any, String] =
-    executePost(absoluteBaseUrl, serializer.serialize(entity), serializer.contentType)
-      .trace("create")
-
   protected def absoluteBaseUrl = configuration.url + "/" + baseUrl + "/"
 
   protected def writeData(connection: HttpURLConnection, data: String, contentType: String) {
@@ -90,7 +73,7 @@ trait Adapter[T <: Model] {
     connection.getResponseCode match {
       case HttpURLConnection.HTTP_OK => processResponseWithResult(connection)
       case HttpURLConnection.HTTP_NOT_FOUND => Right(None)
-      case code => Left(ServerError(code, connection.getErrorStream()))
+      case code => Left(ServerError(code, connection.getErrorStream))
     }
   }
 

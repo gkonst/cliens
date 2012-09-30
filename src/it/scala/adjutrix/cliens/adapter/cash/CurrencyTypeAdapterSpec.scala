@@ -1,9 +1,9 @@
 package adjutrix.cliens.adapter.cash
 
 import adjutrix.cliens.model.CurrencyType
-import adjutrix.cliens.adapter.AdapterSpec
+import adjutrix.cliens.adapter.ReaderAdapterSpec
 
-class CurrencyTypeAdapterSpec extends AdapterSpec[CurrencyType] with CurrencyTypeAdapterComponent {
+class CurrencyTypeAdapterSpec extends ReaderAdapterSpec[CurrencyType] with CurrencyTypeAdapterComponent {
 
   it should behave like findAllIsDefined()
   it should behave like findByIdIsDefined(fixtureId = 1)

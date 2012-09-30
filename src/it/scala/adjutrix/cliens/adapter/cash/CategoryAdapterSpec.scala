@@ -1,10 +1,9 @@
 package adjutrix.cliens.adapter.cash
 
 import adjutrix.cliens.model.{CategoryType, Category}
-import adjutrix.cliens.model.ModelsFactory._
-import adjutrix.cliens.adapter.AdapterSpec
+import adjutrix.cliens.adapter.ReaderAdapterSpec
 
-class CategoryAdapterSpec extends AdapterSpec[Category] with CategoryAdapterComponent {
+class CategoryAdapterSpec extends ReaderAdapterSpec[Category] with CategoryAdapterComponent {
 
   it should behave like findAllIsDefined()
 
@@ -17,9 +16,9 @@ class CategoryAdapterSpec extends AdapterSpec[Category] with CategoryAdapterComp
     result.right.get.get foreach (_.categoryType === CategoryType.EXPENSE)
   }
 
-  it should behave like createIsDefined(given = category(None))
-
-  it should behave like deleteIsDefined(given = category(None))
+  //  it should behave like createIsDefined(given = category(None))
+  //
+  //  it should behave like deleteIsDefined(given = category(None))
 
   def specifyFields(result: Category) {
     result.name must not be null
